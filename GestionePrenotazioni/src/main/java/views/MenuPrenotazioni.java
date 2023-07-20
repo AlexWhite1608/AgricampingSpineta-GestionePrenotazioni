@@ -1,25 +1,35 @@
 package views;
 
 import javax.swing.*;
+import java.awt.*;
 
 public class MenuPrenotazioni extends JPanel {
 
-    private JTable tabellaPrenotazioni;
-    private JPanel pnlTabellaPrenotazioni;
-    private JToolBar toolBar;
+
+    private JPanel mainPanelPrenotazioni;
+    private JPanel pnlToolbar;
+    private JToolBar toolbar;
+    private JButton btnAggiungiPrenotazione;
 
     public MenuPrenotazioni() {
 
-        initUiComponents();
+        createUIComponents();
 
         setupToolbar();
 
         setupTable();
+
+        add(mainPanelPrenotazioni);
+        setVisible(true);
     }
 
-    // Inizializza le componenti grafiche
-    private void initUiComponents(){
+    // Inizializzazione degli elementi di UI
+    private void createUIComponents() {
+        mainPanelPrenotazioni = new JPanel(new BorderLayout());
+        pnlToolbar = new JPanel(new FlowLayout());
 
+        toolbar = new JToolBar();
+        btnAggiungiPrenotazione = new JButton("Aggiungi");
     }
 
     // Setup della tabella delle prenotazioni
@@ -29,7 +39,11 @@ public class MenuPrenotazioni extends JPanel {
 
     // Setup toolbar
     private void setupToolbar(){
+        toolbar.add(btnAggiungiPrenotazione);
+        toolbar.setFloatable(false);
+        toolbar.setLayout(new FlowLayout(FlowLayout.CENTER));
 
+        pnlToolbar.add(toolbar);
+        mainPanelPrenotazioni.add(pnlToolbar, BorderLayout.PAGE_START);
     }
-
 }
