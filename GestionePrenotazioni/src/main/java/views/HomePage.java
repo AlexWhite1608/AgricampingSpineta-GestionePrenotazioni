@@ -15,9 +15,9 @@ public class HomePage extends JFrame{
     public HomePage() throws IOException {
         JTabbedPane tabbedPane = new JTabbedPane();
 
-        // Imposta l'icona
-        //Image icon = ImageIO.read(Objects.requireNonNull(getClass().getResource("/favicon-32x32.png")));
-        //setIconImage(icon);
+        //Imposta l'icona
+        Image icon = ImageIO.read(Objects.requireNonNull(getClass().getResource("/favicon-32x32.png")));
+        setIconImage(icon);
 
         //Crea i menu
         MenuCalendario menuCalendario = new MenuCalendario();
