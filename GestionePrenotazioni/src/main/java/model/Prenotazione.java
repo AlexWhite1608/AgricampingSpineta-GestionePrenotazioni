@@ -2,6 +2,7 @@ package model;
 
 import utils.IDGenerator;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 public class Prenotazione {
