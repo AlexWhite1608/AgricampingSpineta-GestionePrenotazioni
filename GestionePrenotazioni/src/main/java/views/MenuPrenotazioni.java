@@ -5,7 +5,6 @@ import utils.DataFilter;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.TableCellRenderer;
 import java.awt.*;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -13,8 +12,12 @@ import java.util.ArrayList;
 
 public class MenuPrenotazioni extends JPanel {
 
-    // Dimensione separatore nella toolbox
     private final int SEPARATOR_WIDTH = 1565;
+    private final Font CELL_FONT = new Font("Segoe UI", Font.PLAIN, 14);
+    private final Font HEADER_FONT = new Font("Segoe UI", Font.BOLD, 16);
+    private final Color ALTERNATE_CELL_COLOR = new Color(220, 232, 234);
+    private final Color SELECTION_COLOR = new Color(255, 255, 102);
+    private final Color HEADER_BACKGROUND = Color.LIGHT_GRAY;
 
     // Anni contenuti nella cbFiltroAnni
     private final ArrayList<String> YEARS = DataFilter.getYears();
@@ -56,6 +59,7 @@ public class MenuPrenotazioni extends JPanel {
 
         // Popola la tabella con le informazioni nel database
         Gateway gateway = new Gateway();
+        //TODO: nella query devi filtrare gli anni della combobox!!
         String initialQuery = "SELECT * FROM Prenotazioni";
         ResultSet resultSet = gateway.execSelectQuery(initialQuery);
         tabellaPrenotazioni = new JTable(gateway.buildCustomTableModel(resultSet));
@@ -70,25 +74,56 @@ public class MenuPrenotazioni extends JPanel {
         tabellaPrenotazioni.setDefaultEditor(Object.class, null);
         tabellaPrenotazioni.removeColumn(tabellaPrenotazioni.getColumnModel().getColumn(0));
 
-        // Modifiche estetiche
+        // Centratura del testo
         int rowHeight = 40;
         tabellaPrenotazioni.setRowHeight(rowHeight);
-        tabellaPrenotazioni.setDefaultRenderer(Object.class, new TableCellRenderer() {
-            private DefaultTableCellRenderer DEFAULT_RENDERER = new DefaultTableCellRenderer();
+
+        // Renderer per il testo delle celle
+        DefaultTableCellRenderer cellRenderer = new DefaultTableCellRenderer() {
 
             @Override
             public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-                Component c = DEFAULT_RENDERER.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-                if (isSelected) {
-                    c.setBackground(new Color(255, 255, 102)); // Imposta il colore rosso per la riga selezionata
-                } else if (row % 2 == 0) {
+                Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+
+                setHorizontalAlignment(SwingConstants.CENTER);
+                setFont(CELL_FONT);
+
+                // Colora le righe alternativamente
+                if (row % 2 == 0) {
                     c.setBackground(Color.WHITE);
                 } else {
-                    c.setBackground(new Color(220, 232, 234));
+                    c.setBackground(ALTERNATE_CELL_COLOR);
                 }
+
+                // Colora di giallo la riga selezionata
+                if(isSelected){
+                    c.setBackground(SELECTION_COLOR);
+                }
+
                 return c;
             }
-        });
+        };
+
+        // Renderer per l'header
+        DefaultTableCellRenderer headerRenderer = new DefaultTableCellRenderer() {
+            @Override
+            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+                Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+
+                setHorizontalAlignment(SwingConstants.CENTER);
+                setFont(HEADER_FONT);
+                setBorder(UIManager.getBorder("TableHeader.cellBorder"));
+                setBackground(HEADER_BACKGROUND);
+
+                return c;
+            }
+        };
+
+        // Assegna i renderer
+        for(int columnIndex = 0; columnIndex < tabellaPrenotazioni.getColumnCount(); columnIndex++) {
+            tabellaPrenotazioni.getColumnModel().getColumn(columnIndex).setCellRenderer(cellRenderer);
+        }
+        tabellaPrenotazioni.getTableHeader().setDefaultRenderer(headerRenderer);
 
         JScrollPane scrollPane = new JScrollPane(tabellaPrenotazioni);
         mainPanelPrenotazioni.add(scrollPane, BorderLayout.CENTER);
