@@ -4,6 +4,7 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.Objects;
 
 public class HomePage extends JFrame{
@@ -12,7 +13,7 @@ public class HomePage extends JFrame{
     private final static String MENU_PRENOTAZIONI = "Prenotazioni";
     private final static String MENU_ARRIVI_PARTENZE = "Arrivi/Partenze";
 
-    public HomePage() throws IOException {
+    public HomePage() throws IOException, SQLException {
         JTabbedPane tabbedPane = new JTabbedPane();
 
         //Imposta l'icona

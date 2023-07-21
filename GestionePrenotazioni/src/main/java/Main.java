@@ -10,7 +10,7 @@ public class Main {
             public void run() {
                 try {
                     new HomePage();
-                } catch (IOException e) {
+                } catch (SQLException | IOException e) {
                     throw new RuntimeException(e);
                 }
             }

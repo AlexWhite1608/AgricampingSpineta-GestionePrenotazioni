@@ -1,24 +1,24 @@
 package views;
 
+import data_access.Gateway;
+
 import javax.swing.*;
 import java.awt.*;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class MenuPrenotazioni extends JPanel {
 
     private JPanel mainPanelPrenotazioni;
     private JPanel pnlToolbar;
-    private JPanel pnlTable;
     private JToolBar toolbar;
     private JButton btnAggiungiPrenotazione;
-    private JButton btnRimuoviPrenotazione;
+    private JButton btnCercaPrenotazione;
+    private JTable tabellaPrenotazioni;
 
-
-    public MenuPrenotazioni() {
-
+    public MenuPrenotazioni() throws SQLException {
         createUIComponents();
-
         setupToolbar();
-
         setupTable();
 
         setLayout(new BorderLayout());
@@ -27,36 +27,43 @@ public class MenuPrenotazioni extends JPanel {
     }
 
     // Inizializzazione degli elementi di UI
-    private void createUIComponents() {
-
+    private void createUIComponents() throws SQLException {
         // Main panel
         mainPanelPrenotazioni = new JPanel();
         mainPanelPrenotazioni.setLayout(new BorderLayout());
 
         // Panel toolbar
         pnlToolbar = new JPanel(new BorderLayout());
-
-        // Panel tabella
-        pnlTable = new JPanel(new BorderLayout());
-
-        // Toolbar
         toolbar = new JToolBar();
         btnAggiungiPrenotazione = new JButton("Aggiungi");
-        btnRimuoviPrenotazione = new JButton("Cerca");
+        btnCercaPrenotazione = new JButton("Cerca");
         btnAggiungiPrenotazione.setFocusPainted(false);
-        btnRimuoviPrenotazione.setFocusPainted(false);
+        btnCercaPrenotazione.setFocusPainted(false);
+        btnAggiungiPrenotazione.setToolTipText("Aggiungi prenotazione");
+        btnCercaPrenotazione.setToolTipText("Cerca prenotazione");
 
+        // Popola la tabella con le informazioni nel database
+        Gateway gateway = new Gateway();
+        String initialQuery = "SELECT * FROM Prenotazioni";
+        ResultSet resultSet = gateway.execSelectQuery(initialQuery);
+        tabellaPrenotazioni = new JTable(gateway.buildCustomTableModel(resultSet));
     }
 
     // Setup della tabella delle prenotazioni
-    private void setupTable(){
+    private void setupTable() {
+        int rowHeight = 30;
+        tabellaPrenotazioni.setRowHeight(rowHeight);
+        tabellaPrenotazioni.getTableHeader().setReorderingAllowed(false);
+        tabellaPrenotazioni.setDefaultEditor(Object.class, null);
 
+        JScrollPane scrollPane = new JScrollPane(tabellaPrenotazioni);
+        mainPanelPrenotazioni.add(scrollPane, BorderLayout.CENTER);
     }
 
     // Setup toolbar
-    private void setupToolbar(){
+    private void setupToolbar() {
         toolbar.add(btnAggiungiPrenotazione);
-        toolbar.add(btnRimuoviPrenotazione);
+        toolbar.add(btnCercaPrenotazione);
         toolbar.setFloatable(false);
 
         pnlToolbar.add(toolbar, BorderLayout.CENTER);
