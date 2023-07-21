@@ -4,8 +4,6 @@ import data_access.Gateway;
 import utils.DataFilter;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 import java.awt.*;
@@ -15,7 +13,11 @@ import java.util.ArrayList;
 
 public class MenuPrenotazioni extends JPanel {
 
-    private final ArrayList<String> years = DataFilter.getYears();
+    // Dimensione separatore nella toolbox
+    private final int SEPARATOR_WIDTH = 1565;
+
+    // Anni contenuti nella cbFiltroAnni
+    private final ArrayList<String> YEARS = DataFilter.getYears();
 
     private JPanel mainPanelPrenotazioni;
     private JPanel pnlToolbar;
@@ -50,7 +52,7 @@ public class MenuPrenotazioni extends JPanel {
         btnCercaPrenotazione = new JButton("Cerca");
 
         // ComboBox filtraggio anni
-        cbFiltroAnni = new JComboBox(years.toArray());
+        cbFiltroAnni = new JComboBox(YEARS.toArray());
 
         // Popola la tabella con le informazioni nel database
         Gateway gateway = new Gateway();
@@ -102,16 +104,16 @@ public class MenuPrenotazioni extends JPanel {
         btnCercaPrenotazione.setToolTipText("Cerca prenotazione");
 
         // Crea un separatore orizzontale per distanziare i bottoni dalla combobox
-        int separatorWidth = 1500;
-        Component horizontalStrut = Box.createHorizontalStrut(separatorWidth);
+        Component horizontalStrut = Box.createHorizontalStrut(SEPARATOR_WIDTH);
         toolbar.add(btnAggiungiPrenotazione);
         toolbar.add(btnCercaPrenotazione);
         toolbar.add(horizontalStrut);
 
         // Setting combobox
-        cbFiltroAnni.setSelectedItem(years.get(years.size() - 1));
+        cbFiltroAnni.setSelectedItem(YEARS.get(YEARS.size() - 1));
         toolbar.add(new JLabel("Mostra per anno: "));
         toolbar.add(cbFiltroAnni);
+        ((JLabel) cbFiltroAnni.getRenderer()).setHorizontalAlignment(SwingConstants.CENTER);
 
         toolbar.setFloatable(false);
 
