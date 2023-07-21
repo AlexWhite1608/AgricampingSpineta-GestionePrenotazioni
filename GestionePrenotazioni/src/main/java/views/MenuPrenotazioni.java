@@ -42,7 +42,7 @@ public class MenuPrenotazioni extends JPanel {
         // Toolbar
         toolbar = new JToolBar();
         btnAggiungiPrenotazione = new JButton("Aggiungi");
-        btnRimuoviPrenotazione = new JButton("Rimuovi");
+        btnRimuoviPrenotazione = new JButton("Cerca");
         btnAggiungiPrenotazione.setFocusPainted(false);
         btnRimuoviPrenotazione.setFocusPainted(false);
 
