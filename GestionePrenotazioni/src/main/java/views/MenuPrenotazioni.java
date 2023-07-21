@@ -13,7 +13,7 @@ import java.util.ArrayList;
 public class MenuPrenotazioni extends JPanel {
 
     // Valori per modifiche estetiche
-    private final int SEPARATOR_WIDTH = 1565;
+    private final int SEPARATOR_WIDTH = 1520;
     private final Font CELL_FONT = new Font("Segoe UI", Font.PLAIN, 14);
     private final Font HEADER_FONT = new Font("Segoe UI", Font.BOLD, 16);
     private final Color ALTERNATE_CELL_COLOR = new Color(220, 232, 234);
@@ -28,6 +28,7 @@ public class MenuPrenotazioni extends JPanel {
     private JToolBar toolbar;
     private JButton btnAggiungiPrenotazione;
     private JButton btnCercaPrenotazione;
+    private JButton btnSalva;
     private JTable tabellaPrenotazioni;
     private JComboBox cbFiltroAnni;
 
@@ -52,6 +53,7 @@ public class MenuPrenotazioni extends JPanel {
         toolbar = new JToolBar();
 
         // Bottoni azioni nella toolbar
+        btnSalva = new JButton("Salva");
         btnAggiungiPrenotazione = new JButton("Aggiungi");
         btnCercaPrenotazione = new JButton("Cerca");
 
@@ -134,13 +136,16 @@ public class MenuPrenotazioni extends JPanel {
     private void setupToolbar() {
 
         // Setting buttons
+        btnSalva.setFocusPainted(false);
         btnAggiungiPrenotazione.setFocusPainted(false);
         btnCercaPrenotazione.setFocusPainted(false);
+        btnSalva.setToolTipText("Salva sul drive");
         btnAggiungiPrenotazione.setToolTipText("Aggiungi prenotazione");
         btnCercaPrenotazione.setToolTipText("Cerca prenotazione");
 
         // Crea un separatore orizzontale per distanziare i bottoni dalla combobox
         Component horizontalStrut = Box.createHorizontalStrut(SEPARATOR_WIDTH);
+        toolbar.add(btnSalva);
         toolbar.add(btnAggiungiPrenotazione);
         toolbar.add(btnCercaPrenotazione);
         toolbar.add(horizontalStrut);
