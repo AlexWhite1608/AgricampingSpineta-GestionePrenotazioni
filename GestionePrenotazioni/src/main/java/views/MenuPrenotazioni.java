@@ -12,6 +12,7 @@ import java.util.ArrayList;
 
 public class MenuPrenotazioni extends JPanel {
 
+    // Valori per modifiche estetiche
     private final int SEPARATOR_WIDTH = 1565;
     private final Font CELL_FONT = new Font("Segoe UI", Font.PLAIN, 14);
     private final Font HEADER_FONT = new Font("Segoe UI", Font.BOLD, 16);
@@ -74,7 +75,7 @@ public class MenuPrenotazioni extends JPanel {
         tabellaPrenotazioni.setDefaultEditor(Object.class, null);
         tabellaPrenotazioni.removeColumn(tabellaPrenotazioni.getColumnModel().getColumn(0));
 
-        // Centratura del testo
+        // Dimensione righe tabella
         int rowHeight = 40;
         tabellaPrenotazioni.setRowHeight(rowHeight);
 
