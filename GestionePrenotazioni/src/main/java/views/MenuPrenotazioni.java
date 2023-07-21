@@ -6,6 +6,8 @@ import utils.DataFilter;
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -143,6 +145,22 @@ public class MenuPrenotazioni extends JPanel {
         btnAggiungiPrenotazione.setToolTipText("Aggiungi prenotazione");
         btnCercaPrenotazione.setToolTipText("Cerca prenotazione");
 
+        // Azione: aggiunta di una nuova prenotazione
+        btnAggiungiPrenotazione.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JDialog dialogNuovaPrenotazione = new JDialog((Frame) SwingUtilities.getWindowAncestor(MenuPrenotazioni.this), "Aggiungi nuova prenotazione", true);
+                dialogNuovaPrenotazione.setLayout(new BorderLayout());
+                dialogNuovaPrenotazione.setLocationRelativeTo(null);
+
+                JPanel pnlForm = new JPanel();
+
+                dialogNuovaPrenotazione.add(pnlForm, BorderLayout.CENTER);
+                dialogNuovaPrenotazione.pack();
+                dialogNuovaPrenotazione.setVisible(true);
+            }
+        });
+
         // Crea un separatore orizzontale per distanziare i bottoni dalla combobox
         Component horizontalStrut = Box.createHorizontalStrut(SEPARATOR_WIDTH);
         toolbar.add(btnSalva);
@@ -161,5 +179,10 @@ public class MenuPrenotazioni extends JPanel {
 
         pnlToolbar.add(toolbar, BorderLayout.CENTER);
         mainPanelPrenotazioni.add(pnlToolbar, BorderLayout.NORTH);
+    }
+
+    // Setting dialog di aggiunta prenotazione
+    private void addPrenotazioneDialog(){
+
     }
 }
