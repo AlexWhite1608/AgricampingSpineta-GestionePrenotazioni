@@ -3,6 +3,8 @@ package views;
 import data_access.Gateway;
 
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 import java.awt.*;
@@ -55,26 +57,30 @@ public class MenuPrenotazioni extends JPanel {
     private void setupTable() {
 
         tabellaPrenotazioni.getTableHeader().setReorderingAllowed(false);
+        tabellaPrenotazioni.setCellSelectionEnabled(false); // Disabilita la selezione delle singole celle
+        tabellaPrenotazioni.setRowSelectionAllowed(true); // Abilita la selezione delle righe
         tabellaPrenotazioni.setDefaultEditor(Object.class, null);
         tabellaPrenotazioni.removeColumn(tabellaPrenotazioni.getColumnModel().getColumn(0));
+
 
         // Modifiche estetiche
         int rowHeight = 40;
         tabellaPrenotazioni.setRowHeight(rowHeight);
-        tabellaPrenotazioni.setDefaultRenderer(Object.class, new TableCellRenderer(){
-            private DefaultTableCellRenderer DEFAULT_RENDERER =  new DefaultTableCellRenderer();
+        tabellaPrenotazioni.setDefaultRenderer(Object.class, new TableCellRenderer() {
+            private DefaultTableCellRenderer DEFAULT_RENDERER = new DefaultTableCellRenderer();
+
             @Override
             public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
                 Component c = DEFAULT_RENDERER.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-                if (row % 2 == 0){
+                if (isSelected) {
+                    c.setBackground(new Color(255, 255, 102)); // Imposta il colore rosso per la riga selezionata
+                } else if (row % 2 == 0) {
                     c.setBackground(Color.WHITE);
-                }
-                else {
+                } else {
                     c.setBackground(new Color(220, 232, 234));
                 }
                 return c;
             }
-
         });
 
         JScrollPane scrollPane = new JScrollPane(tabellaPrenotazioni);

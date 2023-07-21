@@ -90,11 +90,7 @@ public class Gateway {
     // Modifica i metodi del DefaultTableModel per la modifica della tabella
     private DefaultTableModel setTableModelParams(Vector<Vector<Object>> data, Vector<String> columnNames){
         DefaultTableModel model = new DefaultTableModel(data, columnNames){
-            @Override
-            //TODO: quali celle sono editabili??
-            public boolean isCellEditable(int row, int column){
-                return true;
-            }
+
         };
 
         return model;
