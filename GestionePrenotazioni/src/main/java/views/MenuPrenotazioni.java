@@ -5,11 +5,13 @@ import java.awt.*;
 
 public class MenuPrenotazioni extends JPanel {
 
-
     private JPanel mainPanelPrenotazioni;
     private JPanel pnlToolbar;
+    private JPanel pnlTable;
     private JToolBar toolbar;
     private JButton btnAggiungiPrenotazione;
+    private JButton btnRimuoviPrenotazione;
+
 
     public MenuPrenotazioni() {
 
@@ -19,17 +21,31 @@ public class MenuPrenotazioni extends JPanel {
 
         setupTable();
 
-        add(mainPanelPrenotazioni);
+        setLayout(new BorderLayout());
+        add(mainPanelPrenotazioni, BorderLayout.CENTER);
         setVisible(true);
     }
 
     // Inizializzazione degli elementi di UI
     private void createUIComponents() {
-        mainPanelPrenotazioni = new JPanel(new BorderLayout());
-        pnlToolbar = new JPanel(new FlowLayout());
 
+        // Main panel
+        mainPanelPrenotazioni = new JPanel();
+        mainPanelPrenotazioni.setLayout(new BorderLayout());
+
+        // Panel toolbar
+        pnlToolbar = new JPanel(new BorderLayout());
+
+        // Panel tabella
+        pnlTable = new JPanel(new BorderLayout());
+
+        // Toolbar
         toolbar = new JToolBar();
         btnAggiungiPrenotazione = new JButton("Aggiungi");
+        btnRimuoviPrenotazione = new JButton("Rimuovi");
+        btnAggiungiPrenotazione.setFocusPainted(false);
+        btnRimuoviPrenotazione.setFocusPainted(false);
+
     }
 
     // Setup della tabella delle prenotazioni
@@ -40,10 +56,10 @@ public class MenuPrenotazioni extends JPanel {
     // Setup toolbar
     private void setupToolbar(){
         toolbar.add(btnAggiungiPrenotazione);
+        toolbar.add(btnRimuoviPrenotazione);
         toolbar.setFloatable(false);
-        toolbar.setLayout(new FlowLayout(FlowLayout.CENTER));
 
-        pnlToolbar.add(toolbar);
-        mainPanelPrenotazioni.add(pnlToolbar, BorderLayout.PAGE_START);
+        pnlToolbar.add(toolbar, BorderLayout.CENTER);
+        mainPanelPrenotazioni.add(pnlToolbar, BorderLayout.NORTH);
     }
 }
