@@ -147,6 +147,7 @@ public class MenuPrenotazioni extends JPanel {
 
         // Setting combobox
         cbFiltroAnni.setSelectedItem(YEARS.get(YEARS.size() - 1));
+        cbFiltroAnni.setFocusable(false);
         toolbar.add(new JLabel("Mostra per anno: "));
         toolbar.add(cbFiltroAnni);
         ((JLabel) cbFiltroAnni.getRenderer()).setHorizontalAlignment(SwingConstants.CENTER);
