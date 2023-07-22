@@ -5,6 +5,7 @@ import data_access.Gateway;
 import javax.swing.*;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Objects;
 
 public class TablePrenotazioniController {
 
@@ -17,10 +18,19 @@ public class TablePrenotazioniController {
     }
 
     // Mostra la visualizzazione iniziale della tabella (con il filtro dell'anno)
-    public JTable initView() throws SQLException {
-        String initialQuery = "SELECT * FROM Prenotazioni";
-
+    public JTable initView(JComboBox cbFiltro) throws SQLException {
         //TODO: nella query devi filtrare gli anni della combobox!!
+
+        // Ottiene il valore selezionato nella comboBox
+        String selectedFilter = Objects.requireNonNull(cbFiltro.getSelectedItem()).toString();
+
+        String initialQuery = "";
+        if(Objects.equals(selectedFilter, "Tutto")) {
+            initialQuery = "SELECT * FROM Prenotazioni";
+        } else {
+            initialQuery = String.format("SELECT * FROM Prenotazioni WHERE strftime('%%Y', Arrivo) >= '%s-01-01' AND strftime('%%Y', Partenza) <= '%s-12-31';", selectedFilter, selectedFilter);
+        }
+
         ResultSet resultSet = this.gateway.execSelectQuery(initialQuery);
         tblPrenotazioni = new JTable(gateway.buildCustomTableModel(resultSet));
 

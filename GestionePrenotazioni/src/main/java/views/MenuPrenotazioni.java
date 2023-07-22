@@ -66,9 +66,18 @@ public class MenuPrenotazioni extends JPanel {
         // ComboBox filtraggio anni
         cbFiltroAnni = new JComboBox(YEARS.toArray());
 
-        // Mostra la query iniziale
+        // Mostra la query in base al valore della comboBox
         tablePrenotazioniController = new TablePrenotazioniController(tabellaPrenotazioni);
-        tabellaPrenotazioni = tablePrenotazioniController.initView();
+        tabellaPrenotazioni = tablePrenotazioniController.initView(cbFiltroAnni);
+        cbFiltroAnni.addActionListener (new ActionListener () {
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    tabellaPrenotazioni = tablePrenotazioniController.initView(cbFiltroAnni);
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+        });
     }
 
     // Setup della tabella delle prenotazioni
