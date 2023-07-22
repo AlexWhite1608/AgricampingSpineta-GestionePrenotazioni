@@ -1,5 +1,6 @@
 package views;
 
+import controller.TablePrenotazioniController;
 import data_access.Gateway;
 import utils.DataFilter;
 
@@ -24,6 +25,9 @@ public class MenuPrenotazioni extends JPanel {
 
     // Anni contenuti nella cbFiltroAnni
     private final ArrayList<String> YEARS = DataFilter.getYears();
+
+    // Controller della tabella
+    TablePrenotazioniController tablePrenotazioniController;
 
     private JPanel mainPanelPrenotazioni;
     private JPanel pnlToolbar;
@@ -62,12 +66,9 @@ public class MenuPrenotazioni extends JPanel {
         // ComboBox filtraggio anni
         cbFiltroAnni = new JComboBox(YEARS.toArray());
 
-        // Popola la tabella con le informazioni nel database
-        Gateway gateway = new Gateway();
-        //TODO: nella query devi filtrare gli anni della combobox!!
-        String initialQuery = "SELECT * FROM Prenotazioni";
-        ResultSet resultSet = gateway.execSelectQuery(initialQuery);
-        tabellaPrenotazioni = new JTable(gateway.buildCustomTableModel(resultSet));
+        // Mostra la query iniziale
+        tablePrenotazioniController = new TablePrenotazioniController(tabellaPrenotazioni);
+        tabellaPrenotazioni = tablePrenotazioniController.initView();
     }
 
     // Setup della tabella delle prenotazioni
@@ -149,15 +150,7 @@ public class MenuPrenotazioni extends JPanel {
         btnAggiungiPrenotazione.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JDialog dialogNuovaPrenotazione = new JDialog((Frame) SwingUtilities.getWindowAncestor(MenuPrenotazioni.this), "Aggiungi nuova prenotazione", true);
-                dialogNuovaPrenotazione.setLayout(new BorderLayout());
-                dialogNuovaPrenotazione.setLocationRelativeTo(null);
-
-                JPanel pnlForm = new JPanel();
-
-                dialogNuovaPrenotazione.add(pnlForm, BorderLayout.CENTER);
-                dialogNuovaPrenotazione.pack();
-                dialogNuovaPrenotazione.setVisible(true);
+                addPrenotazioneDialog();
             }
         });
 
@@ -183,6 +176,53 @@ public class MenuPrenotazioni extends JPanel {
 
     // Setting dialog di aggiunta prenotazione
     private void addPrenotazioneDialog(){
+        JDialog dialogNuovaPrenotazione = new JDialog((Frame) SwingUtilities.getWindowAncestor(MenuPrenotazioni.this), "Aggiungi nuova prenotazione", true);
+        dialogNuovaPrenotazione.setLayout(new BorderLayout());
+        dialogNuovaPrenotazione.setLocationRelativeTo(SwingUtilities.getWindowAncestor(this));
+        dialogNuovaPrenotazione.setResizable(false);
 
+        /* Panel dedicato agli elementi del form */
+        JPanel pnlForm = new JPanel(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(5, 5, 5, 5);
+
+        JLabel nameLabel = new JLabel("Name:");
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.anchor = GridBagConstraints.WEST;
+        pnlForm.add(nameLabel, gbc);
+
+        JTextField nameField = new JTextField(20);
+        gbc.gridx = 1;
+        gbc.gridy = 0;
+        gbc.anchor = GridBagConstraints.WEST;
+        pnlForm.add(nameField, gbc);
+        /* --------------------------------------- */
+
+        /* Panel dedicato ai buttons */
+        JPanel pnlButtons = new JPanel(new FlowLayout());
+        JButton btnConferma = new JButton("Aggiungi");
+        JButton btnAnnulla = new JButton("Annulla");
+        btnConferma.setFocusPainted(false);
+        btnAnnulla.setFocusPainted(false);
+
+        // Annulla -> chiude il dialog
+        btnAnnulla.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dialogNuovaPrenotazione.dispose();
+            }
+        });
+
+        //TODO: Aggiungi -> aggiunge la prenotazione nel db e fa refresh della tabella!
+
+        pnlButtons.add(btnConferma);
+        pnlButtons.add(btnAnnulla);
+        /* --------------------------------------- */
+
+        dialogNuovaPrenotazione.add(pnlForm, BorderLayout.CENTER);
+        dialogNuovaPrenotazione.add(pnlButtons, BorderLayout.SOUTH);
+        dialogNuovaPrenotazione.pack();
+        dialogNuovaPrenotazione.setVisible(true);
     }
 }
