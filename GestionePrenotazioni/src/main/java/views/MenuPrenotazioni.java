@@ -66,6 +66,7 @@ public class MenuPrenotazioni extends JPanel {
         cbFiltroAnni = new JComboBox(YEARS.toArray());
 
         // Mostra la query in base al valore della comboBox
+        cbFiltroAnni.setSelectedItem(YEARS.get(YEARS.size() - 1));
         tabellaPrenotazioni = tablePrenotazioniController.initView(cbFiltroAnni);
 
     }
@@ -126,7 +127,6 @@ public class MenuPrenotazioni extends JPanel {
         toolbar.add(horizontalStrut);
 
         // Setting combobox
-        cbFiltroAnni.setSelectedItem(YEARS.get(YEARS.size() - 1));
         cbFiltroAnni.setFocusable(false);
         toolbar.add(new JLabel("Mostra per anno: "));
         toolbar.add(cbFiltroAnni);

@@ -32,8 +32,6 @@ public class TablePrenotazioniController {
     public JTable initView(JComboBox cbFiltro) throws SQLException {
         this.cbFiltro = cbFiltro;
 
-        //TODO: nella query devi filtrare gli anni della combobox!!
-
         // Ottiene il valore selezionato nella comboBox
         String selectedFilterYear = Objects.requireNonNull(cbFiltro.getSelectedItem()).toString();
 
@@ -42,10 +40,6 @@ public class TablePrenotazioniController {
         if(Objects.equals(selectedFilterYear, "Tutto")) {
             initialQuery = "SELECT * FROM Prenotazioni";
         } else {
-            // Converti la data nel formato "yyyy-mm-dd"
-            String dataArrivo = selectedFilterYear + "-01-01";
-            String dataPartenza = selectedFilterYear + "-12-31";
-
             initialQuery = String.format("SELECT * FROM Prenotazioni WHERE substr(Arrivo, 7, 4) = '%s' OR substr(Partenza, 7, 4) = '%s'", selectedFilterYear, selectedFilterYear);
         }
 
