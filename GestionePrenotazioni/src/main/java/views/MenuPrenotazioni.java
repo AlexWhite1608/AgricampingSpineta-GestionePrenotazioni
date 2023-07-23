@@ -18,11 +18,6 @@ public class MenuPrenotazioni extends JPanel {
 
     // Valori per modifiche estetiche
     private final int SEPARATOR_WIDTH = 1520;
-    private final Font CELL_FONT = new Font("Segoe UI", Font.PLAIN, 14);
-    private final Font HEADER_FONT = new Font("Segoe UI", Font.BOLD, 16);
-    private final Color ALTERNATE_CELL_COLOR = new Color(220, 232, 234);
-    private final Color SELECTION_COLOR = new Color(255, 255, 102);
-    private final Color HEADER_BACKGROUND = Color.LIGHT_GRAY;
 
     // Anni contenuti nella cbFiltroAnni
     private final ArrayList<String> YEARS = DataFilter.getYears();
@@ -41,6 +36,8 @@ public class MenuPrenotazioni extends JPanel {
     private JScrollPane scrollPane;
 
     public MenuPrenotazioni() throws SQLException {
+        tablePrenotazioniController = new TablePrenotazioniController(tabellaPrenotazioni);
+
         createUIComponents();
         setupToolbar();
         setupTable();
@@ -69,7 +66,6 @@ public class MenuPrenotazioni extends JPanel {
         cbFiltroAnni = new JComboBox(YEARS.toArray());
 
         // Mostra la query in base al valore della comboBox
-        tablePrenotazioniController = new TablePrenotazioniController(tabellaPrenotazioni);
         tabellaPrenotazioni = tablePrenotazioniController.initView(cbFiltroAnni);
 
     }
@@ -88,10 +84,10 @@ public class MenuPrenotazioni extends JPanel {
         tabellaPrenotazioni.setRowHeight(rowHeight);
 
         // Renderer per il testo delle celle
-        DefaultTableCellRenderer cellRenderer = createCellRenderer();
+        DefaultTableCellRenderer cellRenderer = tablePrenotazioniController.createCellRenderer();
 
         // Renderer per l'header
-        DefaultTableCellRenderer headerRenderer = createHeaderRenderer();
+        DefaultTableCellRenderer headerRenderer = tablePrenotazioniController.createHeaderRenderer();
 
         // Assegna i renderer
         for(int columnIndex = 0; columnIndex < tabellaPrenotazioni.getColumnCount(); columnIndex++) {
@@ -101,50 +97,6 @@ public class MenuPrenotazioni extends JPanel {
 
         scrollPane = new JScrollPane(tabellaPrenotazioni);
         mainPanelPrenotazioni.add(scrollPane, BorderLayout.CENTER);
-    }
-
-    // Renderer estetica celle
-    private DefaultTableCellRenderer createCellRenderer() {
-        return new DefaultTableCellRenderer() {
-            @Override
-            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-                Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-
-                setHorizontalAlignment(SwingConstants.CENTER);
-                setFont(CELL_FONT);
-
-                // Colora le righe alternativamente
-                if (row % 2 == 0) {
-                    c.setBackground(Color.WHITE);
-                } else {
-                    c.setBackground(ALTERNATE_CELL_COLOR);
-                }
-
-                // Colora di giallo la riga selezionata
-                if(isSelected){
-                    c.setBackground(SELECTION_COLOR);
-                }
-
-                return c;
-            }
-        };
-    }
-
-    // Renderer estetica header
-    private DefaultTableCellRenderer createHeaderRenderer() {
-        return new DefaultTableCellRenderer() {
-            @Override
-            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-                Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-
-                setHorizontalAlignment(SwingConstants.CENTER);
-                setFont(HEADER_FONT);
-                setBorder(UIManager.getBorder("TableHeader.cellBorder"));
-                setBackground(HEADER_BACKGROUND);
-
-                return c;
-            }
-        };
     }
 
     // Setup toolbar
@@ -181,18 +133,7 @@ public class MenuPrenotazioni extends JPanel {
         ((JLabel) cbFiltroAnni.getRenderer()).setHorizontalAlignment(SwingConstants.CENTER);
         cbFiltroAnni.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                try {
-                    tabellaPrenotazioni.setModel(tablePrenotazioniController.initView(cbFiltroAnni).getModel());
-                    ((AbstractTableModel) tabellaPrenotazioni.getModel()).fireTableDataChanged();
-
-                    for(int columnIndex = 0; columnIndex < tabellaPrenotazioni.getColumnCount(); columnIndex++) {
-                        tabellaPrenotazioni.getColumnModel().getColumn(columnIndex).setCellRenderer(createCellRenderer());
-                    }
-                    tabellaPrenotazioni.getTableHeader().setDefaultRenderer(createHeaderRenderer());
-
-                } catch (SQLException ex) {
-                    throw new RuntimeException(ex);
-                }
+                tablePrenotazioniController.refreshTable(tabellaPrenotazioni);
             }
         });
 
