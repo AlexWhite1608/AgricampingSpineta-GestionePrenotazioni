@@ -1,6 +1,7 @@
 package views;
 
 import controller.TablePrenotazioniController;
+import data_access.Gateway;
 import utils.DataFilter;
 
 import javax.swing.*;
@@ -10,6 +11,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class MenuPrenotazioni extends JPanel {
 
@@ -178,17 +180,17 @@ public class MenuPrenotazioni extends JPanel {
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);
 
-        JLabel nameLabel = new JLabel("Nome piazzola:");
+        JLabel labelNomePiazzola = new JLabel("Nome piazzola:");
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.anchor = GridBagConstraints.WEST;
-        pnlForm.add(nameLabel, gbc);
+        pnlForm.add(labelNomePiazzola, gbc);
 
-        JTextField nameField = new JTextField(15);
+        JTextField tfNomePiazzola = new JTextField(15);
         gbc.gridx = 1;
         gbc.gridy = 0;
         gbc.anchor = GridBagConstraints.WEST;
-        pnlForm.add(nameField, gbc);
+        pnlForm.add(tfNomePiazzola, gbc);
         /* --------------------------------------- */
 
         /* Panel dedicato ai buttons */
@@ -207,6 +209,31 @@ public class MenuPrenotazioni extends JPanel {
         });
 
         //TODO: Aggiungi -> aggiunge la piazzola
+        btnAggiungi.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String nomePiazzola = Objects.requireNonNull(tfNomePiazzola.getText());
+                String query = "INSERT INTO Piazzole(Nome) VALUES (?)";
+                try {
+                    if(new Gateway().execUpdateQuery(query, nomePiazzola) != 0){
+                        aggiungiPiazzolaDialog.dispose();
+                        JOptionPane.showMessageDialog(MenuPrenotazioni.this,
+                                String.format("Piazzola %s aggiunta correttamente!", nomePiazzola),
+                                "Aggiunta piazzola",
+                                JOptionPane.CLOSED_OPTION);
+                    } else {
+                        JOptionPane.showMessageDialog(MenuPrenotazioni.this,
+                                "Impossibile aggiungere la piazzola",
+                                "Errore aggiunta piazzola",
+                                JOptionPane.ERROR_MESSAGE);
+                    }
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
+
+
+            }
+        });
 
         pnlButtons.add(btnAggiungi);
         pnlButtons.add(btnAnnulla);

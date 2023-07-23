@@ -62,6 +62,18 @@ public class Gateway {
         return statement.executeQuery();
     }
 
+    // Esegue query di modifica della tabella
+    public int execUpdateQuery(String query, String... params) throws SQLException {
+        PreparedStatement statement = connection.prepareStatement(query);
+
+        // Imposta i parametri nella query
+        for (int i = 0; i < params.length; i++) {
+            statement.setString(i + 1, params[i]);
+        }
+
+        return statement.executeUpdate();
+    }
+
     // Costruisce il table model passando il result set della query
     public DefaultTableModel buildCustomTableModel(ResultSet rs) throws SQLException {
         ResultSetMetaData metaData = rs.getMetaData();
@@ -88,6 +100,7 @@ public class Gateway {
     }
 
     // Modifica i metodi del DefaultTableModel per la modifica della tabella
+    //TODO: impementare
     private DefaultTableModel setTableModelParams(Vector<Vector<Object>> data, Vector<String> columnNames){
         DefaultTableModel model = new DefaultTableModel(data, columnNames){
 
