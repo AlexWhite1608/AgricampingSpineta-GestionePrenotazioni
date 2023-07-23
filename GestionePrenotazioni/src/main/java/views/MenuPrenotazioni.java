@@ -5,6 +5,7 @@ import data_access.Gateway;
 import utils.DataFilter;
 
 import javax.swing.*;
+import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -37,6 +38,7 @@ public class MenuPrenotazioni extends JPanel {
     private JButton btnSalva;
     private JTable tabellaPrenotazioni;
     private JComboBox cbFiltroAnni;
+    private JScrollPane scrollPane;
 
     public MenuPrenotazioni() throws SQLException {
         createUIComponents();
@@ -69,15 +71,7 @@ public class MenuPrenotazioni extends JPanel {
         // Mostra la query in base al valore della comboBox
         tablePrenotazioniController = new TablePrenotazioniController(tabellaPrenotazioni);
         tabellaPrenotazioni = tablePrenotazioniController.initView(cbFiltroAnni);
-        cbFiltroAnni.addActionListener (new ActionListener () {
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    tabellaPrenotazioni = tablePrenotazioniController.initView(cbFiltroAnni);
-                } catch (SQLException ex) {
-                    throw new RuntimeException(ex);
-                }
-            }
-        });
+
     }
 
     // Setup della tabella delle prenotazioni
@@ -94,8 +88,24 @@ public class MenuPrenotazioni extends JPanel {
         tabellaPrenotazioni.setRowHeight(rowHeight);
 
         // Renderer per il testo delle celle
-        DefaultTableCellRenderer cellRenderer = new DefaultTableCellRenderer() {
+        DefaultTableCellRenderer cellRenderer = createCellRenderer();
 
+        // Renderer per l'header
+        DefaultTableCellRenderer headerRenderer = createHeaderRenderer();
+
+        // Assegna i renderer
+        for(int columnIndex = 0; columnIndex < tabellaPrenotazioni.getColumnCount(); columnIndex++) {
+            tabellaPrenotazioni.getColumnModel().getColumn(columnIndex).setCellRenderer(cellRenderer);
+        }
+        tabellaPrenotazioni.getTableHeader().setDefaultRenderer(headerRenderer);
+
+        scrollPane = new JScrollPane(tabellaPrenotazioni);
+        mainPanelPrenotazioni.add(scrollPane, BorderLayout.CENTER);
+    }
+
+    // Renderer estetica celle
+    private DefaultTableCellRenderer createCellRenderer() {
+        return new DefaultTableCellRenderer() {
             @Override
             public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
                 Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
@@ -118,9 +128,11 @@ public class MenuPrenotazioni extends JPanel {
                 return c;
             }
         };
+    }
 
-        // Renderer per l'header
-        DefaultTableCellRenderer headerRenderer = new DefaultTableCellRenderer() {
+    // Renderer estetica header
+    private DefaultTableCellRenderer createHeaderRenderer() {
+        return new DefaultTableCellRenderer() {
             @Override
             public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
                 Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
@@ -133,15 +145,6 @@ public class MenuPrenotazioni extends JPanel {
                 return c;
             }
         };
-
-        // Assegna i renderer
-        for(int columnIndex = 0; columnIndex < tabellaPrenotazioni.getColumnCount(); columnIndex++) {
-            tabellaPrenotazioni.getColumnModel().getColumn(columnIndex).setCellRenderer(cellRenderer);
-        }
-        tabellaPrenotazioni.getTableHeader().setDefaultRenderer(headerRenderer);
-
-        JScrollPane scrollPane = new JScrollPane(tabellaPrenotazioni);
-        mainPanelPrenotazioni.add(scrollPane, BorderLayout.CENTER);
     }
 
     // Setup toolbar
@@ -176,6 +179,22 @@ public class MenuPrenotazioni extends JPanel {
         toolbar.add(new JLabel("Mostra per anno: "));
         toolbar.add(cbFiltroAnni);
         ((JLabel) cbFiltroAnni.getRenderer()).setHorizontalAlignment(SwingConstants.CENTER);
+        cbFiltroAnni.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    tabellaPrenotazioni.setModel(tablePrenotazioniController.initView(cbFiltroAnni).getModel());
+                    ((AbstractTableModel) tabellaPrenotazioni.getModel()).fireTableDataChanged();
+
+                    for(int columnIndex = 0; columnIndex < tabellaPrenotazioni.getColumnCount(); columnIndex++) {
+                        tabellaPrenotazioni.getColumnModel().getColumn(columnIndex).setCellRenderer(createCellRenderer());
+                    }
+                    tabellaPrenotazioni.getTableHeader().setDefaultRenderer(createHeaderRenderer());
+
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+        });
 
         toolbar.setFloatable(false);
 
