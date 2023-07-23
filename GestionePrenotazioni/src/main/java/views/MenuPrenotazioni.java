@@ -1,23 +1,20 @@
 package views;
 
 import controller.TablePrenotazioniController;
-import data_access.Gateway;
 import utils.DataFilter;
 
 import javax.swing.*;
-import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class MenuPrenotazioni extends JPanel {
 
     // Valori per modifiche estetiche
-    private final int SEPARATOR_WIDTH = 1420;
+    private final int SEPARATOR_WIDTH = 1250;
 
     // Anni contenuti nella cbFiltroAnni
     private final ArrayList<String> YEARS = DataFilter.getYears();
@@ -27,11 +24,12 @@ public class MenuPrenotazioni extends JPanel {
 
     private JPanel mainPanelPrenotazioni;
     private JPanel pnlToolbar;
-    private JToolBar toolbar;
+    private JToolBar toolBar;
     private JButton btnAggiungiPrenotazione;
     private JButton btnCercaPrenotazione;
     private JButton btnSalva;
-    private JButton btnPiazzole;
+    private JButton btnAggiungiPiazzola;
+    private JButton btnRimuoviPiazzola;
     private JTable tabellaPrenotazioni;
     private JComboBox cbFiltroAnni;
     private JScrollPane scrollPane;
@@ -56,13 +54,14 @@ public class MenuPrenotazioni extends JPanel {
 
         // Panel toolbar
         pnlToolbar = new JPanel(new BorderLayout());
-        toolbar = new JToolBar();
+        toolBar = new JToolBar();
 
         // Bottoni azioni nella toolbar
         btnSalva = new JButton("Salva");
         btnAggiungiPrenotazione = new JButton("Aggiungi");
         btnCercaPrenotazione = new JButton("Cerca");
-        btnPiazzole = new JButton("Piazzole");
+        btnAggiungiPiazzola = new JButton("Aggiungi piazzola");
+        btnRimuoviPiazzola = new JButton("Rimuovi piazzola");
 
         // ComboBox filtraggio anni
         cbFiltroAnni = new JComboBox(YEARS.toArray());
@@ -109,11 +108,13 @@ public class MenuPrenotazioni extends JPanel {
         btnSalva.setFocusPainted(false);
         btnAggiungiPrenotazione.setFocusPainted(false);
         btnCercaPrenotazione.setFocusPainted(false);
-        btnPiazzole.setFocusPainted(false);
+        btnAggiungiPiazzola.setFocusPainted(false);
+        btnRimuoviPiazzola.setFocusPainted(false);
         btnSalva.setToolTipText("Salva sul drive");
         btnAggiungiPrenotazione.setToolTipText("Aggiungi prenotazione");
         btnCercaPrenotazione.setToolTipText("Cerca prenotazione");
-        btnPiazzole.setToolTipText("Visualizza piazzole");
+        btnAggiungiPiazzola.setToolTipText("Aggiungi piazzola ");
+        btnRimuoviPiazzola.setToolTipText("Rimuovi piazzola");
 
         // Azione: aggiunta di una nuova prenotazione
         btnAggiungiPrenotazione.addActionListener(new ActionListener() {
@@ -123,18 +124,35 @@ public class MenuPrenotazioni extends JPanel {
             }
         });
 
+        // Azione: aggiungi piazzola
+        btnAggiungiPiazzola.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                setupAggiungiPiazzola();
+            }
+        });
+
+        // Azione: rimuovi piazzola
+        btnRimuoviPiazzola.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                setupRimuoviPiazzola();
+            }
+        });
+
         // Crea un separatore orizzontale per distanziare i bottoni dalla combobox
         Component horizontalStrut = Box.createHorizontalStrut(SEPARATOR_WIDTH);
-        toolbar.add(btnSalva);
-        toolbar.add(btnAggiungiPrenotazione);
-        toolbar.add(btnCercaPrenotazione);
-        toolbar.add(btnPiazzole);
-        toolbar.add(horizontalStrut);
+        toolBar.add(btnSalva);
+        toolBar.add(btnAggiungiPrenotazione);
+        toolBar.add(btnCercaPrenotazione);
+        toolBar.add(btnAggiungiPiazzola);
+        toolBar.add(btnRimuoviPiazzola);
+        toolBar.add(horizontalStrut);
 
         // Setting combobox
         cbFiltroAnni.setFocusable(false);
-        toolbar.add(new JLabel("Mostra per anno: "));
-        toolbar.add(cbFiltroAnni);
+        toolBar.add(new JLabel("Mostra per anno: "));
+        toolBar.add(cbFiltroAnni);
         ((JLabel) cbFiltroAnni.getRenderer()).setHorizontalAlignment(SwingConstants.CENTER);
         cbFiltroAnni.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -142,15 +160,114 @@ public class MenuPrenotazioni extends JPanel {
             }
         });
 
-        toolbar.setFloatable(false);
+        toolBar.setFloatable(false);
 
-        pnlToolbar.add(toolbar, BorderLayout.CENTER);
+        pnlToolbar.add(toolBar, BorderLayout.CENTER);
         mainPanelPrenotazioni.add(pnlToolbar, BorderLayout.NORTH);
     }
 
-    // Setup impostazioni delle piazzole
-    private void setupPiazzoleDialog(){
+    // Setup form aggiungi piazzola
+    private void setupAggiungiPiazzola(){
+        JDialog aggiungiPiazzolaDialog = new JDialog((Frame) SwingUtilities.getWindowAncestor(MenuPrenotazioni.this), "Aggiungi piazzola", true);
+        aggiungiPiazzolaDialog.setLayout(new BorderLayout());
+        aggiungiPiazzolaDialog.setLocationRelativeTo(null);
+        aggiungiPiazzolaDialog.setResizable(false);
 
+        /* Panel dedicato agli elementi del form */
+        JPanel pnlForm = new JPanel(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(5, 5, 5, 5);
+
+        JLabel nameLabel = new JLabel("Nome piazzola:");
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.anchor = GridBagConstraints.WEST;
+        pnlForm.add(nameLabel, gbc);
+
+        JTextField nameField = new JTextField(15);
+        gbc.gridx = 1;
+        gbc.gridy = 0;
+        gbc.anchor = GridBagConstraints.WEST;
+        pnlForm.add(nameField, gbc);
+        /* --------------------------------------- */
+
+        /* Panel dedicato ai buttons */
+        JPanel pnlButtons = new JPanel(new FlowLayout());
+        JButton btnAggiungi = new JButton("Aggiungi");
+        JButton btnAnnulla = new JButton("Annulla");
+        btnAggiungi.setFocusPainted(false);
+        btnAnnulla.setFocusPainted(false);
+
+        // Annulla -> chiude il dialog
+        btnAnnulla.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                aggiungiPiazzolaDialog.dispose();
+            }
+        });
+
+        //TODO: Aggiungi -> aggiunge la piazzola
+
+        pnlButtons.add(btnAggiungi);
+        pnlButtons.add(btnAnnulla);
+        /* --------------------------------------- */
+
+        aggiungiPiazzolaDialog.add(pnlForm, BorderLayout.CENTER);
+        aggiungiPiazzolaDialog.add(pnlButtons, BorderLayout.SOUTH);
+        aggiungiPiazzolaDialog.pack();
+        aggiungiPiazzolaDialog.setVisible(true);
+    }
+
+    // Setup form rimuovi piazzola
+    private void setupRimuoviPiazzola(){
+        JDialog rimuoviPiazzolaDialog = new JDialog((Frame) SwingUtilities.getWindowAncestor(MenuPrenotazioni.this), "Rimuovi piazzola", true);
+        rimuoviPiazzolaDialog.setLayout(new BorderLayout());
+        rimuoviPiazzolaDialog.setLocationRelativeTo(null);
+        rimuoviPiazzolaDialog.setResizable(false);
+
+        /* Panel dedicato agli elementi del form */
+        JPanel pnlForm = new JPanel(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(5, 5, 5, 5);
+
+        JLabel nameLabel = new JLabel("Scegli piazzola:");
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.anchor = GridBagConstraints.WEST;
+        pnlForm.add(nameLabel, gbc);
+
+        JTextField nameField = new JTextField(15);
+        gbc.gridx = 1;
+        gbc.gridy = 0;
+        gbc.anchor = GridBagConstraints.WEST;
+        pnlForm.add(nameField, gbc);
+        /* --------------------------------------- */
+
+        /* Panel dedicato ai buttons */
+        JPanel pnlButtons = new JPanel(new FlowLayout());
+        JButton btnElimina = new JButton("Elimina");
+        JButton btnAnnulla = new JButton("Annulla");
+        btnElimina.setFocusPainted(false);
+        btnAnnulla.setFocusPainted(false);
+
+        // Annulla -> chiude il dialog
+        btnAnnulla.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                rimuoviPiazzolaDialog.dispose();
+            }
+        });
+
+        //TODO: Aggiungi -> rimuove la piazzola
+
+        pnlButtons.add(btnElimina);
+        pnlButtons.add(btnAnnulla);
+        /* --------------------------------------- */
+
+        rimuoviPiazzolaDialog.add(pnlForm, BorderLayout.CENTER);
+        rimuoviPiazzolaDialog.add(pnlButtons, BorderLayout.SOUTH);
+        rimuoviPiazzolaDialog.pack();
+        rimuoviPiazzolaDialog.setVisible(true);
     }
 
     // Setting dialog di aggiunta prenotazione
