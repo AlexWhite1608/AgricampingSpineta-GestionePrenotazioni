@@ -17,7 +17,7 @@ import java.util.ArrayList;
 public class MenuPrenotazioni extends JPanel {
 
     // Valori per modifiche estetiche
-    private final int SEPARATOR_WIDTH = 1520;
+    private final int SEPARATOR_WIDTH = 1420;
 
     // Anni contenuti nella cbFiltroAnni
     private final ArrayList<String> YEARS = DataFilter.getYears();
@@ -31,6 +31,7 @@ public class MenuPrenotazioni extends JPanel {
     private JButton btnAggiungiPrenotazione;
     private JButton btnCercaPrenotazione;
     private JButton btnSalva;
+    private JButton btnPiazzole;
     private JTable tabellaPrenotazioni;
     private JComboBox cbFiltroAnni;
     private JScrollPane scrollPane;
@@ -61,6 +62,7 @@ public class MenuPrenotazioni extends JPanel {
         btnSalva = new JButton("Salva");
         btnAggiungiPrenotazione = new JButton("Aggiungi");
         btnCercaPrenotazione = new JButton("Cerca");
+        btnPiazzole = new JButton("Piazzole");
 
         // ComboBox filtraggio anni
         cbFiltroAnni = new JComboBox(YEARS.toArray());
@@ -107,9 +109,11 @@ public class MenuPrenotazioni extends JPanel {
         btnSalva.setFocusPainted(false);
         btnAggiungiPrenotazione.setFocusPainted(false);
         btnCercaPrenotazione.setFocusPainted(false);
+        btnPiazzole.setFocusPainted(false);
         btnSalva.setToolTipText("Salva sul drive");
         btnAggiungiPrenotazione.setToolTipText("Aggiungi prenotazione");
         btnCercaPrenotazione.setToolTipText("Cerca prenotazione");
+        btnPiazzole.setToolTipText("Visualizza piazzole");
 
         // Azione: aggiunta di una nuova prenotazione
         btnAggiungiPrenotazione.addActionListener(new ActionListener() {
@@ -124,6 +128,7 @@ public class MenuPrenotazioni extends JPanel {
         toolbar.add(btnSalva);
         toolbar.add(btnAggiungiPrenotazione);
         toolbar.add(btnCercaPrenotazione);
+        toolbar.add(btnPiazzole);
         toolbar.add(horizontalStrut);
 
         // Setting combobox
@@ -141,6 +146,11 @@ public class MenuPrenotazioni extends JPanel {
 
         pnlToolbar.add(toolbar, BorderLayout.CENTER);
         mainPanelPrenotazioni.add(pnlToolbar, BorderLayout.NORTH);
+    }
+
+    // Setup impostazioni delle piazzole
+    private void setupPiazzoleDialog(){
+
     }
 
     // Setting dialog di aggiunta prenotazione
