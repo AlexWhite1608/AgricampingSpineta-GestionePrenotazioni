@@ -35,7 +35,6 @@ public class TablePrenotazioniController {
         // Ottiene il valore selezionato nella comboBox
         String selectedFilterYear = Objects.requireNonNull(cbFiltro.getSelectedItem()).toString();
 
-        //FIXME: gestire il caso in cui l'arrivo e la partenza siano in anni diversi!
         String initialQuery = "";
         if(Objects.equals(selectedFilterYear, "Tutto")) {
             initialQuery = "SELECT * FROM Prenotazioni";
