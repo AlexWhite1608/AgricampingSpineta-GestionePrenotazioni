@@ -31,16 +31,22 @@ public class TablePrenotazioniController {
     // Mostra la visualizzazione iniziale della tabella (con il filtro dell'anno)
     public JTable initView(JComboBox cbFiltro) throws SQLException {
         this.cbFiltro = cbFiltro;
+
         //TODO: nella query devi filtrare gli anni della combobox!!
 
         // Ottiene il valore selezionato nella comboBox
-        String selectedFilter = Objects.requireNonNull(cbFiltro.getSelectedItem()).toString();
+        String selectedFilterYear = Objects.requireNonNull(cbFiltro.getSelectedItem()).toString();
 
+        //FIXME: gestire il caso in cui l'arrivo e la partenza siano in anni diversi!
         String initialQuery = "";
-        if(Objects.equals(selectedFilter, "Tutto")) {
+        if(Objects.equals(selectedFilterYear, "Tutto")) {
             initialQuery = "SELECT * FROM Prenotazioni";
         } else {
-            initialQuery = String.format("SELECT * FROM Prenotazioni WHERE strftime('%%Y', Arrivo) >= '%s-01-01' AND strftime('%%Y', Partenza) <= '%s-12-31';", selectedFilter, selectedFilter);
+            // Converti la data nel formato "yyyy-mm-dd"
+            String dataArrivo = selectedFilterYear + "-01-01";
+            String dataPartenza = selectedFilterYear + "-12-31";
+
+            initialQuery = String.format("SELECT * FROM Prenotazioni WHERE substr(Arrivo, 7, 4) = '%s' OR substr(Partenza, 7, 4) = '%s'", selectedFilterYear, selectedFilterYear);
         }
 
         ResultSet resultSet = this.gateway.execSelectQuery(initialQuery);
