@@ -212,28 +212,25 @@ public class MenuPrenotazioni extends JPanel {
         btnAggiungi.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String nomePiazzola = Objects.requireNonNull(tfNomePiazzola.getText());
-                String query = "INSERT INTO Piazzole(Nome) VALUES (?)";
+                String nomePiazzola = tfNomePiazzola.getText();
+                String query = "INSERT INTO Piazzole (Nome) VALUES (?)";
                 try {
-                    if(new Gateway().execUpdateQuery(query, nomePiazzola) != 0){
-                        aggiungiPiazzolaDialog.dispose();
-                        JOptionPane.showMessageDialog(MenuPrenotazioni.this,
-                                String.format("Piazzola %s aggiunta correttamente!", nomePiazzola),
-                                "Aggiunta piazzola",
-                                JOptionPane.CLOSED_OPTION);
-                    } else {
-                        JOptionPane.showMessageDialog(MenuPrenotazioni.this,
-                                "Impossibile aggiungere la piazzola",
-                                "Errore aggiunta piazzola",
-                                JOptionPane.ERROR_MESSAGE);
-                    }
+                    new Gateway().execUpdateQuery(query, nomePiazzola);
+                    aggiungiPiazzolaDialog.dispose();
+                    JOptionPane.showMessageDialog(MenuPrenotazioni.this,
+                            String.format("Piazzola %s aggiunta correttamente!", nomePiazzola),
+                            "Aggiunta piazzola",
+                            JOptionPane.INFORMATION_MESSAGE);
                 } catch (SQLException ex) {
-                    throw new RuntimeException(ex);
+                    ex.printStackTrace();
+                    JOptionPane.showMessageDialog(MenuPrenotazioni.this,
+                            "Impossibile aggiungere la piazzola",
+                            "Errore aggiunta piazzola",
+                            JOptionPane.ERROR_MESSAGE);
                 }
-
-
             }
         });
+
 
         pnlButtons.add(btnAggiungi);
         pnlButtons.add(btnAnnulla);
