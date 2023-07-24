@@ -9,6 +9,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Objects;
@@ -20,6 +21,10 @@ public class MenuPrenotazioni extends JPanel {
 
     // Anni contenuti nella cbFiltroAnni
     private final ArrayList<String> YEARS = DataFilter.getYears();
+
+    // Lista delle piazzole
+    ArrayList<String> listaPiazzole = new ArrayList<>();
+
 
     // Controller della tabella
     TablePrenotazioniController tablePrenotazioniController;
@@ -138,7 +143,11 @@ public class MenuPrenotazioni extends JPanel {
         btnRimuoviPiazzola.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                setupRimuoviPiazzola();
+                try {
+                    setupRimuoviPiazzola();
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
             }
         });
 
@@ -231,7 +240,6 @@ public class MenuPrenotazioni extends JPanel {
             }
         });
 
-
         pnlButtons.add(btnAggiungi);
         pnlButtons.add(btnAnnulla);
         /* --------------------------------------- */
@@ -243,7 +251,7 @@ public class MenuPrenotazioni extends JPanel {
     }
 
     // Setup form rimuovi piazzola
-    private void setupRimuoviPiazzola(){
+    private void setupRimuoviPiazzola() throws SQLException {
         JDialog rimuoviPiazzolaDialog = new JDialog((Frame) SwingUtilities.getWindowAncestor(MenuPrenotazioni.this), "Rimuovi piazzola", true);
         rimuoviPiazzolaDialog.setLayout(new BorderLayout());
         rimuoviPiazzolaDialog.setLocationRelativeTo(null);
@@ -260,11 +268,20 @@ public class MenuPrenotazioni extends JPanel {
         gbc.anchor = GridBagConstraints.WEST;
         pnlForm.add(nameLabel, gbc);
 
-        JTextField nameField = new JTextField(15);
+        // Ricava tutte le piazzole salvate nel db
+        ResultSet piazzoleRs = new Gateway().execSelectQuery("SELECT * FROM Piazzole");
+        while (piazzoleRs.next()) {
+            listaPiazzole.add(piazzoleRs.getString("Nome"));
+        }
+        piazzoleRs.close();
+
+        JComboBox cbPiazzole = new JComboBox(listaPiazzole.toArray());
+        cbPiazzole.setFocusable(false);
+        ((JLabel) cbPiazzole.getRenderer()).setHorizontalAlignment(SwingConstants.CENTER);
         gbc.gridx = 1;
         gbc.gridy = 0;
         gbc.anchor = GridBagConstraints.WEST;
-        pnlForm.add(nameField, gbc);
+        pnlForm.add(cbPiazzole, gbc);
         /* --------------------------------------- */
 
         /* Panel dedicato ai buttons */
