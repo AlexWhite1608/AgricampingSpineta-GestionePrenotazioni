@@ -6,6 +6,8 @@ import controllers.MessageController;
 import controllers.TablePrenotazioniController;
 import controllers.TextFieldsController;
 import data_access.Gateway;
+import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
+import org.jdesktop.swingx.autocomplete.ObjectToStringConverter;
 import utils.DataFilter;
 
 import javax.swing.*;
@@ -27,9 +29,6 @@ public class MenuPrenotazioni extends JPanel {
 
     // Anni contenuti nella cbFiltroAnni
     private final ArrayList<String> YEARS = DataFilter.getYears();
-
-    // Lista delle piazzole
-    ArrayList<String> listaPiazzole = new ArrayList<>();
 
     // Controller della tabella
     TablePrenotazioniController tablePrenotazioniController;
@@ -290,8 +289,8 @@ public class MenuPrenotazioni extends JPanel {
         gbc.anchor = GridBagConstraints.WEST;
         pnlForm.add(nameLabel, gbc);
 
-        setListaPiazzole();
-        JComboBox cbPiazzole = new JComboBox(listaPiazzole.toArray());
+        tablePrenotazioniController.setListaPiazzole();
+        JComboBox cbPiazzole = new JComboBox(tablePrenotazioniController.getListaPiazzole().toArray());
         cbPiazzole.setFocusable(false);
         cbPiazzole.setSelectedItem(null);
         ((JLabel) cbPiazzole.getRenderer()).setHorizontalAlignment(SwingConstants.CENTER);
@@ -329,7 +328,7 @@ public class MenuPrenotazioni extends JPanel {
                 } else {
                     try {
                         new Gateway().execUpdateQuery(query, selectedPiazzola);
-                        listaPiazzole.remove(selectedPiazzola);
+                        tablePrenotazioniController.removePiazzolaFromList(selectedPiazzola);
                         rimuoviPiazzolaDialog.dispose();
 
                         MessageController.getInfoMessage(rimuoviPiazzolaDialog, String.format("Piazzola %s rimossa correttamente!", selectedPiazzola));
@@ -424,8 +423,8 @@ public class MenuPrenotazioni extends JPanel {
         pnlForm.add(lblPiazzola, gbc);
 
         // ComboBox scelta piazzola
-        setListaPiazzole();
-        JComboBox cbSceltaPiazzola = new JComboBox<>(listaPiazzole.toArray());
+        tablePrenotazioniController.setListaPiazzole();
+        JComboBox cbSceltaPiazzola = new JComboBox<>(tablePrenotazioniController.getListaPiazzole().toArray());
         cbSceltaPiazzola.setPreferredSize(datePickerArrivo.getPreferredSize());
         cbSceltaPiazzola.setFocusable(false);
         cbSceltaPiazzola.setSelectedItem(null);
@@ -646,6 +645,7 @@ public class MenuPrenotazioni extends JPanel {
         gbc.gridy = 0;
         gbc.anchor = GridBagConstraints.WEST;
         pnlForm.add(tfNomePrenotazione, gbc);
+        //AutoCompleteDecorator.decorate(tfNomePrenotazione, listaNomiPrenotazioni, false, ObjectToStringConverter.DEFAULT_IMPLEMENTATION);
         /* --------------------------------------- */
 
         /* Panel dedicato ai buttons */
@@ -698,16 +698,6 @@ public class MenuPrenotazioni extends JPanel {
         rimuoviPrenotazioneDialog.add(pnlButtons, BorderLayout.SOUTH);
         rimuoviPrenotazioneDialog.pack();
         rimuoviPrenotazioneDialog.setVisible(true);
-    }
-
-    // Carica tutte le piazzole
-    private void setListaPiazzole() throws SQLException {
-        ResultSet piazzoleRs = new Gateway().execSelectQuery("SELECT * FROM Piazzole");
-        while (piazzoleRs.next()) {
-            if(!listaPiazzole.contains(piazzoleRs.getString("Nome")))
-                listaPiazzole.add(piazzoleRs.getString("Nome"));
-        }
-        piazzoleRs.close();
     }
 
 }

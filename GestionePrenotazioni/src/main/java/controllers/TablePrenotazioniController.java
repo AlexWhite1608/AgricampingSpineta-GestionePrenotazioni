@@ -8,6 +8,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Objects;
 
 public class TablePrenotazioniController {
@@ -18,6 +19,13 @@ public class TablePrenotazioniController {
     private final Color ALTERNATE_CELL_COLOR = new Color(220, 232, 234);
     private final Color SELECTION_COLOR = new Color(255, 255, 102);
     private final Color HEADER_BACKGROUND = Color.LIGHT_GRAY;
+
+    public ArrayList<String> getListaPiazzole() {
+        return listaPiazzole;
+    }
+
+    // Lista delle piazzole
+    ArrayList<String> listaPiazzole = new ArrayList<>();
 
     private JTable tblPrenotazioni;
     private JComboBox cbFiltro;
@@ -112,5 +120,25 @@ public class TablePrenotazioniController {
                 return c;
             }
         };
+    }
+
+    // Carica tutte le piazzole
+    public void setListaPiazzole() throws SQLException {
+        ResultSet piazzoleRs = new Gateway().execSelectQuery("SELECT * FROM Piazzole");
+        while (piazzoleRs.next()) {
+            if(!listaPiazzole.contains(piazzoleRs.getString("Nome")))
+                listaPiazzole.add(piazzoleRs.getString("Nome"));
+        }
+        piazzoleRs.close();
+    }
+
+    // Rimuove le piazzole dalla lista
+    public void removePiazzolaFromList(String value){
+        listaPiazzole.remove(value);
+    }
+
+    // Ritorna tutti i nomi delle prenotazioni
+    public ArrayList<String> getAllNames() {
+        return null;
     }
 }
