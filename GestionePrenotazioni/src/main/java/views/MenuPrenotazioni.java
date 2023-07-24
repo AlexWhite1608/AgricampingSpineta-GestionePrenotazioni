@@ -217,7 +217,6 @@ public class MenuPrenotazioni extends JPanel {
             }
         });
 
-        //TODO: Aggiungi -> aggiunge la piazzola
         btnAggiungi.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -300,7 +299,6 @@ public class MenuPrenotazioni extends JPanel {
             }
         });
 
-        //TODO: Aggiungi -> rimuove la piazzola
         btnElimina.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
