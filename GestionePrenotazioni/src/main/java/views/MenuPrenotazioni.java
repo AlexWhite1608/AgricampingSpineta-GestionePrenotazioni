@@ -22,7 +22,7 @@ import java.util.Objects;
 public class MenuPrenotazioni extends JPanel {
 
     // Valori per modifiche estetiche
-    private final int SEPARATOR_WIDTH = 1250;
+    private final int SEPARATOR_WIDTH = 1200;
     private final int DIALOG_SEPARATOR_WIDTH = 30;
 
     // Anni contenuti nella cbFiltroAnni
@@ -31,7 +31,6 @@ public class MenuPrenotazioni extends JPanel {
     // Lista delle piazzole
     ArrayList<String> listaPiazzole = new ArrayList<>();
 
-
     // Controller della tabella
     TablePrenotazioniController tablePrenotazioniController;
 
@@ -39,6 +38,7 @@ public class MenuPrenotazioni extends JPanel {
     private JPanel pnlToolbar;
     private JToolBar toolBar;
     private JButton btnAggiungiPrenotazione;
+    private JButton btnRimuoviPrenotazione;
     private JButton btnCercaPrenotazione;
     private JButton btnSalva;
     private JButton btnAggiungiPiazzola;
@@ -72,6 +72,7 @@ public class MenuPrenotazioni extends JPanel {
         // Bottoni azioni nella toolbar
         btnSalva = new JButton("Salva");
         btnAggiungiPrenotazione = new JButton("Aggiungi");
+        btnRimuoviPrenotazione = new JButton("Rimuovi");
         btnCercaPrenotazione = new JButton("Cerca");
         btnAggiungiPiazzola = new JButton("Aggiungi piazzola");
         btnRimuoviPiazzola = new JButton("Rimuovi piazzola");
@@ -120,11 +121,13 @@ public class MenuPrenotazioni extends JPanel {
         // Setting buttons
         btnSalva.setFocusPainted(false);
         btnAggiungiPrenotazione.setFocusPainted(false);
+        btnRimuoviPrenotazione.setFocusPainted(false);
         btnCercaPrenotazione.setFocusPainted(false);
         btnAggiungiPiazzola.setFocusPainted(false);
         btnRimuoviPiazzola.setFocusPainted(false);
         btnSalva.setToolTipText("Salva sul drive");
         btnAggiungiPrenotazione.setToolTipText("Aggiungi prenotazione");
+        btnRimuoviPrenotazione.setToolTipText("Rimuovi prenotazione");
         btnCercaPrenotazione.setToolTipText("Cerca prenotazione");
         btnAggiungiPiazzola.setToolTipText("Aggiungi piazzola ");
         btnRimuoviPiazzola.setToolTipText("Rimuovi piazzola");
@@ -138,6 +141,14 @@ public class MenuPrenotazioni extends JPanel {
                 } catch (SQLException ex) {
                     throw new RuntimeException(ex);
                 }
+            }
+        });
+
+        // Azione: rimuovi prenotazione in base al nome
+        btnRimuoviPrenotazione.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                rimuoviPrenotazioneDialog();
             }
         });
 
@@ -165,6 +176,7 @@ public class MenuPrenotazioni extends JPanel {
         Component horizontalStrut = Box.createHorizontalStrut(SEPARATOR_WIDTH);
         toolBar.add(btnSalva);
         toolBar.add(btnAggiungiPrenotazione);
+        toolBar.add(btnRimuoviPrenotazione);
         toolBar.add(btnCercaPrenotazione);
         toolBar.add(btnAggiungiPiazzola);
         toolBar.add(btnRimuoviPiazzola);
@@ -608,6 +620,84 @@ public class MenuPrenotazioni extends JPanel {
         dialogNuovaPrenotazione.add(pnlButtons, BorderLayout.SOUTH);
         dialogNuovaPrenotazione.pack();
         dialogNuovaPrenotazione.setVisible(true);
+    }
+
+    // Setting dialog rimozione della prenotazione in base al nome fornito
+    private void rimuoviPrenotazioneDialog() {
+        JDialog rimuoviPrenotazioneDialog = new JDialog((Frame) SwingUtilities.getWindowAncestor(MenuPrenotazioni.this), "Rimuovi prenotazione", true);
+        rimuoviPrenotazioneDialog.setLayout(new BorderLayout());
+        rimuoviPrenotazioneDialog.setLocationRelativeTo(null);
+        rimuoviPrenotazioneDialog.setResizable(false);
+
+        /* Panel dedicato agli elementi del form */
+        JPanel pnlForm = new JPanel(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(5, 5, 5, 5);
+
+        JLabel nameLabel = new JLabel("Nome prenotazione:");
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.anchor = GridBagConstraints.WEST;
+        pnlForm.add(nameLabel, gbc);
+
+        //TODO: CI VUOLE IL COMPLETER!!
+        JTextField tfNomePrenotazione = new JTextField(15);
+        gbc.gridx = 1;
+        gbc.gridy = 0;
+        gbc.anchor = GridBagConstraints.WEST;
+        pnlForm.add(tfNomePrenotazione, gbc);
+        /* --------------------------------------- */
+
+        /* Panel dedicato ai buttons */
+        JPanel pnlButtons = new JPanel(new FlowLayout());
+        JButton btnElimina = new JButton("Rimuovi");
+        JButton btnAnnulla = new JButton("Annulla");
+        btnElimina.setFocusPainted(false);
+        btnAnnulla.setFocusPainted(false);
+
+        // Annulla -> chiude il dialog
+        btnAnnulla.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                rimuoviPrenotazioneDialog.dispose();
+            }
+        });
+
+        // Elimina -> elimina la piazzola
+        btnElimina.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String nomePrenotazione = tfNomePrenotazione.getText();
+                String query = "DELETE FROM Prenotazioni WHERE Nome = ?";
+
+                // Controllo che la piazzola sia selezionata
+                if(Objects.equals(nomePrenotazione, "")){
+                    MessageController.getErrorMessage(rimuoviPrenotazioneDialog, "Scrivere il nome della prenotazione!");
+                } else {
+                    try {
+                        new Gateway().execUpdateQuery(query, nomePrenotazione);
+                        rimuoviPrenotazioneDialog.dispose();
+
+                        tablePrenotazioniController.refreshTable(tabellaPrenotazioni);
+                        MessageController.getInfoMessage(rimuoviPrenotazioneDialog, String.format("Prenotazione a nome di %s rimossa correttamente!", nomePrenotazione));
+
+                        rimuoviPrenotazioneDialog.dispose();
+                    } catch (SQLException ex) {
+                        ex.printStackTrace();
+                        MessageController.getErrorMessage(rimuoviPrenotazioneDialog, "Impossibile rimuovere la piazzola!");
+                    }
+                }
+            }
+        });
+
+        pnlButtons.add(btnElimina);
+        pnlButtons.add(btnAnnulla);
+        /* --------------------------------------- */
+
+        rimuoviPrenotazioneDialog.add(pnlForm, BorderLayout.CENTER);
+        rimuoviPrenotazioneDialog.add(pnlButtons, BorderLayout.SOUTH);
+        rimuoviPrenotazioneDialog.pack();
+        rimuoviPrenotazioneDialog.setVisible(true);
     }
 
     // Carica tutte le piazzole
