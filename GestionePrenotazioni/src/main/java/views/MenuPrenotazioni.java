@@ -21,7 +21,7 @@ public class MenuPrenotazioni extends JPanel {
 
     // Valori per modifiche estetiche
     private final int SEPARATOR_WIDTH = 1250;
-    private final int DIALOG_SEPARATOR_WIDTH = 100;
+    private final int DIALOG_SEPARATOR_WIDTH = 30;
 
     // Anni contenuti nella cbFiltroAnni
     private final ArrayList<String> YEARS = DataFilter.getYears();
@@ -131,7 +131,11 @@ public class MenuPrenotazioni extends JPanel {
         btnAggiungiPrenotazione.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                addPrenotazioneDialog();
+                try {
+                    addPrenotazioneDialog();
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
             }
         });
 
@@ -271,14 +275,7 @@ public class MenuPrenotazioni extends JPanel {
         gbc.anchor = GridBagConstraints.WEST;
         pnlForm.add(nameLabel, gbc);
 
-        // Ricava tutte le piazzole salvate nel db
-        ResultSet piazzoleRs = new Gateway().execSelectQuery("SELECT * FROM Piazzole");
-        while (piazzoleRs.next()) {
-            if(!listaPiazzole.contains(piazzoleRs.getString("Nome")))
-                listaPiazzole.add(piazzoleRs.getString("Nome"));
-        }
-        piazzoleRs.close();
-
+        setListaPiazzole();
         JComboBox cbPiazzole = new JComboBox(listaPiazzole.toArray());
         cbPiazzole.setFocusable(false);
         ((JLabel) cbPiazzole.getRenderer()).setHorizontalAlignment(SwingConstants.CENTER);
@@ -338,7 +335,7 @@ public class MenuPrenotazioni extends JPanel {
     }
 
     // Setting dialog di aggiunta prenotazione
-    private void addPrenotazioneDialog(){
+    private void addPrenotazioneDialog() throws SQLException {
         JDialog dialogNuovaPrenotazione = new JDialog((Frame) SwingUtilities.getWindowAncestor(MenuPrenotazioni.this), "Aggiungi nuova prenotazione", true);
         dialogNuovaPrenotazione.setLayout(new BorderLayout());
         dialogNuovaPrenotazione.setLocationRelativeTo(SwingUtilities.getWindowAncestor(this));
@@ -367,11 +364,11 @@ public class MenuPrenotazioni extends JPanel {
         pnlForm.add(datePickerArrivo, gbc);
 
         // Spaziatura orizzontale tra i datepickers
-        Component horizontalStrut = Box.createHorizontalStrut(DIALOG_SEPARATOR_WIDTH);
+        Component horizontalStrut1 = Box.createHorizontalStrut(DIALOG_SEPARATOR_WIDTH);
         gbc.gridx = 2;
         gbc.gridy = 0;
         gbc.anchor = GridBagConstraints.CENTER;
-        pnlForm.add(horizontalStrut, gbc);
+        pnlForm.add(horizontalStrut1, gbc);
 
         // Label partenza
         JLabel lblPartenza = new JLabel("Partenza:");
@@ -402,7 +399,107 @@ public class MenuPrenotazioni extends JPanel {
             }
         });
 
+        // Label scelta piazzola
+        JLabel lblPiazzola = new JLabel("Piazzola:");
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        gbc.anchor = GridBagConstraints.WEST;
+        pnlForm.add(lblPiazzola, gbc);
 
+        // ComboBox scelta piazzola
+        setListaPiazzole();
+        JComboBox cbSceltaPiazzola = new JComboBox<>(listaPiazzole.toArray());
+        cbSceltaPiazzola.setPreferredSize(datePickerArrivo.getPreferredSize());
+        cbSceltaPiazzola.setFocusable(false);
+        ((JLabel) cbSceltaPiazzola.getRenderer()).setHorizontalAlignment(SwingConstants.CENTER);
+        gbc.gridx = 1;
+        gbc.gridy = 1;
+        gbc.anchor = GridBagConstraints.WEST;
+        pnlForm.add(cbSceltaPiazzola, gbc);
+
+        // Spazio
+        Component horizontalStrut2 = Box.createHorizontalStrut(DIALOG_SEPARATOR_WIDTH);
+        gbc.gridx = 2;
+        gbc.gridy = 1;
+        gbc.anchor = GridBagConstraints.CENTER;
+        pnlForm.add(horizontalStrut2, gbc);
+
+        // Label nome della prenotazione
+        JLabel lblNome = new JLabel("Nome:");
+        gbc.gridx = 3;
+        gbc.gridy = 1;
+        gbc.anchor = GridBagConstraints.WEST;
+        pnlForm.add(lblNome, gbc);
+
+        // TextField nome della prenotazione
+        JTextField tfNome = new JTextField();
+        tfNome.setPreferredSize(datePickerArrivo.getPreferredSize());
+        gbc.gridx = 4;
+        gbc.gridy = 1;
+        gbc.anchor = GridBagConstraints.WEST;
+        pnlForm.add(tfNome, gbc);
+
+        // Label info
+        JLabel lblInfo = new JLabel("Info:");
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+        gbc.anchor = GridBagConstraints.WEST;
+        pnlForm.add(lblInfo, gbc);
+
+        // TextField info
+        JTextField tfInfo = new JTextField();
+        tfInfo.setPreferredSize(datePickerArrivo.getPreferredSize());
+        gbc.gridx = 1;
+        gbc.gridy = 3;
+        gbc.anchor = GridBagConstraints.WEST;
+        pnlForm.add(tfInfo, gbc);
+
+        // Label acconto
+        JLabel lblAcconto = new JLabel("Acconto:");
+        gbc.gridx = 3;
+        gbc.gridy = 3;
+        gbc.anchor = GridBagConstraints.WEST;
+        pnlForm.add(lblAcconto, gbc);
+
+        // TextField acconto
+        JTextField tfAcconto = new JTextField();
+        tfAcconto.setPreferredSize(datePickerArrivo.getPreferredSize());
+        gbc.gridx = 4;
+        gbc.gridy = 3;
+        gbc.anchor = GridBagConstraints.WEST;
+        pnlForm.add(tfAcconto, gbc);
+
+        // Label telefono
+        JLabel lblTelefono = new JLabel("Telefono:");
+        gbc.gridx = 0;
+        gbc.gridy = 4;
+        gbc.anchor = GridBagConstraints.WEST;
+        pnlForm.add(lblTelefono, gbc);
+
+        // TextField telefono
+        JTextField tfTelefono = new JTextField();
+        tfTelefono.setPreferredSize(datePickerArrivo.getPreferredSize());
+        gbc.gridx = 1;
+        gbc.gridy = 4;
+        gbc.anchor = GridBagConstraints.WEST;
+        pnlForm.add(tfTelefono, gbc);
+
+        // Label Email
+        JLabel lblEmail = new JLabel("Email:");
+        gbc.gridx = 3;
+        gbc.gridy = 4;
+        gbc.anchor = GridBagConstraints.WEST;
+        pnlForm.add(lblEmail, gbc);
+
+        // TextField Email
+        JTextField tfEmail = new JTextField();
+        tfEmail.setPreferredSize(datePickerArrivo.getPreferredSize());
+        gbc.gridx = 4;
+        gbc.gridy = 4;
+        gbc.anchor = GridBagConstraints.WEST;
+        pnlForm.add(tfEmail, gbc);
+
+        //TODO: imposta vincoli sulle textFields!!
 
         /* --------------------------------------- */
 
@@ -431,5 +528,15 @@ public class MenuPrenotazioni extends JPanel {
         dialogNuovaPrenotazione.add(pnlButtons, BorderLayout.SOUTH);
         dialogNuovaPrenotazione.pack();
         dialogNuovaPrenotazione.setVisible(true);
+    }
+
+    // Carica tutte le piazzole
+    private void setListaPiazzole() throws SQLException {
+        ResultSet piazzoleRs = new Gateway().execSelectQuery("SELECT * FROM Piazzole");
+        while (piazzoleRs.next()) {
+            if(!listaPiazzole.contains(piazzoleRs.getString("Nome")))
+                listaPiazzole.add(piazzoleRs.getString("Nome"));
+        }
+        piazzoleRs.close();
     }
 }
