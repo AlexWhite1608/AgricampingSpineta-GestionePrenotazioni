@@ -147,7 +147,11 @@ public class MenuPrenotazioni extends JPanel {
         btnRimuoviPrenotazione.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                rimuoviPrenotazioneDialog();
+                try {
+                    rimuoviPrenotazioneDialog();
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
             }
         });
 
@@ -622,7 +626,7 @@ public class MenuPrenotazioni extends JPanel {
     }
 
     // Setting dialog rimozione della prenotazione in base al nome fornito
-    private void rimuoviPrenotazioneDialog() {
+    private void rimuoviPrenotazioneDialog() throws SQLException {
         JDialog rimuoviPrenotazioneDialog = new JDialog((Frame) SwingUtilities.getWindowAncestor(MenuPrenotazioni.this), "Rimuovi prenotazione", true);
         rimuoviPrenotazioneDialog.setLayout(new BorderLayout());
         rimuoviPrenotazioneDialog.setLocationRelativeTo(null);
@@ -645,7 +649,7 @@ public class MenuPrenotazioni extends JPanel {
         gbc.gridy = 0;
         gbc.anchor = GridBagConstraints.WEST;
         pnlForm.add(tfNomePrenotazione, gbc);
-        //AutoCompleteDecorator.decorate(tfNomePrenotazione, listaNomiPrenotazioni, false, ObjectToStringConverter.DEFAULT_IMPLEMENTATION);
+        AutoCompleteDecorator.decorate(tfNomePrenotazione, tablePrenotazioniController.getAllNames(), false, ObjectToStringConverter.DEFAULT_IMPLEMENTATION);
         /* --------------------------------------- */
 
         /* Panel dedicato ai buttons */

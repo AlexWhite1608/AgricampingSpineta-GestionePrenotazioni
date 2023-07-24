@@ -20,12 +20,9 @@ public class TablePrenotazioniController {
     private final Color SELECTION_COLOR = new Color(255, 255, 102);
     private final Color HEADER_BACKGROUND = Color.LIGHT_GRAY;
 
-    public ArrayList<String> getListaPiazzole() {
-        return listaPiazzole;
-    }
-
-    // Lista delle piazzole
+    // Liste dei valori
     ArrayList<String> listaPiazzole = new ArrayList<>();
+    ArrayList<String> listaNomi = new ArrayList<>();
 
     private JTable tblPrenotazioni;
     private JComboBox cbFiltro;
@@ -138,7 +135,18 @@ public class TablePrenotazioniController {
     }
 
     // Ritorna tutti i nomi delle prenotazioni
-    public ArrayList<String> getAllNames() {
-        return null;
+    public ArrayList<String> getAllNames() throws SQLException {
+        ResultSet nomiRs = new Gateway().execSelectQuery("SELECT Nome FROM Prenotazioni");
+        while (nomiRs.next()) {
+            if(!listaNomi.contains(nomiRs.getString("Nome")))
+                listaNomi.add(nomiRs.getString("Nome"));
+        }
+        nomiRs.close();
+
+        return listaNomi;
+    }
+
+    public ArrayList<String> getListaPiazzole() {
+        return listaPiazzole;
     }
 }
