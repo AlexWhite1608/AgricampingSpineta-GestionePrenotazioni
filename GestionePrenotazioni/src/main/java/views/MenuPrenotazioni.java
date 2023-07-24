@@ -2,6 +2,7 @@ package views;
 
 import com.github.lgooddatepicker.components.DatePicker;
 import com.github.lgooddatepicker.components.DatePickerSettings;
+import controllers.MessageController;
 import controllers.TablePrenotazioniController;
 import controllers.TextFieldsController;
 import data_access.Gateway;
@@ -9,10 +10,6 @@ import utils.DataFilter;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.text.AbstractDocument;
-import javax.swing.text.AttributeSet;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.DocumentFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -238,25 +235,16 @@ public class MenuPrenotazioni extends JPanel {
 
                 // Controllo che la piazzola sia selezionata
                 if(Objects.equals(nomePiazzola, "")){
-                    JOptionPane.showMessageDialog(aggiungiPiazzolaDialog,
-                            "Inserire il nome della piazzola!",
-                            "Errore",
-                            JOptionPane.ERROR_MESSAGE);
+                    MessageController.getErrorMessage(aggiungiPiazzolaDialog, "Inserire il nome della piazzola");
                 } else {
                     String query = "INSERT INTO Piazzole (Nome) VALUES (?)";
                     try {
                         new Gateway().execUpdateQuery(query, nomePiazzola);
                         aggiungiPiazzolaDialog.dispose();
-                        JOptionPane.showMessageDialog(MenuPrenotazioni.this,
-                                String.format("Piazzola %s aggiunta correttamente!", nomePiazzola),
-                                "Aggiunta piazzola",
-                                JOptionPane.INFORMATION_MESSAGE);
+                        MessageController.getInfoMessage(aggiungiPiazzolaDialog, String.format("Piazzola %s aggiunta correttamente!", nomePiazzola));
                     } catch (SQLException ex) {
                         ex.printStackTrace();
-                        JOptionPane.showMessageDialog(MenuPrenotazioni.this,
-                                "Impossibile aggiungere la piazzola",
-                                "Errore aggiunta piazzola",
-                                JOptionPane.ERROR_MESSAGE);
+                        MessageController.getErrorMessage(aggiungiPiazzolaDialog, "Impossibile aggiungere la piazzola");
                     }
                 }
             }
@@ -325,26 +313,17 @@ public class MenuPrenotazioni extends JPanel {
 
                 // Controllo che la piazzola sia selezionata
                 if(Objects.equals(selectedPiazzola, null)){
-                    JOptionPane.showMessageDialog(rimuoviPiazzolaDialog,
-                            "Scegliere la piazzola!",
-                            "Errore",
-                            JOptionPane.ERROR_MESSAGE);
+                    MessageController.getErrorMessage(rimuoviPiazzolaDialog, "Scegliere la piazzola!");
                 } else {
                     try {
                         new Gateway().execUpdateQuery(query, selectedPiazzola);
                         listaPiazzole.remove(selectedPiazzola);
-
                         rimuoviPiazzolaDialog.dispose();
-                        JOptionPane.showMessageDialog(MenuPrenotazioni.this,
-                                String.format("Piazzola %s rimossa correttamente!", selectedPiazzola),
-                                "Elimina piazzola",
-                                JOptionPane.INFORMATION_MESSAGE);
+
+                        MessageController.getInfoMessage(rimuoviPiazzolaDialog, String.format("Piazzola %s rimossa correttamente!", selectedPiazzola));
                     } catch (SQLException ex) {
                         ex.printStackTrace();
-                        JOptionPane.showMessageDialog(MenuPrenotazioni.this,
-                                "Impossibile rimuovere la piazzola",
-                                "Errore elimina piazzola",
-                                JOptionPane.ERROR_MESSAGE);
+                        MessageController.getErrorMessage(rimuoviPiazzolaDialog, "Impossibile rimuovere la piazzola!");
                     }
                 }
             }
@@ -420,7 +399,7 @@ public class MenuPrenotazioni extends JPanel {
 
             if (arrivo != null && arrivo.isAfter(partenza)) {
                 datePickerPartenza.closePopup();
-                JOptionPane.showMessageDialog(dialogNuovaPrenotazione, "La data di partenza deve essere successiva alla data di arrivo", "Errore", JOptionPane.ERROR_MESSAGE);
+                MessageController.getErrorMessage(dialogNuovaPrenotazione, "La data di partenza deve essere successiva alla data di arrivo");
                 datePickerPartenza.clear();
             }
         });
@@ -556,22 +535,13 @@ public class MenuPrenotazioni extends JPanel {
                 // Controllo sulle date
                 if ((!datePickerArrivo.getText().isEmpty() && datePickerPartenza.getText().isEmpty()) ||
                     (datePickerArrivo.getText().isEmpty() && !datePickerPartenza.getText().isEmpty())) {
-                    JOptionPane.showMessageDialog(dialogNuovaPrenotazione,
-                            "Inserire entrambe le date!",
-                            "Errore",
-                            JOptionPane.ERROR_MESSAGE);
+                    MessageController.getErrorMessage(dialogNuovaPrenotazione,"Inserire entrambe le date!");
 
                 // Controllo di aver inserito i valori obbligatori
                 } else if (tfNome.getText().isEmpty()) {
-                    JOptionPane.showMessageDialog(dialogNuovaPrenotazione,
-                            "Inserire il nome!",
-                            "Errore",
-                            JOptionPane.ERROR_MESSAGE);
+                    MessageController.getErrorMessage(dialogNuovaPrenotazione, "Inserire il nome!");
                 } else if(cbSceltaPiazzola.getSelectedItem() == null) {
-                    JOptionPane.showMessageDialog(dialogNuovaPrenotazione,
-                            "Inserire la piazzola!",
-                            "Errore",
-                            JOptionPane.ERROR_MESSAGE);
+                    MessageController.getErrorMessage(dialogNuovaPrenotazione, "Inserire la piazzola!");
                 }
 
                 // Ricavo tutte le info inserite
