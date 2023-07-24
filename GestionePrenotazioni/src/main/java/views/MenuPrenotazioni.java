@@ -271,7 +271,8 @@ public class MenuPrenotazioni extends JPanel {
         // Ricava tutte le piazzole salvate nel db
         ResultSet piazzoleRs = new Gateway().execSelectQuery("SELECT * FROM Piazzole");
         while (piazzoleRs.next()) {
-            listaPiazzole.add(piazzoleRs.getString("Nome"));
+            if(!listaPiazzole.contains(piazzoleRs.getString("Nome")))
+                listaPiazzole.add(piazzoleRs.getString("Nome"));
         }
         piazzoleRs.close();
 
@@ -300,6 +301,27 @@ public class MenuPrenotazioni extends JPanel {
         });
 
         //TODO: Aggiungi -> rimuove la piazzola
+        btnElimina.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String selectedPiazzola = Objects.requireNonNull(cbPiazzole.getSelectedItem()).toString();
+                String query = "DELETE FROM Piazzole WHERE Nome = ?";
+                try {
+                    new Gateway().execUpdateQuery(query, selectedPiazzola);
+                    rimuoviPiazzolaDialog.dispose();
+                    JOptionPane.showMessageDialog(MenuPrenotazioni.this,
+                            String.format("Piazzola %s rimossa correttamente!", selectedPiazzola),
+                            "Elimina piazzola",
+                            JOptionPane.INFORMATION_MESSAGE);
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                    JOptionPane.showMessageDialog(MenuPrenotazioni.this,
+                            "Impossibile rimuovere la piazzola",
+                            "Errore elimina piazzola",
+                            JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
 
         pnlButtons.add(btnElimina);
         pnlButtons.add(btnAnnulla);
