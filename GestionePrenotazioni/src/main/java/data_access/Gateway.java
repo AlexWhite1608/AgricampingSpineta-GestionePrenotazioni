@@ -7,23 +7,10 @@ import java.util.Vector;
 public class Gateway {
 
     private Connection connection;
-    private final String dbNameLinux = "database";
-    private final String dbNameWindows = "database.db";
+    private final String dbName = "database.db";
 
     public Gateway() {
         connect();
-    }
-
-    // Distingue i sistemi operativi
-    private String getOsName() {
-        String os = System.getProperty("os.name").toLowerCase();
-        if (os.contains("win")) {
-            return "windows";
-        } else if (os.contains("nix") || os.contains("nux") || os.contains("mac")) {
-            return "linux";
-        } else {
-            return "unknown";
-        }
     }
 
     // Esegue connessione al database
@@ -38,11 +25,7 @@ public class Gateway {
             Class.forName("org.sqlite.JDBC");
 
             // Apre la connessione al database SQLite
-            if(getOsName().equals("windows")){
-                connection = DriverManager.getConnection("jdbc:sqlite::resource:" + dbNameWindows);
-            } else {
-                connection = DriverManager.getConnection("jdbc:sqlite::resource:" + dbNameLinux);
-            }
+            connection = DriverManager.getConnection("jdbc:sqlite::resource:" + dbName);
             System.out.println("Connesso al database");
 
         } catch (ClassNotFoundException e) {
