@@ -1,5 +1,7 @@
 package views;
 
+import com.github.lgooddatepicker.components.DatePicker;
+import com.github.lgooddatepicker.components.DatePickerSettings;
 import controller.TablePrenotazioniController;
 import data_access.Gateway;
 import utils.DataFilter;
@@ -11,6 +13,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -18,6 +21,7 @@ public class MenuPrenotazioni extends JPanel {
 
     // Valori per modifiche estetiche
     private final int SEPARATOR_WIDTH = 1250;
+    private final int DIALOG_SEPARATOR_WIDTH = 100;
 
     // Anni contenuti nella cbFiltroAnni
     private final ArrayList<String> YEARS = DataFilter.getYears();
@@ -345,17 +349,61 @@ public class MenuPrenotazioni extends JPanel {
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);
 
-        JLabel nameLabel = new JLabel("Name:");
+        // Label arrivo
+        JLabel lblArrivo = new JLabel("Arrivo:");
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.anchor = GridBagConstraints.WEST;
-        pnlForm.add(nameLabel, gbc);
+        pnlForm.add(lblArrivo, gbc);
 
-        JTextField nameField = new JTextField(20);
+        // DatePicker arrivo
+        DatePicker datePickerArrivo = new DatePicker();
+        DatePickerSettings dateSettingsArrivo = new DatePickerSettings();
+        dateSettingsArrivo.setFormatForDatesCommonEra("dd/MM/yyyy");
+        datePickerArrivo.setSettings(dateSettingsArrivo);
         gbc.gridx = 1;
         gbc.gridy = 0;
         gbc.anchor = GridBagConstraints.WEST;
-        pnlForm.add(nameField, gbc);
+        pnlForm.add(datePickerArrivo, gbc);
+
+        // Spaziatura orizzontale tra i datepickers
+        Component horizontalStrut = Box.createHorizontalStrut(DIALOG_SEPARATOR_WIDTH);
+        gbc.gridx = 2;
+        gbc.gridy = 0;
+        gbc.anchor = GridBagConstraints.CENTER;
+        pnlForm.add(horizontalStrut, gbc);
+
+        // Label partenza
+        JLabel lblPartenza = new JLabel("Partenza:");
+        gbc.gridx = 3;
+        gbc.gridy = 0;
+        gbc.anchor = GridBagConstraints.EAST;
+        pnlForm.add(lblPartenza, gbc);
+
+        // DatePicker partenza
+        DatePicker datePickerPartenza = new DatePicker();
+        DatePickerSettings dateSettingsPartenza = new DatePickerSettings();
+        dateSettingsPartenza.setFormatForDatesCommonEra("dd/MM/yyyy");
+        datePickerPartenza.setSettings(dateSettingsPartenza);
+        gbc.gridx = 4;
+        gbc.gridy = 0;
+        gbc.anchor = GridBagConstraints.EAST;
+        pnlForm.add(datePickerPartenza, gbc);
+
+        // Controlla che la data di partenza sia successiva a quella di arrivo
+        datePickerPartenza.addDateChangeListener((dateChangeEvent) -> {
+            LocalDate partenza = dateChangeEvent.getNewDate();
+            LocalDate arrivo = datePickerArrivo.getDate();
+
+            if (arrivo != null && arrivo.isAfter(partenza)) {
+                datePickerPartenza.closePopup();
+                JOptionPane.showMessageDialog(dialogNuovaPrenotazione, "La data di partenza deve essere successiva alla data di arrivo", "Errore", JOptionPane.ERROR_MESSAGE);
+                datePickerPartenza.clear();
+            }
+        });
+
+
+
         /* --------------------------------------- */
 
         /* Panel dedicato ai buttons */
@@ -373,10 +421,10 @@ public class MenuPrenotazioni extends JPanel {
             }
         });
 
-        //TODO: Aggiungi -> aggiunge la prenotazione nel db e fa refresh della tabella!
+        //TODO: Aggiungi -> aggiunge la prenotazione nel db e fa refresh della tabella! (controlla che le date siano corrette)
 
-        pnlButtons.add(btnConferma);
-        pnlButtons.add(btnAnnulla);
+        pnlButtons.add(btnConferma, CENTER_ALIGNMENT);
+        pnlButtons.add(btnAnnulla, CENTER_ALIGNMENT);
         /* --------------------------------------- */
 
         dialogNuovaPrenotazione.add(pnlForm, BorderLayout.CENTER);
