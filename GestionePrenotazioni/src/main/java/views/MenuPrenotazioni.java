@@ -230,24 +230,34 @@ public class MenuPrenotazioni extends JPanel {
             }
         });
 
+        // Aggiungi -> aggiunge la nuova piazzola
         btnAggiungi.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String nomePiazzola = tfNomePiazzola.getText();
-                String query = "INSERT INTO Piazzole (Nome) VALUES (?)";
-                try {
-                    new Gateway().execUpdateQuery(query, nomePiazzola);
-                    aggiungiPiazzolaDialog.dispose();
-                    JOptionPane.showMessageDialog(MenuPrenotazioni.this,
-                            String.format("Piazzola %s aggiunta correttamente!", nomePiazzola),
-                            "Aggiunta piazzola",
-                            JOptionPane.INFORMATION_MESSAGE);
-                } catch (SQLException ex) {
-                    ex.printStackTrace();
-                    JOptionPane.showMessageDialog(MenuPrenotazioni.this,
-                            "Impossibile aggiungere la piazzola",
-                            "Errore aggiunta piazzola",
+
+                // Controllo che la piazzola sia selezionata
+                if(Objects.equals(nomePiazzola, "")){
+                    JOptionPane.showMessageDialog(aggiungiPiazzolaDialog,
+                            "Inserire il nome della piazzola!",
+                            "Errore",
                             JOptionPane.ERROR_MESSAGE);
+                } else {
+                    String query = "INSERT INTO Piazzole (Nome) VALUES (?)";
+                    try {
+                        new Gateway().execUpdateQuery(query, nomePiazzola);
+                        aggiungiPiazzolaDialog.dispose();
+                        JOptionPane.showMessageDialog(MenuPrenotazioni.this,
+                                String.format("Piazzola %s aggiunta correttamente!", nomePiazzola),
+                                "Aggiunta piazzola",
+                                JOptionPane.INFORMATION_MESSAGE);
+                    } catch (SQLException ex) {
+                        ex.printStackTrace();
+                        JOptionPane.showMessageDialog(MenuPrenotazioni.this,
+                                "Impossibile aggiungere la piazzola",
+                                "Errore aggiunta piazzola",
+                                JOptionPane.ERROR_MESSAGE);
+                    }
                 }
             }
         });
@@ -283,6 +293,7 @@ public class MenuPrenotazioni extends JPanel {
         setListaPiazzole();
         JComboBox cbPiazzole = new JComboBox(listaPiazzole.toArray());
         cbPiazzole.setFocusable(false);
+        cbPiazzole.setSelectedItem(null);
         ((JLabel) cbPiazzole.getRenderer()).setHorizontalAlignment(SwingConstants.CENTER);
         gbc.gridx = 1;
         gbc.gridy = 0;
@@ -305,26 +316,36 @@ public class MenuPrenotazioni extends JPanel {
             }
         });
 
+        // Elimina -> elimina la piazzola
         btnElimina.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String selectedPiazzola = Objects.requireNonNull(cbPiazzole.getSelectedItem()).toString();
                 String query = "DELETE FROM Piazzole WHERE Nome = ?";
-                try {
-                    new Gateway().execUpdateQuery(query, selectedPiazzola);
-                    listaPiazzole.remove(selectedPiazzola);
 
-                    rimuoviPiazzolaDialog.dispose();
-                    JOptionPane.showMessageDialog(MenuPrenotazioni.this,
-                            String.format("Piazzola %s rimossa correttamente!", selectedPiazzola),
-                            "Elimina piazzola",
-                            JOptionPane.INFORMATION_MESSAGE);
-                } catch (SQLException ex) {
-                    ex.printStackTrace();
-                    JOptionPane.showMessageDialog(MenuPrenotazioni.this,
-                            "Impossibile rimuovere la piazzola",
-                            "Errore elimina piazzola",
+                // Controllo che la piazzola sia selezionata
+                if(Objects.equals(selectedPiazzola, null)){
+                    JOptionPane.showMessageDialog(rimuoviPiazzolaDialog,
+                            "Scegliere la piazzola!",
+                            "Errore",
                             JOptionPane.ERROR_MESSAGE);
+                } else {
+                    try {
+                        new Gateway().execUpdateQuery(query, selectedPiazzola);
+                        listaPiazzole.remove(selectedPiazzola);
+
+                        rimuoviPiazzolaDialog.dispose();
+                        JOptionPane.showMessageDialog(MenuPrenotazioni.this,
+                                String.format("Piazzola %s rimossa correttamente!", selectedPiazzola),
+                                "Elimina piazzola",
+                                JOptionPane.INFORMATION_MESSAGE);
+                    } catch (SQLException ex) {
+                        ex.printStackTrace();
+                        JOptionPane.showMessageDialog(MenuPrenotazioni.this,
+                                "Impossibile rimuovere la piazzola",
+                                "Errore elimina piazzola",
+                                JOptionPane.ERROR_MESSAGE);
+                    }
                 }
             }
         });
@@ -416,6 +437,7 @@ public class MenuPrenotazioni extends JPanel {
         JComboBox cbSceltaPiazzola = new JComboBox<>(listaPiazzole.toArray());
         cbSceltaPiazzola.setPreferredSize(datePickerArrivo.getPreferredSize());
         cbSceltaPiazzola.setFocusable(false);
+        cbSceltaPiazzola.setSelectedItem(null);
         ((JLabel) cbSceltaPiazzola.getRenderer()).setHorizontalAlignment(SwingConstants.CENTER);
         gbc.gridx = 1;
         gbc.gridy = 1;
@@ -513,9 +535,9 @@ public class MenuPrenotazioni extends JPanel {
 
         /* Panel dedicato ai buttons */
         JPanel pnlButtons = new JPanel(new FlowLayout());
-        JButton btnConferma = new JButton("Aggiungi");
+        JButton btnAggiungiPrenotazioneDialog = new JButton("Aggiungi");
         JButton btnAnnulla = new JButton("Annulla");
-        btnConferma.setFocusPainted(false);
+        btnAggiungiPrenotazioneDialog.setFocusPainted(false);
         btnAnnulla.setFocusPainted(false);
 
         // Annulla -> chiude il dialog
@@ -526,9 +548,37 @@ public class MenuPrenotazioni extends JPanel {
             }
         });
 
-        //TODO: Aggiungi -> aggiunge la prenotazione nel db e fa refresh della tabella! (controlla che le date siano corrette)
+        //TODO: Aggiungi -> aggiunge la prenotazione nel db e fa refresh della tabella!
+        btnAggiungiPrenotazioneDialog.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
 
-        pnlButtons.add(btnConferma, CENTER_ALIGNMENT);
+                // Controllo sulle date
+                if ((!datePickerArrivo.getText().isEmpty() && datePickerPartenza.getText().isEmpty()) ||
+                    (datePickerArrivo.getText().isEmpty() && !datePickerPartenza.getText().isEmpty())) {
+                    JOptionPane.showMessageDialog(dialogNuovaPrenotazione,
+                            "Inserire entrambe le date!",
+                            "Errore",
+                            JOptionPane.ERROR_MESSAGE);
+
+                // Controllo di aver inserito i valori obbligatori
+                } else if (tfNome.getText().isEmpty()) {
+                    JOptionPane.showMessageDialog(dialogNuovaPrenotazione,
+                            "Inserire il nome!",
+                            "Errore",
+                            JOptionPane.ERROR_MESSAGE);
+                } else if(cbSceltaPiazzola.getSelectedItem() == null) {
+                    JOptionPane.showMessageDialog(dialogNuovaPrenotazione,
+                            "Inserire la piazzola!",
+                            "Errore",
+                            JOptionPane.ERROR_MESSAGE);
+                }
+
+                // Ricavo tutte le info inserite
+            }
+        });
+
+        pnlButtons.add(btnAggiungiPrenotazioneDialog, CENTER_ALIGNMENT);
         pnlButtons.add(btnAnnulla, CENTER_ALIGNMENT);
         /* --------------------------------------- */
 
