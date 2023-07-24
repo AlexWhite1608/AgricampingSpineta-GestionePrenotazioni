@@ -308,6 +308,8 @@ public class MenuPrenotazioni extends JPanel {
                 String query = "DELETE FROM Piazzole WHERE Nome = ?";
                 try {
                     new Gateway().execUpdateQuery(query, selectedPiazzola);
+                    listaPiazzole.remove(selectedPiazzola);
+
                     rimuoviPiazzolaDialog.dispose();
                     JOptionPane.showMessageDialog(MenuPrenotazioni.this,
                             String.format("Piazzola %s rimossa correttamente!", selectedPiazzola),
