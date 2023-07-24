@@ -1,7 +1,6 @@
 package data_access;
 
 import javax.swing.table.DefaultTableModel;
-import java.net.URL;
 import java.sql.*;
 import java.util.Vector;
 
@@ -27,9 +26,8 @@ public class Gateway {
         }
     }
 
-
     // Esegue connessione al database
-    private void connect() {
+    private void connect(){
         try {
             // Verifica se la connessione esiste già
             if (connection != null && !connection.isClosed()) {
@@ -39,29 +37,12 @@ public class Gateway {
             // Carica il driver JDBC per SQLite
             Class.forName("org.sqlite.JDBC");
 
-            // Nome del file del database
-            String dbName;
-            if (getOsName().equals("windows")) {
-                dbName = "database.db";
-            } else {
-                dbName = "database"; // Senza l'estensione .db per Linux
-            }
-
-            // Crea il percorso del file del database relativo al classpath
-            String dbPath = "/" + dbName;
-
-            // Ottieni l'URL delle risorse usando il classpath
-            URL resourceUrl = getClass().getResource(dbPath);
-            if (resourceUrl == null) {
-                throw new RuntimeException("File del database non trovato: " + dbPath);
-            }
-
-            // Converti l'URL in un percorso comprensibile per il driver JDBC di SQLite
-            String dbUrl = "jdbc:sqlite:" + resourceUrl.getPath();
-
             // Apre la connessione al database SQLite
-            connection = DriverManager.getConnection(dbUrl);
-
+            if(getOsName().equals("windows")){
+                connection = DriverManager.getConnection("jdbc:sqlite::resource:" + dbNameWindows);
+            } else {
+                connection = DriverManager.getConnection("jdbc:sqlite::resource:" + dbNameLinux);
+            }
             System.out.println("Connesso al database");
 
         } catch (ClassNotFoundException e) {
@@ -72,6 +53,7 @@ public class Gateway {
             System.out.println("Impossibile connettersi al database");
             e.printStackTrace();
         }
+
     }
 
     // Esegue disconnessione dal database
