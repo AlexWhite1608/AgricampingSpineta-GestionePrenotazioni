@@ -2,12 +2,17 @@ package views;
 
 import com.github.lgooddatepicker.components.DatePicker;
 import com.github.lgooddatepicker.components.DatePickerSettings;
-import controller.TablePrenotazioniController;
+import controllers.TablePrenotazioniController;
+import controllers.TextFieldsController;
 import data_access.Gateway;
 import utils.DataFilter;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.text.AbstractDocument;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DocumentFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -499,7 +504,10 @@ public class MenuPrenotazioni extends JPanel {
         gbc.anchor = GridBagConstraints.WEST;
         pnlForm.add(tfEmail, gbc);
 
-        //TODO: imposta vincoli sulle textFields!!
+        // Imposta i vincoli sulle textFields
+        TextFieldsController.setupTextFieldsInteger(tfTelefono);
+        TextFieldsController.setupTextFieldsFloat(tfAcconto);
+        TextFieldsController.setupTextFieldsString(tfNome);
 
         /* --------------------------------------- */
 
@@ -539,4 +547,5 @@ public class MenuPrenotazioni extends JPanel {
         }
         piazzoleRs.close();
     }
+
 }
