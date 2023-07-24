@@ -527,7 +527,7 @@ public class MenuPrenotazioni extends JPanel {
             }
         });
 
-        //TODO: Aggiungi -> aggiunge la prenotazione nel db e fa refresh della tabella!
+        //TODO: Aggiungi -> aggiunge la prenotazione nel db
         btnAggiungiPrenotazioneDialog.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -537,7 +537,7 @@ public class MenuPrenotazioni extends JPanel {
                     (datePickerArrivo.getText().isEmpty() && !datePickerPartenza.getText().isEmpty())) {
                     MessageController.getErrorMessage(dialogNuovaPrenotazione,"Inserire entrambe le date!");
 
-                // Controllo di aver inserito i valori obbligatori
+                // Controllo di aver inserito i valori obbligatori (nome, piazzola)
                 } else if (tfNome.getText().isEmpty()) {
                     MessageController.getErrorMessage(dialogNuovaPrenotazione, "Inserire il nome!");
                 } else if(cbSceltaPiazzola.getSelectedItem() == null) {
@@ -545,6 +545,8 @@ public class MenuPrenotazioni extends JPanel {
                 }
 
                 // Ricavo tutte le info inserite
+
+                //TODO: fai refresh della tabella!
             }
         });
 

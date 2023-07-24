@@ -7,9 +7,11 @@ import java.util.Vector;
 public class Gateway {
 
     private Connection connection;
-    private final String dbName = "database";
+    private final String dbNameLinux = "database";
+    private final String dbNameWindows = "database.db";
 
     public Gateway() {
+
 
         connect();
     }
@@ -26,7 +28,11 @@ public class Gateway {
             Class.forName("org.sqlite.JDBC");
 
             // Apre la connessione al database SQLite
-            connection = DriverManager.getConnection("jdbc:sqlite::resource:" + dbName);
+            if(System.getProperty("os.name").contains("Linux")){
+                connection = DriverManager.getConnection("jdbc:sqlite::resource:" + dbNameLinux);
+            } else if (System.getProperty("os.name").contains("Windows")){
+                connection = DriverManager.getConnection("jdbc:sqlite::resource:" + dbNameWindows);
+            }
             System.out.println("Connesso al database");
 
         } catch (ClassNotFoundException e) {
