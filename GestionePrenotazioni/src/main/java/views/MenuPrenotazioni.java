@@ -545,6 +545,43 @@ public class MenuPrenotazioni extends JPanel {
                 }
 
                 // Ricavo tutte le info inserite
+                String nomePrenotazione = "";
+                String piazzolaScelta = "";
+                String dataArrivo = "";
+                String dataPartenza = "";
+                String info = "";
+                String telefono = "";
+                String email = "";
+                String acconto = "";
+                if(!Objects.equals(tfNome.getText(), ""))
+                    nomePrenotazione = tfNome.getText();
+                if(!Objects.equals(cbSceltaPiazzola.getSelectedItem().toString(), ""))
+                    piazzolaScelta = cbSceltaPiazzola.getSelectedItem().toString();
+                if(!Objects.equals(datePickerArrivo.getText(), ""))
+                    dataArrivo = datePickerArrivo.getText();
+                if(!Objects.equals(datePickerPartenza.getText(), ""))
+                    dataPartenza = datePickerPartenza.getText();
+                if(!Objects.equals(tfInfo.getText(), ""))
+                    info = tfInfo.getText();
+                if(!Objects.equals(tfTelefono.getText(), ""))
+                    telefono = tfTelefono.getText();
+                if(!Objects.equals(tfEmail.getText(), ""))
+                    email = tfEmail.getText();
+                if(!Objects.equals(tfAcconto.getText(), ""))
+                    acconto = tfAcconto.getText();
+
+                // Eseguo la query di inserimento della prenotazione
+                String query = "INSERT INTO Prenotazioni (Piazzola, Arrivo, Partenza, Nome, Acconto, Info, Telefono, Email) " +
+                               "VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
+
+                try {
+                    new Gateway().execUpdateQuery(query, piazzolaScelta, dataArrivo, dataPartenza, nomePrenotazione, acconto, info, telefono, email);
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
+
+                //TODO: controlla che la nuova prenotazione sia stata inserita
+
 
                 //TODO: fai refresh della tabella!
             }
