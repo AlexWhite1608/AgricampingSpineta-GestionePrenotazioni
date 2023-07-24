@@ -397,7 +397,7 @@ public class MenuPrenotazioni extends JPanel {
             LocalDate partenza = dateChangeEvent.getNewDate();
             LocalDate arrivo = datePickerArrivo.getDate();
 
-            if (arrivo != null && arrivo.isAfter(partenza)) {
+            if (arrivo != null && arrivo.isAfter(partenza) || Objects.equals(datePickerPartenza.getText(), datePickerArrivo.getText())) {
                 datePickerPartenza.closePopup();
                 MessageController.getErrorMessage(dialogNuovaPrenotazione, "La data di partenza deve essere successiva alla data di arrivo");
                 datePickerPartenza.clear();
@@ -527,7 +527,7 @@ public class MenuPrenotazioni extends JPanel {
             }
         });
 
-        //TODO: Aggiungi -> aggiunge la prenotazione nel db
+        // Aggiungi -> aggiunge la prenotazione nel db
         btnAggiungiPrenotazioneDialog.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -580,10 +580,23 @@ public class MenuPrenotazioni extends JPanel {
                     throw new RuntimeException(ex);
                 }
 
-                //TODO: controlla che la nuova prenotazione sia stata inserita
+                // Ricarico la tabella prenotazioni
+                tablePrenotazioniController.refreshTable(tabellaPrenotazioni);
 
+                // Controlla che la nuova prenotazione sia stata inserita
+                String checkQuery = "SELECT * FROM Prenotazioni WHERE Nome = ? AND Piazzola = ? AND Arrivo = ? AND Partenza = ?";
 
-                //TODO: fai refresh della tabella!
+                try {
+                    if(new Gateway().execSelectQuery(checkQuery) != null) {
+                        MessageController.getInfoMessage(dialogNuovaPrenotazione, "Prenotazione aggiunta");
+                    } else {
+                        MessageController.getErrorMessage(dialogNuovaPrenotazione, "Impossibile inserire la nuova prenotazione");
+                    }
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
+
+                dialogNuovaPrenotazione.dispose();
             }
         });
 
