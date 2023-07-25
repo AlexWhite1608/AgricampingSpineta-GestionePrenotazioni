@@ -662,7 +662,10 @@ public class MenuPrenotazioni extends JPanel {
                                "VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
 
                 try {
-                    new Gateway().execUpdateQuery(query, piazzolaScelta, dataArrivo, dataPartenza, nomePrenotazione, "€ "+acconto, info, telefono, email);
+                    if(!Objects.equals(acconto, ""))
+                        new Gateway().execUpdateQuery(query, piazzolaScelta, dataArrivo, dataPartenza, nomePrenotazione, "€ " + acconto, info, telefono, email);
+                    else
+                        new Gateway().execUpdateQuery(query, piazzolaScelta, dataArrivo, dataPartenza, nomePrenotazione, null, info, telefono, email);
                 } catch (SQLException ex) {
                     throw new RuntimeException(ex);
                 }
@@ -1037,6 +1040,30 @@ public class MenuPrenotazioni extends JPanel {
         rimuoviItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+
+                // Seleziono tutti i valori della riga e faccio la query
+                ArrayList<String> deleteValues = new ArrayList<>();
+                for(int i = 1; i < tabellaPrenotazioni.getColumnCount(); i++){
+                    deleteValues.add((String) tabellaPrenotazioni.getValueAt(selectedRow, i));
+                }
+
+                try {
+                    String deleteQuery = "DELETE FROM Prenotazioni WHERE Piazzola = ? AND " +
+                                                                        "Arrivo = ? AND " +
+                                                                        "Partenza = ? AND " +
+                                                                        "Nome = ? AND " +
+                                                                        "Acconto = ? AND " +
+                                                                        "Info = ? AND " +
+                                                                        "Telefono = ? AND " +
+                                                                        "Email = ?";
+
+                    new Gateway().execUpdateQuery(deleteQuery, String.valueOf(deleteValues));
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
+
+                // riaggiorno la tabella
+                tablePrenotazioniController.refreshTable(tabellaPrenotazioni);
             }
         });
 
