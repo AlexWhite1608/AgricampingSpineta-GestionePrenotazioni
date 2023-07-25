@@ -143,6 +143,8 @@ public class MenuPrenotazioni extends JPanel {
                 if (tabellaPrenotazioni.getSelectedRowCount() == 0) {
                     return;
                 }
+
+                // Mostra il popupMenu
                 popupMenu = new JPopupMenu();
                 setupPopUpMenu();
                 popupMenu.show(e.getComponent(), e.getX(), e.getY());
@@ -1016,13 +1018,23 @@ public class MenuPrenotazioni extends JPanel {
 
     // Setup popupMenu sulla tabella
     private void setupPopUpMenu(){
-
-        // Creazione delle azioni del menu
-        JMenuItem deleteItem = new JMenuItem("Rimuovi");
+        JMenuItem rimuoviItem = new JMenuItem("Rimuovi");
         JMenuItem saldaAccontoItem = new JMenuItem("Salda acconto");
 
+        int selectedRow = tabellaPrenotazioni.getSelectedRow();
+        int accontoIndex = 4;  //Indice colonna acconto
+
+        if (selectedRow >= 0 && tablePrenotazioniController.isAcconto(tabellaPrenotazioni.getValueAt(selectedRow, accontoIndex))) {
+            // Se è presente l'acconto mostra entrambi i menu
+            popupMenu.add(saldaAccontoItem);
+            popupMenu.add(rimuoviItem);
+        } else {
+            // Mostra solo il menu rimuoviItem se non è presente l'acconto
+            popupMenu.add(rimuoviItem);
+        }
+
         //TODO: Azione: elimina la riga selezionata
-        deleteItem.addActionListener(new ActionListener() {
+        rimuoviItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
             }
@@ -1034,8 +1046,5 @@ public class MenuPrenotazioni extends JPanel {
             public void actionPerformed(ActionEvent e) {
             }
         });
-
-        popupMenu.add(deleteItem);
-        popupMenu.add(saldaAccontoItem);
     }
 }

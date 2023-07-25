@@ -98,12 +98,12 @@ public class TablePrenotazioniController {
                     c.setBackground(SELECTION_COLOR);
                 }
 
+                // Imposta il bordo di selezione della cella (sia click sinistro che destro)
                 if (isSelected && table.getSelectedColumn() == column && table.getSelectedRow() == row) {
                     setBorder(BorderFactory.createLineBorder(BORDER_CELL_SELECTED));
                 } else {
                     setBorder(BorderFactory.createEmptyBorder());
                 }
-
 
                 // Colora il testo dell'acconto di rosso finché non viene saldato
                 if (column == 4) {
@@ -116,7 +116,6 @@ public class TablePrenotazioniController {
             }
         };
     }
-
 
     // Renderer estetica header
     public DefaultTableCellRenderer createHeaderRenderer() {
@@ -160,6 +159,14 @@ public class TablePrenotazioniController {
         nomiRs.close();
 
         return listaNomi;
+    }
+
+    // Verifica se nella riga selezionata è presente o meno l'acconto
+    public boolean isAcconto(Object value) {
+        if (value instanceof String) {
+            return value != null;
+        }
+        return false;
     }
 
     public ArrayList<String> getListaPiazzole() {
