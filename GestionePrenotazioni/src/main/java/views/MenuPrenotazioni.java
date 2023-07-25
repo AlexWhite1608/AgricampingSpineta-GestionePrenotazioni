@@ -1080,6 +1080,8 @@ public class MenuPrenotazioni extends JPanel {
         saldaAccontoItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                tablePrenotazioniController.setAccontoSaldato(true);
+                tabellaPrenotazioni.repaint();
             }
         });
     }

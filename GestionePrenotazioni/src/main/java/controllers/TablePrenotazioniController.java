@@ -25,6 +25,9 @@ public class TablePrenotazioniController {
     ArrayList<String> listaPiazzole = new ArrayList<>();
     ArrayList<String> listaNomi = new ArrayList<>();
 
+    // Flag per aggiornare il colore dell'acconto
+    private boolean isAccontoSaldato = false;
+
     private JTable tblPrenotazioni;
     private JComboBox cbFiltro;
     private final Gateway gateway;
@@ -106,10 +109,12 @@ public class TablePrenotazioniController {
                 }
 
                 // Colora il testo dell'acconto di rosso finché non viene saldato
-                if (column == 4) {
-                    c.setForeground(Color.RED);
+                if (column == 4 && !isAccontoSaldato) {
+                    setForeground(Color.RED);
+                } else if (column == 4 && isAccontoSaldato) {
+                    setForeground(Color.GREEN);
                 } else {
-                    c.setForeground(Color.BLACK);
+                    setForeground(Color.BLACK);
                 }
 
                 return c;
@@ -171,5 +176,9 @@ public class TablePrenotazioniController {
 
     public ArrayList<String> getListaPiazzole() {
         return listaPiazzole;
+    }
+
+    public void setAccontoSaldato(boolean accontoSaldato) {
+        isAccontoSaldato = accontoSaldato;
     }
 }
