@@ -1037,7 +1037,6 @@ public class MenuPrenotazioni extends JPanel {
             popupMenu.add(rimuoviItem);
         }
 
-        //TODO: Azione: elimina la riga selezionata
         rimuoviItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

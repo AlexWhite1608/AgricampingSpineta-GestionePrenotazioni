@@ -188,9 +188,12 @@ public class TablePrenotazioniController {
         ResultSet rs = new Gateway().execSelectQuery(checkQuery, values);
         if(rs.next()){
             String isSaldato = rs.getString("Saldato");
+            rs.close();
             return Objects.equals(isSaldato, "saldato");
-        } else
+        } else {
+            rs.close();
             return false;
+        }
     }
 
     public ArrayList<String> getListaPiazzole() {
