@@ -61,6 +61,18 @@ public class Gateway {
         return statement.executeQuery();
     }
 
+    // Esegue la query di select fornita con parametri ritornando il resultset
+    public ResultSet execSelectQuery(String query, String... params) throws SQLException {
+        PreparedStatement statement = connection.prepareStatement(query);
+
+        // Imposta i parametri nella query
+        for (int i = 0; i < params.length; i++) {
+            statement.setString(i + 1, params[i]);
+        }
+
+        return statement.executeQuery();
+    }
+
     // Esegue query di modifica della tabella
     public int execUpdateQuery(String query, String... params) throws SQLException {
         PreparedStatement statement = connection.prepareStatement(query);

@@ -25,9 +25,6 @@ public class TablePrenotazioniController {
     ArrayList<String> listaPiazzole = new ArrayList<>();
     ArrayList<String> listaNomi = new ArrayList<>();
 
-    // Flag per aggiornare il colore dell'acconto
-    private boolean isAccontoSaldato = false;
-
     private JTable tblPrenotazioni;
     private JComboBox cbFiltro;
     private final Gateway gateway;
@@ -108,13 +105,23 @@ public class TablePrenotazioniController {
                     setBorder(BorderFactory.createEmptyBorder());
                 }
 
-                // Colora il testo dell'acconto di rosso finché non viene saldato
-                if (column == 4 && !isAccontoSaldato) {
-                    setForeground(Color.RED);
-                } else if (column == 4 && isAccontoSaldato) {
-                    setForeground(Color.GREEN);
-                } else {
-                    setForeground(Color.BLACK);
+                // Ricavo le informazioni per l'acconto
+                String acconto = (String) table.getModel().getValueAt(row, 4);
+                String nome = (String) table.getModel().getValueAt(row, 3);
+                String partenza = (String) table.getModel().getValueAt(row, 2);
+                String arrivo = (String) table.getModel().getValueAt(row, 1);
+
+                // Colora il testo dell'acconto (rosso -> non saldato, verde -> saldato)
+                try {
+                    if (column == 4 && !checkAccontoIsSaldato(nome, arrivo, partenza, acconto)) {
+                        setForeground(Color.RED);
+                    } else if (column == 4 && checkAccontoIsSaldato(nome, arrivo, partenza, acconto)) {
+                        setForeground(Color.GREEN);
+                    } else {
+                        setForeground(Color.BLACK);
+                    }
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
                 }
 
                 return c;
@@ -174,11 +181,20 @@ public class TablePrenotazioniController {
         return false;
     }
 
+    // Controlla dal db se l'acconto è saldato o meno
+    private boolean checkAccontoIsSaldato(String... values) throws SQLException {
+        String checkQuery = "SELECT Saldato FROM SaldoAcconti WHERE Nome = ? AND Arrivo = ? AND Partenza = ? AND Acconto = ?";
+
+        ResultSet rs = new Gateway().execSelectQuery(checkQuery, values);
+        if(rs.next()){
+            String isSaldato = rs.getString("Saldato");
+            return Objects.equals(isSaldato, "saldato");
+        } else
+            return false;
+    }
+
     public ArrayList<String> getListaPiazzole() {
         return listaPiazzole;
     }
 
-    public void setAccontoSaldato(boolean accontoSaldato) {
-        isAccontoSaldato = accontoSaldato;
-    }
 }

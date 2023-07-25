@@ -15,6 +15,7 @@ import javax.swing.border.Border;
 import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
 import java.awt.event.*;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -1076,11 +1077,30 @@ public class MenuPrenotazioni extends JPanel {
             }
         });
 
-        //TODO: Azione: salda l'acconto -> colora di verde la colonna
         saldaAccontoItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                tablePrenotazioniController.setAccontoSaldato(true);
+
+                // Ricavo i valori dell'acconto selezionato dalla tabella SaldoAcconti
+                ArrayList<String> valoriAcconto = new ArrayList<>();
+                for(int i = 0; i < tabellaPrenotazioni.getColumnCount(); i++){
+                    valoriAcconto.add((String) tabellaPrenotazioni.getValueAt(selectedRow, i));
+                }
+
+                String arrivo = valoriAcconto.get(1);
+                String partenza = valoriAcconto.get(2);
+                String nome = valoriAcconto.get(3);
+                String acconto = valoriAcconto.get(4);
+
+                // Imposto l'acconto saldato sul database
+                String updateAcconto = "UPDATE SaldoAcconti SET Saldato = 'saldato' WHERE Nome = ? AND Arrivo = ? AND Partenza = ? AND Acconto = ?";
+                try {
+                    new Gateway().execUpdateQuery(updateAcconto, nome, arrivo, partenza, acconto);
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
+
+                // Ricarico la visualizzazione
                 tabellaPrenotazioni.repaint();
             }
         });
