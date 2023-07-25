@@ -667,6 +667,12 @@ public class MenuPrenotazioni extends JPanel {
                         new Gateway().execUpdateQuery(query, piazzolaScelta, dataArrivo, dataPartenza, nomePrenotazione, "€ " + acconto, info, telefono, email);
                     else
                         new Gateway().execUpdateQuery(query, piazzolaScelta, dataArrivo, dataPartenza, nomePrenotazione, null, info, telefono, email);
+
+                    // Inserisce le info nella tabella SaldoAcconti
+                    if (acconto != null) {
+                        String insertSaldoQuery = "INSERT INTO SaldoAcconti (Nome, Arrivo, Partenza, Acconto, Saldato) VALUES (?, ?, ?, ?, 'non saldato')";
+                        new Gateway().execUpdateQuery(insertSaldoQuery, nomePrenotazione, dataArrivo, dataPartenza, acconto);
+                    }
                 } catch (SQLException ex) {
                     throw new RuntimeException(ex);
                 }
@@ -1040,39 +1046,40 @@ public class MenuPrenotazioni extends JPanel {
         rimuoviItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
-                // Seleziono tutti i valori della riga e faccio la query
-                ArrayList<String> deleteValues = new ArrayList<>();
-                for(int i = 0; i < tabellaPrenotazioni.getColumnCount(); i++){
-                    deleteValues.add((String) tabellaPrenotazioni.getValueAt(selectedRow, i));
+                int selectedRow = tabellaPrenotazioni.getSelectedRow();
+                if (selectedRow < 0) {
+                    return;
                 }
 
                 try {
                     String deleteQuery = "DELETE FROM Prenotazioni WHERE Piazzola = ? AND " +
-                                                                        "Arrivo = ? AND " +
-                                                                        "Partenza = ? AND " +
-                                                                        "Nome = ? AND " +
-                                                                        "Acconto = ? AND " +
-                                                                        "Info = ? AND " +
-                                                                        "Telefono = ? AND " +
-                                                                        "Email = ?";
+                            "Arrivo = ? AND " +
+                            "Partenza = ? AND " +
+                            "Nome = ? AND " +
+                            "(Acconto = ? OR Acconto IS NULL) AND " +
+                            "Info = ? AND " +
+                            "Telefono = ? AND " +
+                            "Email = ?";
 
-                    String piazzola = deleteValues.get(0);
-                    String arrivo = deleteValues.get(1);
-                    String partenza = deleteValues.get(2);
-                    String nome = deleteValues.get(3);
-                    String acconto = deleteValues.get(4);
-                    String info = deleteValues.get(5);
-                    String telefono = deleteValues.get(6);
-                    String email = deleteValues.get(7);
+                    // Ottengo i valori dalla riga selezionata
+                    String piazzola = (String) tabellaPrenotazioni.getValueAt(selectedRow, 0);
+                    String arrivo = (String) tabellaPrenotazioni.getValueAt(selectedRow, 1);
+                    String partenza = (String) tabellaPrenotazioni.getValueAt(selectedRow, 2);
+                    String nome = (String) tabellaPrenotazioni.getValueAt(selectedRow, 3);
+                    String acconto = (String) tabellaPrenotazioni.getValueAt(selectedRow, 4);
+                    String info = (String) tabellaPrenotazioni.getValueAt(selectedRow, 5);
+                    String telefono = (String) tabellaPrenotazioni.getValueAt(selectedRow, 6);
+                    String email = (String) tabellaPrenotazioni.getValueAt(selectedRow, 7);
 
+                    // Eseguo la query di eliminazione
                     new Gateway().execUpdateQuery(deleteQuery, piazzola, arrivo, partenza, nome, acconto, info, telefono, email);
-                } catch (SQLException ex) {
-                    throw new RuntimeException(ex);
-                }
 
-                // riaggiorno la tabella
-                tablePrenotazioniController.refreshTable(tabellaPrenotazioni);
+                    // Aggiorno la tabella dopo l'eliminazione
+                    tablePrenotazioniController.refreshTable(tabellaPrenotazioni);
+                } catch (SQLException ex) {
+                    MessageController.getErrorMessage(MenuPrenotazioni.this, "Errore durante l'eliminazione della riga: " + ex.getMessage());
+                    ex.printStackTrace();
+                }
             }
         });
 
