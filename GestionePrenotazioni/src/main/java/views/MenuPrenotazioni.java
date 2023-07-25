@@ -1101,7 +1101,7 @@ public class MenuPrenotazioni extends JPanel {
                 }
 
                 // Ricarico la visualizzazione
-                tabellaPrenotazioni.repaint();
+                tabellaPrenotazioni.repaint(selectedRow);
             }
         });
     }

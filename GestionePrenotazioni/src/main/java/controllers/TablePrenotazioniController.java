@@ -109,7 +109,7 @@ public class TablePrenotazioniController {
                 String acconto = (String) table.getModel().getValueAt(row, 5);
                 String nome = (String) table.getModel().getValueAt(row, 4);
                 String partenza = (String) table.getModel().getValueAt(row, 3);
-                String arrivo = (String) table.getModel().getValueAt(row, 3);
+                String arrivo = (String) table.getModel().getValueAt(row, 2);
 
                 // Colora il testo dell'acconto (rosso -> non saldato, verde -> saldato)
                 try {
