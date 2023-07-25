@@ -486,10 +486,21 @@ public class MenuPrenotazioni extends JPanel {
             LocalDate partenza = dateChangeEvent.getNewDate();
             LocalDate arrivo = datePickerArrivo.getDate();
 
-            if (arrivo != null && arrivo.isAfter(partenza) || Objects.equals(datePickerPartenza.getText(), datePickerArrivo.getText())) {
+            if (arrivo != null && arrivo.isAfter(partenza)) {
                 datePickerPartenza.closePopup();
                 MessageController.getErrorMessage(dialogNuovaPrenotazione, "La data di partenza deve essere successiva alla data di arrivo");
                 datePickerPartenza.clear();
+            }
+        });
+
+        datePickerArrivo.addDateChangeListener((dateChangeEvent) -> {
+            LocalDate arrivo = dateChangeEvent.getNewDate();
+            LocalDate partenza = datePickerPartenza.getDate();
+
+            if (partenza != null && partenza.isBefore(arrivo)) {
+                datePickerArrivo.closePopup();
+                MessageController.getErrorMessage(dialogNuovaPrenotazione, "La data di partenza deve essere successiva alla data di arrivo");
+                datePickerArrivo.clear();
             }
         });
 
@@ -878,15 +889,25 @@ public class MenuPrenotazioni extends JPanel {
         gbc.anchor = GridBagConstraints.EAST;
         pnlForm.add(datePickerPartenza, gbc);
 
-        // Controlla che la data di partenza sia successiva a quella di arrivo
         datePickerPartenza.addDateChangeListener((dateChangeEvent) -> {
             LocalDate partenza = dateChangeEvent.getNewDate();
             LocalDate arrivo = datePickerArrivo.getDate();
 
-            if (arrivo != null && arrivo.isAfter(partenza) || Objects.equals(datePickerPartenza.getText(), datePickerArrivo.getText())) {
+            if (arrivo != null && arrivo.isAfter(partenza)) {
                 datePickerPartenza.closePopup();
                 MessageController.getErrorMessage(dialogFiltraPrenotazione, "La data di partenza deve essere successiva alla data di arrivo");
                 datePickerPartenza.clear();
+            }
+        });
+
+        datePickerArrivo.addDateChangeListener((dateChangeEvent) -> {
+            LocalDate arrivo = dateChangeEvent.getNewDate();
+            LocalDate partenza = datePickerPartenza.getDate();
+
+            if (partenza != null && partenza.isBefore(arrivo)) {
+                datePickerArrivo.closePopup();
+                MessageController.getErrorMessage(dialogFiltraPrenotazione, "La data di partenza deve essere successiva alla data di arrivo");
+                datePickerArrivo.clear();
             }
         });
 
