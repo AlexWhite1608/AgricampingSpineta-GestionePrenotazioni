@@ -38,7 +38,7 @@ public class HomePage extends JFrame{
         double height = screenSize.getHeight();
         this.setSize((int) width, (int) height);
 
-        this.setTitle("Gestore prenotazioni");
+        this.setTitle("Gestione prenotazioni");
         this.setLocationRelativeTo(null);
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
         this.pack();
