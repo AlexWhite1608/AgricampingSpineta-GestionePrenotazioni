@@ -199,7 +199,7 @@ public class MenuPrenotazioni extends JPanel {
 
         // Setting combobox
         cbFiltroAnni.setFocusable(false);
-        toolBar.add(new JLabel("Mostra per anno: "));
+        toolBar.add(new JLabel("Filtra per anno: "));
         toolBar.add(cbFiltroAnni);
         ((JLabel) cbFiltroAnni.getRenderer()).setHorizontalAlignment(SwingConstants.CENTER);
         cbFiltroAnni.addActionListener(new ActionListener() {
@@ -605,7 +605,7 @@ public class MenuPrenotazioni extends JPanel {
                                "VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
 
                 try {
-                    new Gateway().execUpdateQuery(query, piazzolaScelta, dataArrivo, dataPartenza, nomePrenotazione, acconto, info, telefono, email);
+                    new Gateway().execUpdateQuery(query, piazzolaScelta, dataArrivo, dataPartenza, nomePrenotazione, "€ "+acconto, info, telefono, email);
                 } catch (SQLException ex) {
                     throw new RuntimeException(ex);
                 }
@@ -744,7 +744,6 @@ public class MenuPrenotazioni extends JPanel {
                 rbAlcuneCorrispondenze.setSelected(false);
             }
         });
-
         rbAlcuneCorrispondenze.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -856,8 +855,9 @@ public class MenuPrenotazioni extends JPanel {
         gbc.anchor = GridBagConstraints.WEST;
         pnlForm.add(lblNome, gbc);
 
-        // TextField nome della prenotazione
+        //TODO: COMPLETER TextField nome della prenotazione
         JTextField tfNome = new JTextField();
+        AutoCompleteDecorator.decorate(tfNome, tablePrenotazioniController.getAllNames(), false, ObjectToStringConverter.DEFAULT_IMPLEMENTATION);
         tfNome.setPreferredSize(datePickerArrivo.getPreferredSize());
         gbc.gridx = 4;
         gbc.gridy = 1;

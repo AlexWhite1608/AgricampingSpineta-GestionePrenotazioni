@@ -99,7 +99,7 @@ public class Gateway {
     }
 
     // Modifica i metodi del DefaultTableModel per la modifica della tabella
-    //TODO: impementare
+    //TODO: implementare
     private DefaultTableModel setTableModelParams(Vector<Vector<Object>> data, Vector<String> columnNames){
         DefaultTableModel model = new DefaultTableModel(data, columnNames){
 

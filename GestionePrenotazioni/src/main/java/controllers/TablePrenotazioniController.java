@@ -93,14 +93,22 @@ public class TablePrenotazioniController {
                 }
 
                 // Colora di giallo la riga selezionata
-                if(isSelected){
+                if (isSelected) {
                     c.setBackground(SELECTION_COLOR);
+                }
+
+                // Colora il testo dell'acconto di rosso finché non viene saldato
+                if (column == 4) {
+                    c.setForeground(Color.RED);
+                } else {
+                    c.setForeground(Color.BLACK);
                 }
 
                 return c;
             }
         };
     }
+
 
     // Renderer estetica header
     public DefaultTableCellRenderer createHeaderRenderer() {
