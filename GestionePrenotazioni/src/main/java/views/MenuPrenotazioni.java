@@ -45,11 +45,13 @@ public class MenuPrenotazioni extends JPanel {
     private JTable tabellaPrenotazioni;
     private JComboBox cbFiltroAnni;
     private JScrollPane scrollPane;
+    private JPopupMenu popupMenu;
 
     public MenuPrenotazioni() throws SQLException {
         tablePrenotazioniController = new TablePrenotazioniController(tabellaPrenotazioni);
 
         createUIComponents();
+        setupPopUpMenu();
         setupToolbar();
         setupTable();
 
@@ -78,6 +80,9 @@ public class MenuPrenotazioni extends JPanel {
 
         // ComboBox filtraggio anni
         cbFiltroAnni = new JComboBox(YEARS.toArray());
+
+        // Inizializza menu popup
+        popupMenu = new JPopupMenu();
 
         // Mostra la query in base al valore della comboBox
         cbFiltroAnni.setSelectedItem(YEARS.get(YEARS.size() - 1));
@@ -957,5 +962,17 @@ public class MenuPrenotazioni extends JPanel {
         dialogFiltraPrenotazione.add(pnlButtons, BorderLayout.SOUTH);
         dialogFiltraPrenotazione.pack();
         dialogFiltraPrenotazione.setVisible(true);
+    }
+
+    // Setup popupMenu sulla tabella
+    private void setupPopUpMenu(){
+        // Assegna il popup alla tabella
+        tabellaPrenotazioni.setComponentPopupMenu(popupMenu);
+
+        // Creazione delle azioni del menu
+        JMenuItem deleteItem = new JMenuItem("Rimuovi");
+        JMenuItem saldaAccontoItem = new JMenuItem("Salda acconto");
+        popupMenu.add(deleteItem);
+        popupMenu.add(saldaAccontoItem);
     }
 }
