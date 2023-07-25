@@ -761,6 +761,7 @@ public class MenuPrenotazioni extends JPanel {
                 } else {
                     try {
                         new Gateway().execUpdateQuery(query, nomePrenotazione);
+                        tablePrenotazioniController.getListaNomi().remove(nomePrenotazione);
                         rimuoviPrenotazioneDialog.dispose();
 
                         tablePrenotazioniController.refreshTable(tabellaPrenotazioni);
@@ -1073,6 +1074,7 @@ public class MenuPrenotazioni extends JPanel {
 
                     // Eseguo la query di eliminazione
                     new Gateway().execUpdateQuery(deleteQuery, piazzola, arrivo, partenza, nome, acconto, info, telefono, email);
+                    tablePrenotazioniController.getListaNomi().remove(nome);
 
                     // Aggiorno la tabella dopo l'eliminazione
                     tablePrenotazioniController.refreshTable(tabellaPrenotazioni);

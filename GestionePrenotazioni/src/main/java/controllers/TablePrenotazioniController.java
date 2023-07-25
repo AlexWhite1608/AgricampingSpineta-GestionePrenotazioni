@@ -201,4 +201,7 @@ public class TablePrenotazioniController {
         return listaPiazzole;
     }
 
+    public ArrayList<String> getListaNomi() {
+        return listaNomi;
+    }
 }
