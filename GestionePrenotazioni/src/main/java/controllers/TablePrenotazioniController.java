@@ -18,6 +18,7 @@ public class TablePrenotazioniController {
     private final Font HEADER_FONT = new Font("Segoe UI", Font.BOLD, 16);
     private final Color ALTERNATE_CELL_COLOR = new Color(220, 232, 234);
     private final Color SELECTION_COLOR = new Color(255, 255, 102);
+    private final Color ACCONTO_SALDATO_COLOR = new Color(14, 129, 60);
     private final Color HEADER_BACKGROUND = Color.LIGHT_GRAY;
     private final Color BORDER_CELL_SELECTED = Color.blue;
 
@@ -116,7 +117,7 @@ public class TablePrenotazioniController {
                     if (column == 4 && !checkAccontoIsSaldato(nome, arrivo, partenza, acconto)) {
                         setForeground(Color.RED);
                     } else if (column == 4 && checkAccontoIsSaldato(nome, arrivo, partenza, acconto)) {
-                        setForeground(Color.GREEN);
+                        setForeground(ACCONTO_SALDATO_COLOR);
                     } else {
                         setForeground(Color.BLACK);
                     }

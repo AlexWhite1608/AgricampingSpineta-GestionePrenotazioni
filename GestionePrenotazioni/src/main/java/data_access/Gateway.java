@@ -26,7 +26,6 @@ public class Gateway {
 
             // Apre la connessione al database SQLite
             connection = DriverManager.getConnection("jdbc:sqlite::resource:" + dbName);
-            System.out.println("Connesso al database");
 
         } catch (ClassNotFoundException e) {
             System.out.println("JDBC driver non trovato");
