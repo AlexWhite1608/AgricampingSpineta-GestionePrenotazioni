@@ -889,6 +889,7 @@ public class MenuPrenotazioni extends JPanel {
         gbc.anchor = GridBagConstraints.EAST;
         pnlForm.add(datePickerPartenza, gbc);
 
+        // Controlla che la data di partenza sia successiva a quella di arrivo
         datePickerPartenza.addDateChangeListener((dateChangeEvent) -> {
             LocalDate partenza = dateChangeEvent.getNewDate();
             LocalDate arrivo = datePickerArrivo.getDate();
