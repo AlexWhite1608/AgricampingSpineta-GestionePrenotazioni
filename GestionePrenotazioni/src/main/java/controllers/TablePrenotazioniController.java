@@ -106,10 +106,10 @@ public class TablePrenotazioniController {
                 }
 
                 // Ricavo le informazioni per l'acconto
-                String acconto = (String) table.getModel().getValueAt(row, 4);
-                String nome = (String) table.getModel().getValueAt(row, 3);
-                String partenza = (String) table.getModel().getValueAt(row, 2);
-                String arrivo = (String) table.getModel().getValueAt(row, 1);
+                String acconto = (String) table.getModel().getValueAt(row, 5);
+                String nome = (String) table.getModel().getValueAt(row, 4);
+                String partenza = (String) table.getModel().getValueAt(row, 3);
+                String arrivo = (String) table.getModel().getValueAt(row, 3);
 
                 // Colora il testo dell'acconto (rosso -> non saldato, verde -> saldato)
                 try {
