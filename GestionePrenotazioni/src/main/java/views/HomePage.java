@@ -33,6 +33,11 @@ public class HomePage extends JFrame{
         this.add(tabbedPane, BorderLayout.CENTER);
 
         //Imposta parametri visualizzazione HomePage
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        double width = screenSize.getWidth();
+        double height = screenSize.getHeight();
+        this.setSize((int) width, (int) height);
+
         this.setTitle("Gestore prenotazioni");
         this.setLocationRelativeTo(null);
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
