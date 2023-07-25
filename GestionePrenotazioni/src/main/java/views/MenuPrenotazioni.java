@@ -1043,7 +1043,7 @@ public class MenuPrenotazioni extends JPanel {
 
                 // Seleziono tutti i valori della riga e faccio la query
                 ArrayList<String> deleteValues = new ArrayList<>();
-                for(int i = 1; i < tabellaPrenotazioni.getColumnCount(); i++){
+                for(int i = 0; i < tabellaPrenotazioni.getColumnCount(); i++){
                     deleteValues.add((String) tabellaPrenotazioni.getValueAt(selectedRow, i));
                 }
 
@@ -1057,7 +1057,16 @@ public class MenuPrenotazioni extends JPanel {
                                                                         "Telefono = ? AND " +
                                                                         "Email = ?";
 
-                    new Gateway().execUpdateQuery(deleteQuery, String.valueOf(deleteValues));
+                    String piazzola = deleteValues.get(0);
+                    String arrivo = deleteValues.get(1);
+                    String partenza = deleteValues.get(2);
+                    String nome = deleteValues.get(3);
+                    String acconto = deleteValues.get(4);
+                    String info = deleteValues.get(5);
+                    String telefono = deleteValues.get(6);
+                    String email = deleteValues.get(7);
+
+                    new Gateway().execUpdateQuery(deleteQuery, piazzola, arrivo, partenza, nome, acconto, info, telefono, email);
                 } catch (SQLException ex) {
                     throw new RuntimeException(ex);
                 }
