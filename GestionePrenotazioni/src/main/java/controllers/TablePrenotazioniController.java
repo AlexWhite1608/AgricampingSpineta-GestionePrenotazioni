@@ -19,6 +19,7 @@ public class TablePrenotazioniController {
     private final Color ALTERNATE_CELL_COLOR = new Color(220, 232, 234);
     private final Color SELECTION_COLOR = new Color(255, 255, 102);
     private final Color HEADER_BACKGROUND = Color.LIGHT_GRAY;
+    private final Color BORDER_CELL_SELECTED = Color.blue;
 
     // Liste dei valori
     ArrayList<String> listaPiazzole = new ArrayList<>();
@@ -96,6 +97,13 @@ public class TablePrenotazioniController {
                 if (isSelected) {
                     c.setBackground(SELECTION_COLOR);
                 }
+
+                if (isSelected && table.getSelectedColumn() == column && table.getSelectedRow() == row) {
+                    setBorder(BorderFactory.createLineBorder(BORDER_CELL_SELECTED));
+                } else {
+                    setBorder(BorderFactory.createEmptyBorder());
+                }
+
 
                 // Colora il testo dell'acconto di rosso finché non viene saldato
                 if (column == 4) {

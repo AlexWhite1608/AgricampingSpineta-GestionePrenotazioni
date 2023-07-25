@@ -14,10 +14,7 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -105,23 +102,54 @@ public class MenuPrenotazioni extends JPanel {
         tabellaPrenotazioni.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                int r = tabellaPrenotazioni.rowAtPoint(e.getPoint());
-                if (r >= 0 && r < tabellaPrenotazioni.getRowCount()) {
-                    tabellaPrenotazioni.setRowSelectionInterval(r, r);
+                handleRowClick(e);
+                if (e.isPopupTrigger()) {
+                    doPop(e);
                 } else {
-                    tabellaPrenotazioni.clearSelection();
+                    hidePop();
                 }
+            }
 
-                int rowindex = tabellaPrenotazioni.getSelectedRow();
-                if (rowindex < 0)
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                if (e.isPopupTrigger()) {
+                    doPop(e);
+                }
+            }
+
+            private void handleRowClick(MouseEvent e) {
+                ListSelectionModel selectionModel = tabellaPrenotazioni.getSelectionModel();
+                Point contextMenuOpenedAt = e.getPoint();
+                int clickedRow = tabellaPrenotazioni.rowAtPoint(contextMenuOpenedAt);
+                int clickedColumn = tabellaPrenotazioni.columnAtPoint(contextMenuOpenedAt);
+
+                if (clickedRow < 0 || clickedColumn < 0) {
+                    // Nessuna cella selezionata
+                    selectionModel.clearSelection();
+                } else {
+                    // Cella selezionata
+                    if (SwingUtilities.isRightMouseButton(e)) {
+                        // Click destro
+                        selectionModel.setSelectionInterval(clickedRow, clickedRow);
+                        tabellaPrenotazioni.setColumnSelectionInterval(clickedColumn, clickedColumn);
+                    } else if (SwingUtilities.isLeftMouseButton(e)) {
+                        // Click sinistro
+                        selectionModel.setSelectionInterval(clickedRow, clickedRow);
+                    }
+                }
+            }
+
+            private void doPop(MouseEvent e) {
+                if (tabellaPrenotazioni.getSelectedRowCount() == 0) {
                     return;
-                if (e.isPopupTrigger() && e.getComponent() instanceof JTable ) {
-
-                    // Inizializza menu popup
-                    popupMenu = new JPopupMenu();
-                    setupPopUpMenu();
-                    popupMenu.show(e.getComponent(), e.getX(), e.getY());
                 }
+                popupMenu = new JPopupMenu();
+                setupPopUpMenu();
+                popupMenu.show(e.getComponent(), e.getX(), e.getY());
+            }
+
+            private void hidePop() {
+                popupMenu.setVisible(false);
             }
         });
 
