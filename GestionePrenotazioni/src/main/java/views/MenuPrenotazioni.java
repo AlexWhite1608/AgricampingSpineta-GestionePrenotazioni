@@ -16,6 +16,8 @@ import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -51,7 +53,6 @@ public class MenuPrenotazioni extends JPanel {
         tablePrenotazioniController = new TablePrenotazioniController(tabellaPrenotazioni);
 
         createUIComponents();
-        setupPopUpMenu();
         setupToolbar();
         setupTable();
 
@@ -81,9 +82,6 @@ public class MenuPrenotazioni extends JPanel {
         // ComboBox filtraggio anni
         cbFiltroAnni = new JComboBox(YEARS.toArray());
 
-        // Inizializza menu popup
-        popupMenu = new JPopupMenu();
-
         // Mostra la query in base al valore della comboBox
         cbFiltroAnni.setSelectedItem(YEARS.get(YEARS.size() - 1));
         tabellaPrenotazioni = tablePrenotazioniController.initView(cbFiltroAnni);
@@ -102,6 +100,30 @@ public class MenuPrenotazioni extends JPanel {
         // Dimensione righe tabella
         int rowHeight = 40;
         tabellaPrenotazioni.setRowHeight(rowHeight);
+
+        // Genera il popup con il tasto destro
+        tabellaPrenotazioni.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                int r = tabellaPrenotazioni.rowAtPoint(e.getPoint());
+                if (r >= 0 && r < tabellaPrenotazioni.getRowCount()) {
+                    tabellaPrenotazioni.setRowSelectionInterval(r, r);
+                } else {
+                    tabellaPrenotazioni.clearSelection();
+                }
+
+                int rowindex = tabellaPrenotazioni.getSelectedRow();
+                if (rowindex < 0)
+                    return;
+                if (e.isPopupTrigger() && e.getComponent() instanceof JTable ) {
+
+                    // Inizializza menu popup
+                    popupMenu = new JPopupMenu();
+                    setupPopUpMenu();
+                    popupMenu.show(e.getComponent(), e.getX(), e.getY());
+                }
+            }
+        });
 
         // Renderer per il testo delle celle
         DefaultTableCellRenderer cellRenderer = tablePrenotazioniController.createCellRenderer();
@@ -966,12 +988,25 @@ public class MenuPrenotazioni extends JPanel {
 
     // Setup popupMenu sulla tabella
     private void setupPopUpMenu(){
-        // Assegna il popup alla tabella
-        tabellaPrenotazioni.setComponentPopupMenu(popupMenu);
 
         // Creazione delle azioni del menu
         JMenuItem deleteItem = new JMenuItem("Rimuovi");
         JMenuItem saldaAccontoItem = new JMenuItem("Salda acconto");
+
+        //TODO: Azione: elimina la riga selezionata
+        deleteItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+            }
+        });
+
+        //TODO: Azione: salda l'acconto -> colora di verde la colonna
+        saldaAccontoItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+            }
+        });
+
         popupMenu.add(deleteItem);
         popupMenu.add(saldaAccontoItem);
     }
