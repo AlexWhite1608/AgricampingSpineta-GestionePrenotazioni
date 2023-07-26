@@ -249,6 +249,11 @@ public class MenuPrenotazioni extends JPanel {
         ((JLabel) cbFiltroAnni.getRenderer()).setHorizontalAlignment(SwingConstants.CENTER);
         cbFiltroAnni.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+
+                // Reimposta la label lblFiltro se è applicato il filtro e si rimuove scegliendo un valore della cb
+                lblFiltro.setText("FIltra per anno: ");
+                lblFiltro.setForeground(Color.black);
+
                 tablePrenotazioniController.refreshTable(tabellaPrenotazioni);
             }
         });
