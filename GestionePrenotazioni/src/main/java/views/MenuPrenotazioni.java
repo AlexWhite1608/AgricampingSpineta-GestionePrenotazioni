@@ -961,8 +961,7 @@ public class MenuPrenotazioni extends JPanel {
             }
         });
 
-        //TODO: Filtra -> applica la query filtrata (TUTTI oppure ALCUNI valori) e aggiorna la vista -> deve apparire un flag visivo che la tabella è filtrata
-        // e quindi deve esserci anche un tasto che elimina il filtro!!
+        // Filtra -> applica il filtro alla visualizzazione della tabella
         btnFiltra.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
