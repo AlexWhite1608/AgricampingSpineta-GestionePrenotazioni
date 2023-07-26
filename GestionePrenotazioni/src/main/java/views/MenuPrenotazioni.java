@@ -775,6 +775,9 @@ public class MenuPrenotazioni extends JPanel {
                     try {
                         new Gateway().execUpdateQuery(query, nomePrenotazione);
                         tablePrenotazioniController.getListaNomi().remove(nomePrenotazione);
+
+                        //TODO: DOVREBBE GESTIRE GLI OMONIMI! Rimuovo anche dalla tabella di SaldoAcconti
+
                         rimuoviPrenotazioneDialog.dispose();
 
                         tablePrenotazioniController.refreshTable(tabellaPrenotazioni);
@@ -1100,6 +1103,10 @@ public class MenuPrenotazioni extends JPanel {
                     // Eseguo la query di eliminazione
                     new Gateway().execUpdateQuery(deleteQuery, piazzola, arrivo, partenza, nome, acconto, info, telefono, email);
                     tablePrenotazioniController.getListaNomi().remove(nome);
+
+                    // Elimino anche dalla tabella SaldoAcconti
+                    String deleteSaldoAccontiQuery = "DELETE FROM SaldoAcconti WHERE Nome = ? AND Arrivo = ? AND Partenza = ? AND Acconto = ?";
+                    new Gateway().execUpdateQuery(deleteSaldoAccontiQuery, nome, arrivo, partenza, acconto);
 
                     // Aggiorno la tabella dopo l'eliminazione
                     tablePrenotazioniController.refreshTable(tabellaPrenotazioni);
