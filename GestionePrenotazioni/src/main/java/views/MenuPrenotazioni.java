@@ -43,6 +43,7 @@ public class MenuPrenotazioni extends JPanel {
     private JButton btnSalva;
     private JButton btnAggiungiPiazzola;
     private JButton btnRimuoviPiazzola;
+    private JLabel lblFiltro;
     private JTable tabellaPrenotazioni;
     private JComboBox cbFiltroAnni;
     private JScrollPane scrollPane;
@@ -242,7 +243,8 @@ public class MenuPrenotazioni extends JPanel {
 
         // Setting combobox
         cbFiltroAnni.setFocusable(false);
-        toolBar.add(new JLabel("Filtra per anno: "));
+        lblFiltro = new JLabel("Filtra per anno: ");
+        toolBar.add(lblFiltro);
         toolBar.add(cbFiltroAnni);
         ((JLabel) cbFiltroAnni.getRenderer()).setHorizontalAlignment(SwingConstants.CENTER);
         cbFiltroAnni.addActionListener(new ActionListener() {
@@ -1030,8 +1032,10 @@ public class MenuPrenotazioni extends JPanel {
                 try {
                     ResultSet rs = new Gateway().execSelectQuery(filterQuery);
 
-                    if(!rs.next())
+                    if(!rs.next()) {
                         MessageController.getErrorMessage(dialogFiltraPrenotazione, "Non esistono prenotazioni che soddisfano i filtri inseriti");
+                        return;
+                    }
                 } catch (SQLException ex) {
                     throw new RuntimeException(ex);
                 }
@@ -1040,8 +1044,9 @@ public class MenuPrenotazioni extends JPanel {
                 tablePrenotazioniController.refreshTable(tabellaPrenotazioni, filterQuery);
                 dialogFiltraPrenotazione.dispose();
 
-                // Inserisco un flag che indica che la tabella è filtrata con relativo button per cancellare il filtro
-                System.out.println("TABELLA FILTRATA");
+                //TODO: Inserisco un flag che indica che la tabella è filtrata con relativo button per cancellare il filtro
+                lblFiltro.setText("Filtro applicato ");
+                lblFiltro.setForeground(Color.red);
             }
         });
 
