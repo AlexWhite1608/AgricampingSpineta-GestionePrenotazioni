@@ -633,7 +633,7 @@ public class MenuPrenotazioni extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
 
-                // Controllo sulle date
+                // Controllo sulle date non nulle
                 if ((!datePickerArrivo.getText().isEmpty() && datePickerPartenza.getText().isEmpty()) ||
                     (datePickerArrivo.getText().isEmpty() && !datePickerPartenza.getText().isEmpty())) {
                     MessageController.getErrorMessage(dialogNuovaPrenotazione,"Inserire entrambe le date!");
@@ -670,6 +670,24 @@ public class MenuPrenotazioni extends JPanel {
                     email = tfEmail.getText();
                 if(!Objects.equals(tfAcconto.getText(), ""))
                     acconto = tfAcconto.getText();
+
+                // Controllo che non ci siano già altre prenotazioni nelle date scelte per quella piazzola!
+                String checkPrenotazione = "SELECT COUNT(*) FROM Prenotazioni WHERE Piazzola = ? AND " +
+                                           "((Arrivo BETWEEN ? AND ?) OR (Partenza BETWEEN ? AND ?) OR " +
+                                           "(? BETWEEN Arrivo AND Partenza) OR (? BETWEEN Arrivo AND Partenza))";
+                try {
+                    ResultSet rs = new Gateway().execSelectQuery(checkPrenotazione, piazzolaScelta, dataArrivo, dataPartenza, dataArrivo, dataPartenza, dataArrivo, dataPartenza);
+                    if (rs.next()) {
+                        if(rs.getInt(1) != 0){
+                            MessageController.getErrorMessage(dialogNuovaPrenotazione, String.format("Esiste già una prenotazione per la piazzola %s nelle date selezionate!", piazzolaScelta));
+                            datePickerArrivo.setText("");
+                            datePickerPartenza.setText("");
+                        }
+                    }
+                    rs.close();
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
 
                 // Eseguo la query di inserimento della prenotazione
                 String query = "INSERT INTO Prenotazioni (Piazzola, Arrivo, Partenza, Nome, Acconto, Info, Telefono, Email) " +
@@ -1132,21 +1150,6 @@ public class MenuPrenotazioni extends JPanel {
                 String partenza = valoriAcconto.get(2);
                 String nome = valoriAcconto.get(3);
                 String acconto = valoriAcconto.get(4);
-
-                //TODO: cancella
-                try {
-                    ResultSet rs = new Gateway().execSelectQuery("SELECT * FROM SaldoAcconti");
-
-                    while (rs.next()){
-                        System.out.println(rs.getString("Nome"));
-                        System.out.println(rs.getString("Arrivo"));
-                        System.out.println(rs.getString("Partenza"));
-                        System.out.println(rs.getString("Acconto"));
-                        System.out.println(rs.getString("Saldato"));
-                    }
-                } catch (SQLException ex) {
-                    throw new RuntimeException(ex);
-                }
 
                 // Imposto l'acconto saldato sul database
                 String updateAcconto = "UPDATE SaldoAcconti SET Saldato = ? WHERE Nome = ? AND Arrivo = ? AND Partenza = ? AND Acconto = ?";

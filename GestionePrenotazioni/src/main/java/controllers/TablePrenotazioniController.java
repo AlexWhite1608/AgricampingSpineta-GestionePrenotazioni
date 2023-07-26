@@ -8,6 +8,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -174,7 +175,7 @@ public class TablePrenotazioniController {
         return listaNomi;
     }
 
-    // Verifica se nella riga selezionata è presente o meno l'acconto
+    // Verifica se nella riga selezionata è presente o meno l'acconto per l'opzione SaldaAcconto nel popup
     public boolean isAcconto(Object value) {
         if (value instanceof String) {
             return value != null;
@@ -195,6 +196,17 @@ public class TablePrenotazioniController {
             rs.close();
             return false;
         }
+    }
+
+    // Controlla se è già presente una prenotazione in quelle date per quella piazzola
+    public boolean isAlreadyBooked(String arrivo, String partenza, String piazzola) throws SQLException {
+
+        // TODO: deve gestire il caso in cui le date non sono coincidenti ma comunque si sovrappongono!
+
+        // Cerco nel db una prenotazione con le date e la piazzola fornite, se non c'è allora ritorna false, altrimenti true
+
+
+        return true;
     }
 
     public ArrayList<String> getListaPiazzole() {
