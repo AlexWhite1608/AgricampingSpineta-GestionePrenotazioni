@@ -971,7 +971,7 @@ public class MenuPrenotazioni extends JPanel {
                 String acconto = "";
                 if(!Objects.equals(tfNome.getText(), ""))
                     nomePrenotazione = tfNome.getText();
-                if(!Objects.equals(cbSceltaPiazzola.getSelectedItem().toString(), ""))
+                if(!Objects.equals(cbSceltaPiazzola.getSelectedItem(), null))
                     piazzolaScelta = cbSceltaPiazzola.getSelectedItem().toString();
                 if(!Objects.equals(datePickerArrivo.getText(), ""))
                     dataArrivo = datePickerArrivo.getText();
@@ -986,13 +986,62 @@ public class MenuPrenotazioni extends JPanel {
                 if(!Objects.equals(tfAcconto.getText(), ""))
                     acconto = tfAcconto.getText();
 
-                // eseguo la query del filtro (in base al radio button selezionato) con eventuale messaggio se non esiste nessun valore per il filtro scelto
-                String filterQuery = "";
+                // Eseguo la query del filtro (in base al radio button selezionato) con eventuale messaggio se non esiste nessun valore per il filtro scelto
+                String filterQuery = "SELECT * FROM Prenotazioni WHERE ";
+                String conjunction = "";
 
-                // aggiorno la tabella con la vista filtrata
+                if (rbTutteCorrispondenze.isSelected()) {
+                    conjunction = "AND";
+                } else if (rbAlcuneCorrispondenze.isSelected()) {
+                    conjunction = "OR";
+                }
+
+                ArrayList<String> conditions = new ArrayList<>();
+
+                // Aggiungi le condizioni alla lista solo se i valori non sono vuoti
+                if (!nomePrenotazione.isEmpty()) {
+                    conditions.add("Nome = '" + nomePrenotazione + "'");
+                }
+                if (!piazzolaScelta.isEmpty()) {
+                    conditions.add("Piazzola = '" + piazzolaScelta + "'");
+                }
+                if (!dataArrivo.isEmpty()) {
+                    conditions.add("Arrivo = '" + dataArrivo + "'");
+                }
+                if (!dataPartenza.isEmpty()) {
+                    conditions.add("Partenza = '" + dataPartenza + "'");
+                }
+                if (!info.isEmpty()) {
+                    conditions.add("Info = '" + info + "'");
+                }
+                if (!telefono.isEmpty()) {
+                    conditions.add("Telefono = '" + telefono + "'");
+                }
+                if (!email.isEmpty()) {
+                    conditions.add("Email = '" + email + "'");
+                }
+                if (!acconto.isEmpty()) {
+                    conditions.add("Acconto = '" + acconto + "'");
+                }
+
+                // Unisco le condizioni utilizzando l'operatore AND oppure OR a seconda del radio button
+                filterQuery += String.join(" " + conjunction + " ", conditions);
+
+                try {
+                    ResultSet rs = new Gateway().execSelectQuery(filterQuery);
+
+                    if(!rs.next())
+                        MessageController.getErrorMessage(dialogFiltraPrenotazione, "Non esistono prenotazioni che soddisfano i filtri inseriti");
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
+
+                // Aggiorno la tabella con la vista filtrata
                 tablePrenotazioniController.refreshTable(tabellaPrenotazioni, filterQuery);
+                dialogFiltraPrenotazione.dispose();
 
-                // inserisco un flag che indica che la tabella è filtrata con relativo button per cancellare il filtro
+                // Inserisco un flag che indica che la tabella è filtrata con relativo button per cancellare il filtro
+                System.out.println("TABELLA FILTRATA");
             }
         });
 
