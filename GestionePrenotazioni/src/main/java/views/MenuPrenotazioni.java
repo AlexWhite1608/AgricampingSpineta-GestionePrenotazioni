@@ -82,7 +82,7 @@ public class MenuPrenotazioni extends JPanel {
 
         // Mostra la query in base al valore della comboBox
         cbFiltroAnni.setSelectedItem(YEARS.get(YEARS.size() - 1));
-        tabellaPrenotazioni = tablePrenotazioniController.initView(cbFiltroAnni);
+        tabellaPrenotazioni = tablePrenotazioniController.initView(cbFiltroAnni, null);
 
     }
 
@@ -716,9 +716,10 @@ public class MenuPrenotazioni extends JPanel {
 
     // Setting dialog filtraggio delle prenotazioni
     private void filtraPrenotazioniDialog() throws SQLException {
-        JDialog dialogFiltraPrenotazione = new JDialog((Frame) SwingUtilities.getWindowAncestor(MenuPrenotazioni.this), "Filtra le prenotazioni", true);
+        JDialog dialogFiltraPrenotazione = new JDialog((Frame) SwingUtilities.getWindowAncestor(this), "Filtra le prenotazioni", true);
         dialogFiltraPrenotazione.setLayout(new BorderLayout());
-        dialogFiltraPrenotazione.setLocationRelativeTo(SwingUtilities.getWindowAncestor(this));
+        dialogFiltraPrenotazione.pack();
+        dialogFiltraPrenotazione.setLocationRelativeTo(SwingUtilities.getWindowAncestor(this)); // Utilizza HomePage come riferimento
         dialogFiltraPrenotazione.setResizable(false);
 
         /* Panel scelta corrispondenze */
@@ -817,7 +818,6 @@ public class MenuPrenotazioni extends JPanel {
                 datePickerPartenza.clear();
             }
         });
-
         datePickerArrivo.addDateChangeListener((dateChangeEvent) -> {
             LocalDate arrivo = dateChangeEvent.getNewDate();
             LocalDate partenza = datePickerPartenza.getDate();
@@ -862,9 +862,8 @@ public class MenuPrenotazioni extends JPanel {
         gbc.anchor = GridBagConstraints.WEST;
         pnlForm.add(lblNome, gbc);
 
-        //TODO: COMPLETER TextField nome della prenotazione
+        // TextField nome prenotazione
         JTextField tfNome = new JTextField();
-        AutoCompleteDecorator.decorate(tfNome, tablePrenotazioniController.getAllNames(), false, ObjectToStringConverter.DEFAULT_IMPLEMENTATION);
         tfNome.setPreferredSize(datePickerArrivo.getPreferredSize());
         gbc.gridx = 4;
         gbc.gridy = 1;
@@ -935,13 +934,16 @@ public class MenuPrenotazioni extends JPanel {
         TextFieldsController.setupTextFieldsInteger(tfTelefono);
         TextFieldsController.setupTextFieldsFloat(tfAcconto);
         TextFieldsController.setupTextFieldsString(tfNome);
+
+        // Implementa il completer per la tf del nome
+        AutoCompleteDecorator.decorate(tfNome, tablePrenotazioniController.getAllNames(), false, ObjectToStringConverter.DEFAULT_IMPLEMENTATION);
         /* --------------------------------------- */
 
         /* Panel dedicato ai buttons */
         JPanel pnlButtons = new JPanel(new FlowLayout());
-        JButton btnFiltraPrenotazioni = new JButton("Filtra");
+        JButton btnFiltra = new JButton("Filtra");
         JButton btnAnnulla = new JButton("Annulla");
-        btnFiltraPrenotazioni.setFocusPainted(false);
+        btnFiltra.setFocusPainted(false);
         btnAnnulla.setFocusPainted(false);
 
         // Annulla -> chiude il dialog
@@ -954,8 +956,47 @@ public class MenuPrenotazioni extends JPanel {
 
         //TODO: Filtra -> applica la query filtrata (TUTTI oppure ALCUNI valori) e aggiorna la vista -> deve apparire un flag visivo che la tabella è filtrata
         // e quindi deve esserci anche un tasto che elimina il filtro!!
+        btnFiltra.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
 
-        pnlButtons.add(btnFiltraPrenotazioni, CENTER_ALIGNMENT);
+                // Ricavo tutte le info inserite
+                String nomePrenotazione = "";
+                String piazzolaScelta = "";
+                String dataArrivo = "";
+                String dataPartenza = "";
+                String info = "";
+                String telefono = "";
+                String email = "";
+                String acconto = "";
+                if(!Objects.equals(tfNome.getText(), ""))
+                    nomePrenotazione = tfNome.getText();
+                if(!Objects.equals(cbSceltaPiazzola.getSelectedItem().toString(), ""))
+                    piazzolaScelta = cbSceltaPiazzola.getSelectedItem().toString();
+                if(!Objects.equals(datePickerArrivo.getText(), ""))
+                    dataArrivo = datePickerArrivo.getText();
+                if(!Objects.equals(datePickerPartenza.getText(), ""))
+                    dataPartenza = datePickerPartenza.getText();
+                if(!Objects.equals(tfInfo.getText(), ""))
+                    info = tfInfo.getText();
+                if(!Objects.equals(tfTelefono.getText(), ""))
+                    telefono = tfTelefono.getText();
+                if(!Objects.equals(tfEmail.getText(), ""))
+                    email = tfEmail.getText();
+                if(!Objects.equals(tfAcconto.getText(), ""))
+                    acconto = tfAcconto.getText();
+
+                // eseguo la query del filtro (in base al radio button selezionato) con eventuale messaggio se non esiste nessun valore per il filtro scelto
+                String filterQuery = "";
+
+                // aggiorno la tabella con la vista filtrata
+                tablePrenotazioniController.refreshTable(tabellaPrenotazioni, filterQuery);
+
+                // inserisco un flag che indica che la tabella è filtrata con relativo button per cancellare il filtro
+            }
+        });
+
+        pnlButtons.add(btnFiltra, CENTER_ALIGNMENT);
         pnlButtons.add(btnAnnulla, CENTER_ALIGNMENT);
         /* --------------------------------------- */
 

@@ -37,21 +37,26 @@ public class TablePrenotazioniController {
     }
 
     // Mostra la visualizzazione iniziale della tabella (con il filtro dell'anno)
-    public JTable initView(JComboBox cbFiltro) throws SQLException {
+    public JTable initView(JComboBox cbFiltro, String filterQuery) throws SQLException {
         this.cbFiltro = cbFiltro;
 
         // Ottiene il valore selezionato nella comboBox
         String selectedFilterYear = Objects.requireNonNull(cbFiltro.getSelectedItem()).toString();
 
-        String initialQuery = "";
-        if(Objects.equals(selectedFilterYear, "Tutto")) {
-            initialQuery = "SELECT * FROM Prenotazioni";
-        } else {
-            initialQuery = String.format("SELECT * FROM Prenotazioni WHERE substr(Arrivo, 7, 4) = '%s' OR substr(Partenza, 7, 4) = '%s'", selectedFilterYear, selectedFilterYear);
-        }
+        if(filterQuery == null){
+            String initialQuery = "";
+            if(Objects.equals(selectedFilterYear, "Tutto")) {
+                initialQuery = "SELECT * FROM Prenotazioni";
+            } else {
+                initialQuery = String.format("SELECT * FROM Prenotazioni WHERE substr(Arrivo, 7, 4) = '%s' OR substr(Partenza, 7, 4) = '%s'", selectedFilterYear, selectedFilterYear);
+            }
 
-        ResultSet resultSet = this.gateway.execSelectQuery(initialQuery);
-        tblPrenotazioni = new JTable(gateway.buildCustomTableModel(resultSet));
+            ResultSet resultSet = this.gateway.execSelectQuery(initialQuery);
+            tblPrenotazioni = new JTable(gateway.buildCustomTableModel(resultSet));
+        } else {
+            ResultSet resultSet = this.gateway.execSelectQuery(filterQuery);
+            tblPrenotazioni = new JTable(gateway.buildCustomTableModel(resultSet));
+        }
 
         return tblPrenotazioni;
     }
@@ -61,7 +66,29 @@ public class TablePrenotazioniController {
         try {
 
             // Lancia evento di modifica della tabella
-            tabellaPrenotazioni.setModel(this.initView(cbFiltro).getModel());
+            tabellaPrenotazioni.setModel(this.initView(cbFiltro, null).getModel());
+            ((AbstractTableModel) tabellaPrenotazioni.getModel()).fireTableDataChanged();
+
+            // Riassegna tutti i renderer
+            for(int columnIndex = 0; columnIndex < tabellaPrenotazioni.getColumnCount(); columnIndex++) {
+                tabellaPrenotazioni.getColumnModel().getColumn(columnIndex).setCellRenderer(this.createCellRenderer());
+            }
+            tabellaPrenotazioni.getTableHeader().setDefaultRenderer(this.createHeaderRenderer());
+
+            // Rimuove la colonna id
+            tabellaPrenotazioni.removeColumn(tabellaPrenotazioni.getColumnModel().getColumn(0));
+
+        } catch (SQLException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
+    // Ricarica la visualizzazione della tabella (con applicazione del filtro)
+    public void refreshTable(JTable tabellaPrenotazioni, String filterQuery) {
+        try {
+
+            // Lancia evento di modifica della tabella
+            tabellaPrenotazioni.setModel(this.initView(cbFiltro, filterQuery).getModel());
             ((AbstractTableModel) tabellaPrenotazioni.getModel()).fireTableDataChanged();
 
             // Riassegna tutti i renderer
