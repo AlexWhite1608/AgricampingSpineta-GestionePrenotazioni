@@ -12,7 +12,9 @@ import utils.DataFilter;
 
 import javax.swing.*;
 import javax.swing.border.Border;
+import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableCellRenderer;
 import java.awt.*;
 import java.awt.event.*;
 import java.sql.ResultSet;
@@ -680,9 +682,9 @@ public class MenuPrenotazioni extends JPanel {
                         new Gateway().execUpdateQuery(query, piazzolaScelta, dataArrivo, dataPartenza, nomePrenotazione, null, info, telefono, email);
 
                     // Inserisce le info nella tabella SaldoAcconti
-                    if (acconto != null) {
+                    if (!Objects.equals(acconto, "")) {
                         String insertSaldoQuery = "INSERT INTO SaldoAcconti (Nome, Arrivo, Partenza, Acconto, Saldato) VALUES (?, ?, ?, ?, 'non saldato')";
-                        new Gateway().execUpdateQuery(insertSaldoQuery, nomePrenotazione, dataArrivo, dataPartenza, acconto);
+                        new Gateway().execUpdateQuery(insertSaldoQuery, nomePrenotazione, dataArrivo, dataPartenza, "€ " + acconto);
                     }
                 } catch (SQLException ex) {
                     throw new RuntimeException(ex);
@@ -1066,6 +1068,7 @@ public class MenuPrenotazioni extends JPanel {
             popupMenu.add(rimuoviItem);
         }
 
+        // Azione: rimuove la riga selezionata
         rimuoviItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -1107,6 +1110,7 @@ public class MenuPrenotazioni extends JPanel {
             }
         });
 
+        // Azione: cambia il colore dell'acconto
         saldaAccontoItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -1122,13 +1126,34 @@ public class MenuPrenotazioni extends JPanel {
                 String nome = valoriAcconto.get(3);
                 String acconto = valoriAcconto.get(4);
 
-                // Imposto l'acconto saldato sul database
-                String updateAcconto = "UPDATE SaldoAcconti SET Saldato = 'saldato' WHERE Nome = ? AND Arrivo = ? AND Partenza = ? AND Acconto = ?";
+                //TODO: cancella
                 try {
-                    new Gateway().execUpdateQuery(updateAcconto, nome, arrivo, partenza, acconto);
+                    ResultSet rs = new Gateway().execSelectQuery("SELECT * FROM SaldoAcconti");
+
+                    while (rs.next()){
+                        System.out.println(rs.getString("Nome"));
+                        System.out.println(rs.getString("Arrivo"));
+                        System.out.println(rs.getString("Partenza"));
+                        System.out.println(rs.getString("Acconto"));
+                        System.out.println(rs.getString("Saldato"));
+                    }
                 } catch (SQLException ex) {
                     throw new RuntimeException(ex);
                 }
+
+                // Imposto l'acconto saldato sul database
+                String updateAcconto = "UPDATE SaldoAcconti SET Saldato = ? WHERE Nome = ? AND Arrivo = ? AND Partenza = ? AND Acconto = ?";
+                try {
+                    System.out.println(new Gateway().execUpdateQuery(updateAcconto, "saldato", nome, arrivo, partenza, acconto));
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
+
+                // Aggiorna anche il colore della cella dell'acconto
+                int accontoColumnIndex = 4; // L'indice della colonna dell'acconto (partendo da 0)
+                TableCellRenderer renderer = tabellaPrenotazioni.getCellRenderer(selectedRow, accontoColumnIndex);
+                Component component = tabellaPrenotazioni.prepareRenderer(renderer, selectedRow, accontoColumnIndex);
+                component.setForeground(Color.green);
 
                 // Ricarico la visualizzazione
                 tabellaPrenotazioni.repaint(selectedRow);
