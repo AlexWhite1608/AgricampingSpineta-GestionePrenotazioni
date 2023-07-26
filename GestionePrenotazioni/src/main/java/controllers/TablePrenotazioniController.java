@@ -201,12 +201,22 @@ public class TablePrenotazioniController {
     // Controlla se è già presente una prenotazione in quelle date per quella piazzola
     public boolean isAlreadyBooked(String arrivo, String partenza, String piazzola) throws SQLException {
 
-        // TODO: deve gestire il caso in cui le date non sono coincidenti ma comunque si sovrappongono!
-
         // Cerco nel db una prenotazione con le date e la piazzola fornite, se non c'è allora ritorna false, altrimenti true
+        boolean isAlreadyBooked = false;
+        String checkPrenotazione = "SELECT COUNT(*) FROM Prenotazioni WHERE Piazzola = ? AND " +
+                                   "((Arrivo BETWEEN ? AND ?) OR (Partenza BETWEEN ? AND ?) OR " +
+                                   "(? BETWEEN Arrivo AND Partenza) OR (? BETWEEN Arrivo AND Partenza))";
+        try {
+            ResultSet rs = new Gateway().execSelectQuery(checkPrenotazione, piazzola, arrivo, partenza, arrivo, partenza, arrivo, partenza);
+            if (rs.next()) {
+                isAlreadyBooked = rs.getInt(1) != 0;
+            }
+            rs.close();
+        } catch (SQLException ex) {
+            throw new RuntimeException(ex);
+        }
 
-
-        return true;
+        return isAlreadyBooked;
     }
 
     public ArrayList<String> getListaPiazzole() {

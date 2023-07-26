@@ -672,19 +672,12 @@ public class MenuPrenotazioni extends JPanel {
                     acconto = tfAcconto.getText();
 
                 // Controllo che non ci siano già altre prenotazioni nelle date scelte per quella piazzola!
-                String checkPrenotazione = "SELECT COUNT(*) FROM Prenotazioni WHERE Piazzola = ? AND " +
-                                           "((Arrivo BETWEEN ? AND ?) OR (Partenza BETWEEN ? AND ?) OR " +
-                                           "(? BETWEEN Arrivo AND Partenza) OR (? BETWEEN Arrivo AND Partenza))";
                 try {
-                    ResultSet rs = new Gateway().execSelectQuery(checkPrenotazione, piazzolaScelta, dataArrivo, dataPartenza, dataArrivo, dataPartenza, dataArrivo, dataPartenza);
-                    if (rs.next()) {
-                        if(rs.getInt(1) != 0){
-                            MessageController.getErrorMessage(dialogNuovaPrenotazione, String.format("Esiste già una prenotazione per la piazzola %s nelle date selezionate!", piazzolaScelta));
-                            datePickerArrivo.setText("");
-                            datePickerPartenza.setText("");
-                        }
+                    if(tablePrenotazioniController.isAlreadyBooked(dataArrivo, dataPartenza, piazzolaScelta)){
+                        MessageController.getErrorMessage(dialogNuovaPrenotazione, String.format("La piazzola %s è già prenotata per le date selezionate", piazzolaScelta));
+                        datePickerArrivo.setText("");
+                        datePickerPartenza.setText("");
                     }
-                    rs.close();
                 } catch (SQLException ex) {
                     throw new RuntimeException(ex);
                 }
