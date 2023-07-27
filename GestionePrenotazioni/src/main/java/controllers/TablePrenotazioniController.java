@@ -24,7 +24,7 @@ public class TablePrenotazioniController {
     private final Color BORDER_CELL_SELECTED = Color.blue;
 
     // Liste dei valori
-    ArrayList<String> listaPiazzole = new ArrayList<>();
+    static ArrayList<String> listaPiazzole = new ArrayList<>();
     ArrayList<String> listaNomi = new ArrayList<>();
 
     private JTable tblPrenotazioni;
@@ -246,7 +246,7 @@ public class TablePrenotazioniController {
         return isAlreadyBooked;
     }
 
-    public ArrayList<String> getListaPiazzole() {
+    public static ArrayList<String> getListaPiazzole() {
         return listaPiazzole;
     }
 

@@ -8,13 +8,16 @@ import controllers.TextFieldsController;
 import data_access.Gateway;
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 import org.jdesktop.swingx.autocomplete.ObjectToStringConverter;
+import utils.CustomCellEditorPrenotazioni;
 import utils.DataFilter;
 
 import javax.swing.*;
 import javax.swing.border.Border;
-import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
+import javax.swing.text.JTextComponent;
 import java.awt.*;
 import java.awt.event.*;
 import java.sql.ResultSet;
@@ -168,6 +171,36 @@ public class MenuPrenotazioni extends JPanel {
             tabellaPrenotazioni.getColumnModel().getColumn(columnIndex).setCellRenderer(cellRenderer);
         }
         tabellaPrenotazioni.getTableHeader().setDefaultRenderer(headerRenderer);
+
+        //Azione: doppio click sulla cella ne seleziona il contenuto
+        tabellaPrenotazioni.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 2) {
+                    int row = tabellaPrenotazioni.rowAtPoint(e.getPoint());
+                    int column = tabellaPrenotazioni.columnAtPoint(e.getPoint());
+
+                    if (column != 0) {
+                        // Rimuovi l'editor di default per consentire l'utilizzo dell'editor personalizzato
+                        tabellaPrenotazioni.removeEditor();
+
+                        // Ottieni l'editor della cella selezionata
+                        TableCellEditor cellEditor = tabellaPrenotazioni.getCellEditor(row, column);
+
+                        // Se l'editor è nullo o non è già un editor personalizzato, crea un nuovo editor
+                        if (cellEditor == null || !(cellEditor instanceof CustomCellEditorPrenotazioni)) {
+                            tabellaPrenotazioni.getColumnModel().getColumn(column).setCellEditor(new CustomCellEditorPrenotazioni());
+                        }
+
+                        // Utilizza l'Action per avviare l'editing della cella
+                        Action editAction = tabellaPrenotazioni.getActionMap().get("startEditing");
+                        if (editAction != null && editAction.isEnabled()) {
+                            editAction.actionPerformed(new ActionEvent(tabellaPrenotazioni, ActionEvent.ACTION_PERFORMED, ""));
+                        }
+                    }
+                }
+            }
+        });
+
 
         scrollPane = new JScrollPane(tabellaPrenotazioni);
         mainPanelPrenotazioni.add(scrollPane, BorderLayout.CENTER);
@@ -356,7 +389,7 @@ public class MenuPrenotazioni extends JPanel {
         pnlForm.add(nameLabel, gbc);
 
         tablePrenotazioniController.setListaPiazzole();
-        JComboBox cbPiazzole = new JComboBox(tablePrenotazioniController.getListaPiazzole().toArray());
+        JComboBox cbPiazzole = new JComboBox(TablePrenotazioniController.getListaPiazzole().toArray());
         cbPiazzole.setFocusable(false);
         cbPiazzole.setSelectedItem(null);
         ((JLabel) cbPiazzole.getRenderer()).setHorizontalAlignment(SwingConstants.CENTER);
@@ -1162,5 +1195,10 @@ public class MenuPrenotazioni extends JPanel {
                 tabellaPrenotazioni.repaint(selectedRow);
             }
         });
+    }
+
+    // Setting della modifica dinamica della tabella (doppio click)
+    private void updateTableSettings(){
+
     }
 }

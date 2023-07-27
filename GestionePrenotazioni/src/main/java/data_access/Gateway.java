@@ -1,5 +1,6 @@
 package data_access;
 
+import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.sql.*;
 import java.util.Vector;
@@ -113,7 +114,10 @@ public class Gateway {
     //TODO: implementare
     private DefaultTableModel setTableModelParams(Vector<Vector<Object>> data, Vector<String> columnNames){
         DefaultTableModel model = new DefaultTableModel(data, columnNames){
-
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return true;
+            }
         };
 
         return model;
