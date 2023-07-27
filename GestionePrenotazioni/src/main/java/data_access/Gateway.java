@@ -1,10 +1,16 @@
 package data_access;
 
+import controllers.MessageController;
 import controllers.TablePrenotazioniController;
+import views.HomePage;
+import views.MenuArriviPartenze;
+import views.MenuPrenotazioni;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.sql.*;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Vector;
 
 public class Gateway {
@@ -90,31 +96,67 @@ public class Gateway {
     // Salva il valore modificato nella tabella all'interno del database
     public int updateCellData(JTable table, int row, int column, Object newValue) throws SQLException {
         String updateQuery = "UPDATE Prenotazioni SET ";
-        String value = "";
+        String queryValue = "";
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        LocalDate dataArrivo;
+        LocalDate dataPartenza;
 
         switch (column){
             case 0:
-                value = "Piazzola = ?";
+                queryValue = "Piazzola = ?";
+
+                //TODO: controlla che non ci siano già prenotazioni per la nuova piazzola!
 
                 break;
 
             case 1:
-                value = "Arrivo = ?";
+                queryValue = "Arrivo = ?";
+
+                // TODO: controlla che la data sia corretta e che non ci siano già prenotazioni (considera piazzola)
+                dataArrivo = LocalDate.parse(newValue.toString(), dtf);
+                dataPartenza = LocalDate.parse(table.getValueAt(row, 2).toString(), dtf);
+
+                if (dataArrivo != null && dataPartenza.isBefore(dataArrivo)) {
+                    MessageController.getErrorMessage(HomePage.getFrames()[0], "La data di partenza deve essere successiva alla data di arrivo");
+
+                    return -1;
+                }
+
+                // Verifica se è già presente una prenotazione
+//                try {
+//                    if(tablePrenotazioniController.isAlreadyBooked(dataArrivo, dataPartenza, piazzolaScelta)){
+//                        MessageController.getErrorMessage(HomePage.getFrames()[0], String.format("La piazzola %s è già prenotata per le date selezionate", piazzolaScelta));
+//                        datePickerArrivo.setText("");
+//                        datePickerPartenza.setText("");
+//                    }
+//                } catch (SQLException ex) {
+//                    throw new RuntimeException(ex);
+//                }
 
                 break;
 
             case 2:
-                value = "Partenza = ?";
+                queryValue = "Partenza = ?";
+
+                // TODO: controlla che la data sia corretta e che non ci siano già prenotazioni (considera piazzola)
+                dataPartenza = LocalDate.parse(newValue.toString(), dtf);
+                dataArrivo = LocalDate.parse(table.getValueAt(row, 1).toString(), dtf);
+
+                if (dataPartenza != null && dataPartenza.isBefore(dataArrivo)) {
+                    MessageController.getErrorMessage(HomePage.getFrames()[0], "La data di partenza deve essere successiva alla data di arrivo");
+
+                    return -1;
+                }
 
                 break;
 
             case 3:
-                value = "Nome = ?";
+                queryValue = "Nome = ?";
 
                 break;
 
             case 4:
-                value = "Acconto = ?";
+                queryValue = "Acconto = ?";
 
                 // Aggiunge il simbolo di euro per l'acconto
                 if(!newValue.toString().contains("€ "))
@@ -144,17 +186,17 @@ public class Gateway {
                 break;
 
             case 5:
-                value = "Info = ?";
+                queryValue = "Info = ?";
 
                 break;
 
             case 6:
-                value = "Telefono = ?";
+                queryValue = "Telefono = ?";
 
                 break;
 
             case 7:
-                value = "Email = ?";
+                queryValue = "Email = ?";
 
                 break;
 
@@ -163,10 +205,13 @@ public class Gateway {
 
         }
 
-        updateQuery = updateQuery + value + " WHERE Id = " + table.getModel().getValueAt(row, 0).toString();
+        updateQuery = updateQuery + queryValue + " WHERE Id = " + table.getModel().getValueAt(row, 0).toString();
         table.repaint();
 
-        return execUpdateQuery(updateQuery, (String) newValue);
+        if(newValue != null)
+            return execUpdateQuery(updateQuery, (String) newValue);
+        else
+            return 0;
     }
 
     // Costruisce il table model passando il result set della query
