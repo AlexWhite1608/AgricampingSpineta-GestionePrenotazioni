@@ -240,7 +240,7 @@ public class TablePrenotazioniController {
     }
 
     // Controlla se è già presente una prenotazione in quelle date per quella piazzola
-    public boolean isAlreadyBooked(String arrivo, String partenza, String piazzola) throws SQLException {
+    public static boolean isAlreadyBooked(String arrivo, String partenza, String piazzola) throws SQLException {
 
         // Cerco nel db una prenotazione con le date e la piazzola fornite, se non c'è allora ritorna false, altrimenti true
         boolean isAlreadyBooked = false;

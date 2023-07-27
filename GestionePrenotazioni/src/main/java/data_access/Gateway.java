@@ -106,6 +106,18 @@ public class Gateway {
                 queryValue = "Piazzola = ?";
 
                 //TODO: controlla che non ci siano già prenotazioni per la nuova piazzola!
+                dataArrivo = LocalDate.parse(table.getValueAt(row, 1).toString().toString(), dtf);
+                dataPartenza = LocalDate.parse(table.getValueAt(row, 2).toString(), dtf);
+
+                try {
+                    if(TablePrenotazioniController.isAlreadyBooked(dataArrivo.toString(), dataPartenza.toString(), newValue.toString())){
+                        MessageController.getErrorMessage(HomePage.getFrames()[0], String.format("La piazzola %s è già prenotata per le date selezionate", newValue.toString()));
+
+                        return -1;
+                    }
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
 
                 break;
 
@@ -123,15 +135,16 @@ public class Gateway {
                 }
 
                 // Verifica se è già presente una prenotazione
-//                try {
-//                    if(tablePrenotazioniController.isAlreadyBooked(dataArrivo, dataPartenza, piazzolaScelta)){
-//                        MessageController.getErrorMessage(HomePage.getFrames()[0], String.format("La piazzola %s è già prenotata per le date selezionate", piazzolaScelta));
-//                        datePickerArrivo.setText("");
-//                        datePickerPartenza.setText("");
-//                    }
-//                } catch (SQLException ex) {
-//                    throw new RuntimeException(ex);
-//                }
+                String piazzolaScelta = table.getValueAt(row, 0).toString();
+                try {
+                    if(TablePrenotazioniController.isAlreadyBooked(dataArrivo.toString(), dataPartenza.toString(), piazzolaScelta)){
+                        MessageController.getErrorMessage(HomePage.getFrames()[0], String.format("La piazzola %s è già prenotata per le date selezionate", piazzolaScelta));
+
+                        return -1;
+                    }
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
 
                 break;
 
@@ -146,6 +159,18 @@ public class Gateway {
                     MessageController.getErrorMessage(HomePage.getFrames()[0], "La data di partenza deve essere successiva alla data di arrivo");
 
                     return -1;
+                }
+
+                // Verifica se è già presente una prenotazione
+                piazzolaScelta = table.getValueAt(row, 0).toString();
+                try {
+                    if(TablePrenotazioniController.isAlreadyBooked(dataArrivo.toString(), dataPartenza.toString(), piazzolaScelta)){
+                        MessageController.getErrorMessage(HomePage.getFrames()[0], String.format("La piazzola %s è già prenotata per le date selezionate", piazzolaScelta));
+
+                        return -1;
+                    }
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
                 }
 
                 break;

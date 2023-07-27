@@ -97,7 +97,7 @@ public class CustomCellEditorPrenotazioni extends AbstractCellEditor implements 
                 if(result == 0)
                     System.err.println("Impossibile modificare il valore");
                 else if (result == -1) {
-                    tabellaPrenotazioni.setValueAt(originalValue, editingRow, editingColumn);
+                    tabellaPrenotazioni.setValueAt(originalValue, editingRow, editingColumn);   //FIXME: non funziona
                 }
             } catch (SQLException e) {
                 throw new RuntimeException(e);
