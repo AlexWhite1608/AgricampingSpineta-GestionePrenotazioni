@@ -1102,27 +1102,18 @@ public class MenuPrenotazioni extends JPanel {
                 }
 
                 try {
-                    String deleteQuery = "DELETE FROM Prenotazioni WHERE Piazzola = ? AND " +
-                            "Arrivo = ? AND " +
-                            "Partenza = ? AND " +
-                            "Nome = ? AND " +
-                            "(Acconto = ? OR Acconto IS NULL) AND " +
-                            "Info = ? AND " +
-                            "Telefono = ? AND " +
-                            "Email = ?";
+                    String deleteQuery = "DELETE FROM Prenotazioni WHERE Id = ?";
 
                     // Ottengo i valori dalla riga selezionata
-                    String piazzola = (String) tabellaPrenotazioni.getValueAt(selectedRow, 0);
+                    String id = tabellaPrenotazioni.getModel().getValueAt(selectedRow, 0).toString();
                     String arrivo = (String) tabellaPrenotazioni.getValueAt(selectedRow, 1);
                     String partenza = (String) tabellaPrenotazioni.getValueAt(selectedRow, 2);
                     String nome = (String) tabellaPrenotazioni.getValueAt(selectedRow, 3);
                     String acconto = (String) tabellaPrenotazioni.getValueAt(selectedRow, 4);
-                    String info = (String) tabellaPrenotazioni.getValueAt(selectedRow, 5);
-                    String telefono = (String) tabellaPrenotazioni.getValueAt(selectedRow, 6);
-                    String email = (String) tabellaPrenotazioni.getValueAt(selectedRow, 7);
+
 
                     // Eseguo la query di eliminazione
-                    new Gateway().execUpdateQuery(deleteQuery, piazzola, arrivo, partenza, nome, acconto, info, telefono, email);
+                    new Gateway().execUpdateQuery(deleteQuery, id);
                     tablePrenotazioniController.getListaNomi().remove(nome);
 
                     // Elimino anche dalla tabella SaldoAcconti

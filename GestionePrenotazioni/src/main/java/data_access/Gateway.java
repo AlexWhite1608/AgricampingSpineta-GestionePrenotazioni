@@ -144,7 +144,7 @@ public class Gateway {
 
         }
 
-        updateQuery = updateQuery + value + " WHERE ID = " + table.getModel().getValueAt(row, 0).toString();
+        updateQuery = updateQuery + value + " WHERE Id = " + table.getModel().getValueAt(row, 0).toString();
 
         return execUpdateQuery(updateQuery, (String) newValue);
     }
