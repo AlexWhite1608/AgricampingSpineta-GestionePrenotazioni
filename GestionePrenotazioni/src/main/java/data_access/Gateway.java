@@ -97,9 +97,12 @@ public class Gateway {
     public int updateCellData(JTable table, int row, int column, Object newValue) throws SQLException {
         String updateQuery = "UPDATE Prenotazioni SET ";
         String queryValue = "";
+        String updateSaldoAcconti = "";
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         LocalDate dataArrivo;
         LocalDate dataPartenza;
+        String nomeAcconto = "";
+        String acconto = "";
 
         switch (column){
             case 0:
@@ -146,6 +149,16 @@ public class Gateway {
                     throw new RuntimeException(ex);
                 }
 
+                // Aggiorna anche la tabella SaldoAcconti con la nuova data di arrivo
+                acconto = table.getValueAt(row, 4).toString();
+                String dataPartenzaString = table.getValueAt(row, 2).toString();
+                nomeAcconto = table.getValueAt(row, 3).toString();
+
+                updateSaldoAcconti = "UPDATE SaldoAcconti SET Arrivo = ? WHERE Nome = ? AND Acconto = ? AND Partenza = ?";
+
+                if(new Gateway().execUpdateQuery(updateSaldoAcconti, (String) newValue, nomeAcconto, acconto, dataPartenzaString) == 0)
+                    return -1;
+
                 break;
 
             case 2:
@@ -173,10 +186,29 @@ public class Gateway {
                     throw new RuntimeException(ex);
                 }
 
+                // Aggiorna anche la tabella SaldoAcconti con la nuova data di partenza
+                acconto = table.getValueAt(row, 4).toString();
+                String dataArrivoString = table.getValueAt(row, 1).toString();
+                nomeAcconto = table.getValueAt(row, 3).toString();
+
+                updateSaldoAcconti = "UPDATE SaldoAcconti SET Partenza = ? WHERE Nome = ? AND Arrivo = ? AND Acconto = ?";
+
+                if(new Gateway().execUpdateQuery(updateSaldoAcconti, (String) newValue, nomeAcconto, dataArrivoString, acconto) == 0)
+                    return -1;
+
                 break;
 
             case 3:
                 queryValue = "Nome = ?";
+
+                // Aggiorna anche la tabella SaldoAcconti con la nuova data di partenza
+                dataPartenzaString = table.getValueAt(row, 2).toString();
+                dataArrivoString = table.getValueAt(row, 1).toString();
+                acconto = table.getValueAt(row, 4).toString();
+                updateSaldoAcconti = "UPDATE SaldoAcconti SET Nome = ? WHERE Arrivo = ? AND Partenza = ? AND Acconto = ?";
+
+                if(new Gateway().execUpdateQuery(updateSaldoAcconti, (String) newValue, dataArrivoString, dataPartenzaString, acconto) == 0)
+                    return -1;
 
                 break;
 
@@ -195,17 +227,17 @@ public class Gateway {
                 ResultSet rs = new Gateway().execSelectQuery("SELECT * FROM SaldoAcconti WHERE Nome = ? AND Arrivo = ? AND Partenza = ?", nome, arrivo, partenza);
 
                 if(rs.next()){
-                    String updateSaldoAcconti = "UPDATE SaldoAcconti SET Acconto = ?, Saldato = 'non saldato' WHERE Nome = ? AND Arrivo = ? AND Partenza = ?";
+                    updateSaldoAcconti = "UPDATE SaldoAcconti SET Acconto = ?, Saldato = 'non saldato' WHERE Nome = ? AND Arrivo = ? AND Partenza = ?";
 
                     rs.close();
 
                     if(new Gateway().execUpdateQuery(updateSaldoAcconti, (String) newValue, nome, arrivo, partenza) == 0)
-                        System.err.println("Impossibile aggiornare tabella SaldoAcconti");
+                        return -1;
                 } else {
                     String insertNewAcconto = "INSERT INTO SaldoAcconti (Nome, Arrivo, Partenza, Acconto, Saldato) VALUES (?, ?, ?, ?, 'non saldato')";
 
                     if(new Gateway().execUpdateQuery(insertNewAcconto, nome, arrivo, partenza, (String) newValue) == 0)
-                        System.err.println("Impossibile aggiornare tabella SaldoAcconti");
+                        return -1;
                 }
 
                 break;
