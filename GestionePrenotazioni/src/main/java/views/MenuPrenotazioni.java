@@ -179,28 +179,19 @@ public class MenuPrenotazioni extends JPanel {
                     int row = tabellaPrenotazioni.rowAtPoint(e.getPoint());
                     int column = tabellaPrenotazioni.columnAtPoint(e.getPoint());
 
-                    if (column != 0) {
-                        // Rimuovi l'editor di default per consentire l'utilizzo dell'editor personalizzato
-                        tabellaPrenotazioni.removeEditor();
+                    // Rimuovi l'editor di default per consentire l'utilizzo dell'editor personalizzato
+                    tabellaPrenotazioni.removeEditor();
 
-                        // Ottieni l'editor della cella selezionata
-                        TableCellEditor cellEditor = tabellaPrenotazioni.getCellEditor(row, column);
+                    // Ottieni l'editor della cella selezionata
+                    TableCellEditor cellEditor = tabellaPrenotazioni.getCellEditor(row, column);
 
-                        // Se l'editor è nullo o non è già un editor personalizzato, crea un nuovo editor
-                        if (cellEditor == null || !(cellEditor instanceof CustomCellEditorPrenotazioni)) {
-                            tabellaPrenotazioni.getColumnModel().getColumn(column).setCellEditor(new CustomCellEditorPrenotazioni());
-                        }
-
-                        // Utilizza l'Action per avviare l'editing della cella
-                        Action editAction = tabellaPrenotazioni.getActionMap().get("startEditing");
-                        if (editAction != null && editAction.isEnabled()) {
-                            editAction.actionPerformed(new ActionEvent(tabellaPrenotazioni, ActionEvent.ACTION_PERFORMED, ""));
-                        }
+                    // Se l'editor è nullo o non è già un editor personalizzato, crea un nuovo editor
+                    if (cellEditor == null || !(cellEditor instanceof CustomCellEditorPrenotazioni)) {
+                        tabellaPrenotazioni.getColumnModel().getColumn(column).setCellEditor(new CustomCellEditorPrenotazioni());
                     }
                 }
             }
         });
-
 
         scrollPane = new JScrollPane(tabellaPrenotazioni);
         mainPanelPrenotazioni.add(scrollPane, BorderLayout.CENTER);
