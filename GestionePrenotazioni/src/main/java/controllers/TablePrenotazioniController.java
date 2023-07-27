@@ -176,7 +176,7 @@ public class TablePrenotazioniController {
     }
 
     // Carica tutte le piazzole
-    public void setListaPiazzole() throws SQLException {
+    public static void setListaPiazzole() throws SQLException {
         ResultSet piazzoleRs = new Gateway().execSelectQuery("SELECT * FROM Piazzole");
         while (piazzoleRs.next()) {
             if(!listaPiazzole.contains(piazzoleRs.getString("Nome")))

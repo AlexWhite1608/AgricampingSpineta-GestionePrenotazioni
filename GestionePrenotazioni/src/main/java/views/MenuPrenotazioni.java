@@ -175,21 +175,7 @@ public class MenuPrenotazioni extends JPanel {
         //Azione: doppio click sulla cella ne seleziona il contenuto
         tabellaPrenotazioni.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {
-                if (e.getClickCount() == 2) {
-                    int row = tabellaPrenotazioni.rowAtPoint(e.getPoint());
-                    int column = tabellaPrenotazioni.columnAtPoint(e.getPoint());
-
-                    // Rimuovi l'editor di default per consentire l'utilizzo dell'editor personalizzato
-                    tabellaPrenotazioni.removeEditor();
-
-                    // Ottieni l'editor della cella selezionata
-                    TableCellEditor cellEditor = tabellaPrenotazioni.getCellEditor(row, column);
-
-                    // Se l'editor è nullo o non è già un editor personalizzato, crea un nuovo editor
-                    if (cellEditor == null || !(cellEditor instanceof CustomCellEditorPrenotazioni)) {
-                        tabellaPrenotazioni.getColumnModel().getColumn(column).setCellEditor(new CustomCellEditorPrenotazioni());
-                    }
-                }
+                updateTableSettings(e);
             }
         });
 
@@ -1189,7 +1175,21 @@ public class MenuPrenotazioni extends JPanel {
     }
 
     // Setting della modifica dinamica della tabella (doppio click)
-    private void updateTableSettings(){
+    private void updateTableSettings(MouseEvent e){
+        if (e.getClickCount() == 2) {
+            int row = tabellaPrenotazioni.rowAtPoint(e.getPoint());
+            int column = tabellaPrenotazioni.columnAtPoint(e.getPoint());
 
+            // Rimuovi l'editor di default per consentire l'utilizzo dell'editor personalizzato
+            tabellaPrenotazioni.removeEditor();
+
+            // Ottieni l'editor della cella selezionata
+            TableCellEditor cellEditor = tabellaPrenotazioni.getCellEditor(row, column);
+
+            // Se l'editor è nullo o non è già un editor personalizzato, crea un nuovo editor
+            if (cellEditor == null || !(cellEditor instanceof CustomCellEditorPrenotazioni)) {
+                tabellaPrenotazioni.getColumnModel().getColumn(column).setCellEditor(new CustomCellEditorPrenotazioni());
+            }
+        }
     }
 }

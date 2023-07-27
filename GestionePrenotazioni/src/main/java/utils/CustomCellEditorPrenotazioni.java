@@ -3,8 +3,12 @@ package utils;
 import controllers.TablePrenotazioniController;
 
 import javax.swing.*;
+import javax.swing.event.PopupMenuEvent;
+import javax.swing.event.PopupMenuListener;
 import javax.swing.table.TableCellEditor;
 import java.awt.*;
+import java.awt.event.MouseEvent;
+import java.util.EventObject;
 
 public class CustomCellEditorPrenotazioni extends AbstractCellEditor implements TableCellEditor {
     private JComboBox<String> comboBox;
@@ -28,8 +32,10 @@ public class CustomCellEditorPrenotazioni extends AbstractCellEditor implements 
         if (column == 0) {
             // TODO: Popola la combobox con i valori delle piazzole
             comboBox.removeAllItems();
-            comboBox.addItem("Piazzola 1");
-            comboBox.addItem("Piazzola 2");
+
+            for(String piazzola : TablePrenotazioniController.getListaPiazzole()){
+                comboBox.addItem(piazzola);
+            }
 
             // Seleziona il valore della cella o imposta un valore di default
             if (value != null) {
@@ -53,9 +59,13 @@ public class CustomCellEditorPrenotazioni extends AbstractCellEditor implements 
     @Override
     public boolean stopCellEditing() {
         if (editingColumn == 0) {
-            originalValue = comboBox.getSelectedItem();
+            Object selectedValue = comboBox.getSelectedItem();
+            if (selectedValue != null) {
+                originalValue = selectedValue;
+            }
         } else {
-            originalValue = textField.getText();
+            String newValue = textField.getText();
+            originalValue = newValue.isEmpty() ? null : newValue;
         }
         fireEditingStopped();
         return true;
@@ -67,8 +77,18 @@ public class CustomCellEditorPrenotazioni extends AbstractCellEditor implements 
         if (editingColumn == 0) {
             comboBox.setSelectedItem(originalValue);
         } else {
+            String newValue = textField.getText();
+            originalValue = newValue.isEmpty() ? null : newValue;
             textField.setText(originalValue != null ? originalValue.toString() : "");
         }
+    }
+
+    @Override
+    public boolean isCellEditable(EventObject e) {
+        if (e instanceof MouseEvent) {
+            return ((MouseEvent) e).getClickCount() >= 2;
+        }
+        return false;
     }
 }
 
