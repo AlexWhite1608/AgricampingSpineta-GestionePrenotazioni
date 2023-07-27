@@ -1179,7 +1179,7 @@ public class MenuPrenotazioni extends JPanel {
 
             // Se l'editor è nullo o non è già un editor personalizzato, crea un nuovo editor
             if (cellEditor == null || !(cellEditor instanceof CustomCellEditorPrenotazioni)) {
-                tabellaPrenotazioni.getColumnModel().getColumn(column).setCellEditor(new CustomCellEditorPrenotazioni());
+                tabellaPrenotazioni.getColumnModel().getColumn(column).setCellEditor(new CustomCellEditorPrenotazioni(tablePrenotazioniController));
             }
         }
     }

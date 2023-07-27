@@ -9,6 +9,7 @@ import views.MenuPrenotazioni;
 import javax.swing.*;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
+import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableCellEditor;
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -22,8 +23,11 @@ public class CustomCellEditorPrenotazioni extends AbstractCellEditor implements 
     private int editingColumn;
     private int editingRow;
     private JTable tabellaPrenotazioni;
+    private final TablePrenotazioniController tablePrenotazioniController;
 
-    public CustomCellEditorPrenotazioni() {
+    public CustomCellEditorPrenotazioni(TablePrenotazioniController tablePrenotazioniController) {
+        this.tablePrenotazioniController = tablePrenotazioniController;
+
         comboBox = new JComboBox<>();
         comboBox.addActionListener(e -> stopCellEditing());
 
@@ -82,6 +86,10 @@ public class CustomCellEditorPrenotazioni extends AbstractCellEditor implements 
                     int result = new Gateway().updateCellData(tabellaPrenotazioni, editingRow, editingColumn, selectedValue.toString());
                     if(result == 0)
                         System.err.println("Impossibile modificare il valore");
+                    else if (result == -1) {
+                        tablePrenotazioniController.refreshTable(tabellaPrenotazioni);
+                        tabellaPrenotazioni.repaint();
+                    }
                 } catch (SQLException e) {
                     throw new RuntimeException(e);
                 }
@@ -97,7 +105,8 @@ public class CustomCellEditorPrenotazioni extends AbstractCellEditor implements 
                 if(result == 0)
                     System.err.println("Impossibile modificare il valore");
                 else if (result == -1) {
-                    tabellaPrenotazioni.setValueAt(originalValue, editingRow, editingColumn);   //FIXME: non funziona
+                    tablePrenotazioniController.refreshTable(tabellaPrenotazioni);
+                    tabellaPrenotazioni.repaint();
                 }
             } catch (SQLException e) {
                 throw new RuntimeException(e);

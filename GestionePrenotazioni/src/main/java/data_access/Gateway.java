@@ -105,7 +105,7 @@ public class Gateway {
             case 0:
                 queryValue = "Piazzola = ?";
 
-                //TODO: controlla che non ci siano già prenotazioni per la nuova piazzola!
+                // Verifica se è già presente una prenotazione la piazzola modificata
                 dataArrivo = LocalDate.parse(table.getValueAt(row, 1).toString().toString(), dtf);
                 dataPartenza = LocalDate.parse(table.getValueAt(row, 2).toString(), dtf);
 
@@ -124,7 +124,7 @@ public class Gateway {
             case 1:
                 queryValue = "Arrivo = ?";
 
-                // TODO: controlla che la data sia corretta e che non ci siano già prenotazioni (considera piazzola)
+                // Controlla che la data sia corretta e che non ci siano già prenotazioni (considera piazzola)
                 dataArrivo = LocalDate.parse(newValue.toString(), dtf);
                 dataPartenza = LocalDate.parse(table.getValueAt(row, 2).toString(), dtf);
 
@@ -151,7 +151,7 @@ public class Gateway {
             case 2:
                 queryValue = "Partenza = ?";
 
-                // TODO: controlla che la data sia corretta e che non ci siano già prenotazioni (considera piazzola)
+                // Controlla che la data sia corretta e che non ci siano già prenotazioni (considera piazzola)
                 dataPartenza = LocalDate.parse(newValue.toString(), dtf);
                 dataArrivo = LocalDate.parse(table.getValueAt(row, 1).toString(), dtf);
 
