@@ -8,6 +8,7 @@ import javax.swing.event.PopupMenuListener;
 import javax.swing.table.TableCellEditor;
 import java.awt.*;
 import java.awt.event.MouseEvent;
+import java.sql.SQLException;
 import java.util.EventObject;
 
 public class CustomCellEditorPrenotazioni extends AbstractCellEditor implements TableCellEditor {
@@ -30,9 +31,14 @@ public class CustomCellEditorPrenotazioni extends AbstractCellEditor implements 
         originalValue = value;
 
         if (column == 0) {
-            // TODO: Popola la combobox con i valori delle piazzole
             comboBox.removeAllItems();
 
+            // Aggiunge tutti i valori delle piazzole
+            try {
+                TablePrenotazioniController.setListaPiazzole();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
             for(String piazzola : TablePrenotazioniController.getListaPiazzole()){
                 comboBox.addItem(piazzola);
             }
