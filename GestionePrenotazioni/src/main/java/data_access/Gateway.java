@@ -1,5 +1,7 @@
 package data_access;
 
+import controllers.TablePrenotazioniController;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.sql.*;
@@ -112,8 +114,12 @@ public class Gateway {
                 break;
 
             case 4:
-                //TODO: gestisci l'euro
                 value = "Acconto = ?";
+
+                // Aggiunge il simbolo di euro per l'acconto
+                newValue = "€ " + newValue;
+
+                //TODO: va modificata anche la tabella SaldoAcconti????
 
                 break;
 
