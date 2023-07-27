@@ -85,6 +85,63 @@ public class Gateway {
         return statement.executeUpdate();
     }
 
+    // Salva il valore modificato nella tabella all'interno del database
+    public int updateCellData(JTable table, int row, int column, Object newValue) throws SQLException {
+        String updateQuery = "UPDATE Prenotazioni SET ";
+        String value = "";
+
+        switch (column){
+            case 0:
+                value = "Piazzola = ?";
+
+                break;
+
+            case 1:
+                value = "Arrivo = ?";
+
+                break;
+
+            case 2:
+                value = "Partenza = ?";
+
+                break;
+
+            case 3:
+                value = "Nome = ?";
+
+                break;
+
+            case 4:
+                //TODO: gestisci l'euro
+                value = "Acconto = ?";
+
+                break;
+
+            case 5:
+                value = "Info = ?";
+
+                break;
+
+            case 6:
+                value = "Telefono = ?";
+
+                break;
+
+            case 7:
+                value = "Email = ?";
+
+                break;
+
+            default:
+                throw new RuntimeException("Errore modifica della tabella!");
+
+        }
+
+        updateQuery = updateQuery + value + " WHERE ID = " + table.getModel().getValueAt(row, 0).toString();
+
+        return execUpdateQuery(updateQuery, (String) newValue);
+    }
+
     // Costruisce il table model passando il result set della query
     public DefaultTableModel buildCustomTableModel(ResultSet rs) throws SQLException {
         ResultSetMetaData metaData = rs.getMetaData();

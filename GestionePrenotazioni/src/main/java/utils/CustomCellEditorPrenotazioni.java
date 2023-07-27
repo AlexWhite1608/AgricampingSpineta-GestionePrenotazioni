@@ -1,6 +1,10 @@
 package utils;
 
+import controllers.MessageController;
 import controllers.TablePrenotazioniController;
+import data_access.Gateway;
+import views.HomePage;
+import views.MenuPrenotazioni;
 
 import javax.swing.*;
 import javax.swing.event.PopupMenuEvent;
@@ -16,6 +20,8 @@ public class CustomCellEditorPrenotazioni extends AbstractCellEditor implements 
     private JTextField textField;
     private Object originalValue;
     private int editingColumn;
+    private int editingRow;
+    private JTable tabellaPrenotazioni;
 
     public CustomCellEditorPrenotazioni() {
         comboBox = new JComboBox<>();
@@ -28,7 +34,9 @@ public class CustomCellEditorPrenotazioni extends AbstractCellEditor implements 
     @Override
     public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
         editingColumn = column;
+        editingRow = row;
         originalValue = value;
+        tabellaPrenotazioni = table;
 
         if (column == 0) {
             comboBox.removeAllItems();
@@ -68,10 +76,27 @@ public class CustomCellEditorPrenotazioni extends AbstractCellEditor implements 
             Object selectedValue = comboBox.getSelectedItem();
             if (selectedValue != null) {
                 originalValue = selectedValue;
+
+                //TODO: salva qui le modifiche nel db
+                try {
+                    if(new Gateway().updateCellData(tabellaPrenotazioni, editingRow, editingColumn, selectedValue.toString()) == 0)
+                        System.err.println("Impossibile modificare il valore");
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+
             }
         } else {
             String newValue = textField.getText();
             originalValue = newValue.isEmpty() ? null : newValue;
+
+            //TODO: salva qui le modifiche nel db
+            try {
+                if(new Gateway().updateCellData(tabellaPrenotazioni, editingRow, editingColumn, newValue) == 0)
+                    System.err.println("Impossibile modificare il valore");
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
         }
         fireEditingStopped();
         return true;
