@@ -118,6 +118,7 @@ public class Gateway {
 
                 // Aggiunge il simbolo di euro per l'acconto
                 newValue = "€ " + newValue;
+                table.repaint();
 
                 //TODO: va modificata anche la tabella SaldoAcconti????
 

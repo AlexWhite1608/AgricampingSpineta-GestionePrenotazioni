@@ -127,6 +127,19 @@ public class TablePrenotazioniController {
                     c.setBackground(SELECTION_COLOR);
                 }
 
+                // Verifica che nella cella dell'acconto sia sempre visualizzato il simbolo €
+                String valoreAcconto = "";
+                if (column == 4) {
+                    Object cellValue = table.getValueAt(row, 4);
+                    if (cellValue != null) {
+                        valoreAcconto = cellValue.toString();
+                        if (!valoreAcconto.isEmpty() && !valoreAcconto.contains("€")) {
+                            String nuovoValoreAcconto = "€ " + valoreAcconto;
+                            table.setValueAt(nuovoValoreAcconto, row, 4);
+                        }
+                    }
+                }
+
                 // Imposta il bordo di selezione della cella (sia click sinistro che destro)
                 if (isSelected && table.getSelectedColumn() == column && table.getSelectedRow() == row) {
                     setBorder(BorderFactory.createLineBorder(BORDER_CELL_SELECTED));
