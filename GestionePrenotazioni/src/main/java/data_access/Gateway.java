@@ -117,10 +117,29 @@ public class Gateway {
                 value = "Acconto = ?";
 
                 // Aggiunge il simbolo di euro per l'acconto
-                newValue = "€ " + newValue;
-                table.repaint();
+                if(!newValue.toString().contains("€ "))
+                    newValue = "€ " + newValue;
 
-                //TODO: va modificata anche la tabella SaldoAcconti????
+                String nome = table.getValueAt(row, 3).toString();
+                String arrivo = table.getValueAt(row, 1).toString();
+                String partenza = table.getValueAt(row, 2).toString();
+
+                // Se esisteva già l'acconto faccio update, altrimenti inserisco il nuovo valore!
+                ResultSet rs = new Gateway().execSelectQuery("SELECT * FROM SaldoAcconti WHERE Nome = ? AND Arrivo = ? AND Partenza = ?", nome, arrivo, partenza);
+
+                if(rs.next()){
+                    String updateSaldoAcconti = "UPDATE SaldoAcconti SET Acconto = ?, Saldato = 'non saldato' WHERE Nome = ? AND Arrivo = ? AND Partenza = ?";
+
+                    rs.close();
+
+                    if(new Gateway().execUpdateQuery(updateSaldoAcconti, (String) newValue, nome, arrivo, partenza) == 0)
+                        System.err.println("Impossibile aggiornare tabella SaldoAcconti");
+                } else {
+                    String insertNewAcconto = "INSERT INTO SaldoAcconti (Nome, Arrivo, Partenza, Acconto, Saldato) VALUES (?, ?, ?, ?, 'non saldato')";
+
+                    if(new Gateway().execUpdateQuery(insertNewAcconto, nome, arrivo, partenza, (String) newValue) == 0)
+                        System.err.println("Impossibile aggiornare tabella SaldoAcconti");
+                }
 
                 break;
 
@@ -145,6 +164,7 @@ public class Gateway {
         }
 
         updateQuery = updateQuery + value + " WHERE Id = " + table.getModel().getValueAt(row, 0).toString();
+        table.repaint();
 
         return execUpdateQuery(updateQuery, (String) newValue);
     }

@@ -128,14 +128,15 @@ public class TablePrenotazioniController {
                 }
 
                 // Verifica che nella cella dell'acconto sia sempre visualizzato il simbolo €
-                String valoreAcconto = "";
                 if (column == 4) {
                     Object cellValue = table.getValueAt(row, 4);
                     if (cellValue != null) {
-                        valoreAcconto = cellValue.toString();
-                        if (!valoreAcconto.isEmpty() && !valoreAcconto.contains("€")) {
-                            String nuovoValoreAcconto = "€ " + valoreAcconto;
-                            table.setValueAt(nuovoValoreAcconto, row, 4);
+                        String valoreAcconto = cellValue.toString();
+                        if (!valoreAcconto.isEmpty()) {
+                            if (!valoreAcconto.contains("€")) {
+                                String nuovoValoreAcconto = "€ " + valoreAcconto;
+                                table.setValueAt(nuovoValoreAcconto, row, 4);
+                            }
                         }
                     }
                 }
