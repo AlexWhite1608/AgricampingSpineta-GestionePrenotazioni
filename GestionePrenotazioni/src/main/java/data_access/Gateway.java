@@ -11,6 +11,7 @@ import javax.swing.table.DefaultTableModel;
 import java.sql.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Objects;
 import java.util.Vector;
 
 public class Gateway {
@@ -149,15 +150,18 @@ public class Gateway {
                     throw new RuntimeException(ex);
                 }
 
-                // Aggiorna anche la tabella SaldoAcconti con la nuova data di arrivo
-                acconto = table.getValueAt(row, 4).toString();
+                // Aggiorna anche la tabella SaldoAcconti con la nuova data di arrivo (se non è nullo l'acconto)
+                acconto = (String) table.getValueAt(row, 4);
                 String dataPartenzaString = table.getValueAt(row, 2).toString();
                 nomeAcconto = table.getValueAt(row, 3).toString();
 
-                updateSaldoAcconti = "UPDATE SaldoAcconti SET Arrivo = ? WHERE Nome = ? AND Acconto = ? AND Partenza = ?";
+                if(!Objects.equals(acconto, null)){
+                    updateSaldoAcconti = "UPDATE SaldoAcconti SET Arrivo = ? WHERE Nome = ? AND Acconto = ? AND Partenza = ?";
 
-                if(new Gateway().execUpdateQuery(updateSaldoAcconti, (String) newValue, nomeAcconto, acconto, dataPartenzaString) == 0)
-                    return -1;
+                    if(new Gateway().execUpdateQuery(updateSaldoAcconti, (String) newValue, nomeAcconto, acconto, dataPartenzaString) == 0)
+                        return -1;
+                }
+
 
                 break;
 
@@ -186,29 +190,36 @@ public class Gateway {
                     throw new RuntimeException(ex);
                 }
 
-                // Aggiorna anche la tabella SaldoAcconti con la nuova data di partenza
-                acconto = table.getValueAt(row, 4).toString();
+                // Aggiorna anche la tabella SaldoAcconti con la nuova data di partenza (se non è nullo l'acconto)
+                acconto = (String) table.getValueAt(row, 4);
                 String dataArrivoString = table.getValueAt(row, 1).toString();
                 nomeAcconto = table.getValueAt(row, 3).toString();
 
-                updateSaldoAcconti = "UPDATE SaldoAcconti SET Partenza = ? WHERE Nome = ? AND Arrivo = ? AND Acconto = ?";
+                if(!Objects.equals(acconto, null)) {
+                    updateSaldoAcconti = "UPDATE SaldoAcconti SET Partenza = ? WHERE Nome = ? AND Arrivo = ? AND Acconto = ?";
 
-                if(new Gateway().execUpdateQuery(updateSaldoAcconti, (String) newValue, nomeAcconto, dataArrivoString, acconto) == 0)
-                    return -1;
+                    if(new Gateway().execUpdateQuery(updateSaldoAcconti, (String) newValue, nomeAcconto, dataArrivoString, acconto) == 0)
+                        return -1;
+                }
 
                 break;
 
             case 3:
                 queryValue = "Nome = ?";
 
-                // Aggiorna anche la tabella SaldoAcconti con la nuova data di partenza
+                // Aggiorna anche la tabella SaldoAcconti con la nuova data di partenza (se non è nullo l'acconto)
                 dataPartenzaString = table.getValueAt(row, 2).toString();
                 dataArrivoString = table.getValueAt(row, 1).toString();
-                acconto = table.getValueAt(row, 4).toString();
-                updateSaldoAcconti = "UPDATE SaldoAcconti SET Nome = ? WHERE Arrivo = ? AND Partenza = ? AND Acconto = ?";
+                acconto = (String) table.getValueAt(row, 4);
 
-                if(new Gateway().execUpdateQuery(updateSaldoAcconti, (String) newValue, dataArrivoString, dataPartenzaString, acconto) == 0)
-                    return -1;
+                if(!Objects.equals(acconto, null)) {
+                    updateSaldoAcconti = "UPDATE SaldoAcconti SET Nome = ? WHERE Arrivo = ? AND Partenza = ? AND Acconto = ?";
+
+                    if(new Gateway().execUpdateQuery(updateSaldoAcconti, (String) newValue, dataArrivoString, dataPartenzaString, acconto) == 0)
+                        return -1;
+                }
+
+                //TODO: riaggiorna la lista dei nomi per i completer con il nuovo nome!
 
                 break;
 
