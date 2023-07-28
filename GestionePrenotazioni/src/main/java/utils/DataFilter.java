@@ -3,6 +3,8 @@ package utils;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
+//FIXME: ma serve questa classe?
+
 // Gestisce i filtri della visualizzazione delle prenotazioni
 public class DataFilter {
 
