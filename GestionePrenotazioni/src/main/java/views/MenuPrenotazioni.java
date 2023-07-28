@@ -967,7 +967,7 @@ public class MenuPrenotazioni extends JPanel {
         TextFieldsController.setupTextFieldsString(tfNome);
 
         // Implementa il completer per la tf del nome
-        AutoCompleteDecorator.decorate(tfNome, tablePrenotazioniController.getAllNames(), false, ObjectToStringConverter.DEFAULT_IMPLEMENTATION);
+        AutoCompleteDecorator.decorate(tfNome, TablePrenotazioniController.getAllNames(), false, ObjectToStringConverter.DEFAULT_IMPLEMENTATION);
         /* --------------------------------------- */
 
         /* Panel dedicato ai buttons */
