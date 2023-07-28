@@ -79,11 +79,10 @@ public class CustomCellEditorPrenotazioni extends AbstractCellEditor implements 
         if (editingColumn == 0) {
             Object selectedValue = comboBox.getSelectedItem();
             if (selectedValue != null) {
-                originalValue = selectedValue;
 
                 // Salva le modifiche nel database nel caso della piazzola (comboBox)
                 try {
-                    int result = new Gateway().updateCellData(tabellaPrenotazioni, editingRow, editingColumn, selectedValue.toString());
+                    int result = new Gateway().updateCellData(tabellaPrenotazioni, editingRow, editingColumn, selectedValue.toString(), originalValue.toString());
                     if(result == 0)
                         System.err.println("Impossibile modificare il valore");
                     else if (result == -1) {
@@ -97,11 +96,10 @@ public class CustomCellEditorPrenotazioni extends AbstractCellEditor implements 
             }
         } else {
             String newValue = textField.getText();
-            originalValue = newValue.isEmpty() ? null : newValue;
 
             // Salva le modifiche nel database
             try {
-                int result = new Gateway().updateCellData(tabellaPrenotazioni, editingRow, editingColumn, newValue);
+                int result = new Gateway().updateCellData(tabellaPrenotazioni, editingRow, editingColumn, newValue, originalValue.toString());
                 if(result == 0)
                     System.err.println("Impossibile modificare il valore");
                 else if (result == -1) {

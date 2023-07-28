@@ -25,7 +25,7 @@ public class TablePrenotazioniController {
 
     // Liste dei valori
     static ArrayList<String> listaPiazzole = new ArrayList<>();
-    ArrayList<String> listaNomi = new ArrayList<>();
+    static ArrayList<String> listaNomi = new ArrayList<>();
 
     private JTable tblPrenotazioni;
     private JComboBox cbFiltro;
@@ -205,7 +205,7 @@ public class TablePrenotazioniController {
     }
 
     // Ritorna tutti i nomi delle prenotazioni
-    public ArrayList<String> getAllNames() throws SQLException {
+    public static ArrayList<String> getAllNames() throws SQLException {
         ResultSet nomiRs = new Gateway().execSelectQuery("SELECT Nome FROM Prenotazioni");
         while (nomiRs.next()) {
             if(!listaNomi.contains(nomiRs.getString("Nome")))
@@ -214,6 +214,16 @@ public class TablePrenotazioniController {
         nomiRs.close();
 
         return listaNomi;
+    }
+
+    // Modifica il valore dei nomi dopo l'aggiornamento
+    public static void refreshAllNames() throws SQLException {
+        ResultSet nomiRs = new Gateway().execSelectQuery("SELECT Nome FROM Prenotazioni");
+        while (nomiRs.next()) {
+            if(!listaNomi.contains(nomiRs.getString("Nome")))
+                listaNomi.add(nomiRs.getString("Nome"));
+        }
+        nomiRs.close();
     }
 
     // Verifica se nella riga selezionata è presente o meno l'acconto per l'opzione SaldaAcconto nel popup
@@ -264,7 +274,7 @@ public class TablePrenotazioniController {
         return listaPiazzole;
     }
 
-    public ArrayList<String> getListaNomi() {
+    public static ArrayList<String> getListaNomi() {
         return listaNomi;
     }
 }

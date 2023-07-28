@@ -11,6 +11,7 @@ import javax.swing.table.DefaultTableModel;
 import java.sql.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Vector;
 
@@ -95,7 +96,7 @@ public class Gateway {
     }
 
     // Salva il valore modificato nella tabella all'interno del database
-    public int updateCellData(JTable table, int row, int column, Object newValue) throws SQLException {
+    public int updateCellData(JTable table, int row, int column, Object newValue, Object originalValue) throws SQLException {
         String updateQuery = "UPDATE Prenotazioni SET ";
         String queryValue = "";
         String updateSaldoAcconti = "";
@@ -219,7 +220,16 @@ public class Gateway {
                         return -1;
                 }
 
-                //TODO: riaggiorna la lista dei nomi per i completer con il nuovo nome!
+                // Sostituisce il vecchio nome con quello nuovo
+                TablePrenotazioniController.refreshAllNames();
+                ArrayList<String> listaNomi = TablePrenotazioniController.getAllNames();
+
+                for (int i = 0; i < listaNomi.size(); i++) {
+                    if (Objects.equals(listaNomi.get(i), originalValue)) {
+                        listaNomi.set(i, newValue.toString());
+                        break;
+                    }
+                }
 
                 break;
 
