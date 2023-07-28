@@ -2,10 +2,7 @@ package views;
 
 import com.github.lgooddatepicker.components.DatePicker;
 import com.github.lgooddatepicker.components.DatePickerSettings;
-import controllers.ControllerPiazzole;
-import controllers.MessageController;
-import controllers.TablePrenotazioniController;
-import controllers.TextFieldsController;
+import controllers.*;
 import data_access.Gateway;
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 import org.jdesktop.swingx.autocomplete.ObjectToStringConverter;
@@ -501,22 +498,14 @@ public class MenuPrenotazioni extends JPanel {
             LocalDate partenza = dateChangeEvent.getNewDate();
             LocalDate arrivo = datePickerArrivo.getDate();
 
-            if (arrivo != null && arrivo.isAfter(partenza)) {
-                datePickerPartenza.closePopup();
-                MessageController.getErrorMessage(dialogNuovaPrenotazione, "La data di partenza deve essere successiva alla data di arrivo");
-                datePickerPartenza.clear();
-            }
+            ControllerDatePrenotazioni.checkOrdineDate(arrivo, arrivo.isAfter(partenza), datePickerPartenza, dialogNuovaPrenotazione);
         });
 
         datePickerArrivo.addDateChangeListener((dateChangeEvent) -> {
             LocalDate arrivo = dateChangeEvent.getNewDate();
             LocalDate partenza = datePickerPartenza.getDate();
 
-            if (partenza != null && partenza.isBefore(arrivo)) {
-                datePickerArrivo.closePopup();
-                MessageController.getErrorMessage(dialogNuovaPrenotazione, "La data di partenza deve essere successiva alla data di arrivo");
-                datePickerArrivo.clear();
-            }
+            ControllerDatePrenotazioni.checkOrdineDate(partenza, partenza.isBefore(arrivo), datePickerArrivo, dialogNuovaPrenotazione);
         });
 
         // Label scelta piazzola
@@ -686,7 +675,7 @@ public class MenuPrenotazioni extends JPanel {
 
                 // Controllo che non ci siano già altre prenotazioni nelle date scelte per quella piazzola!
                 try {
-                    if(tablePrenotazioniController.isAlreadyBooked(dataArrivo, dataPartenza, piazzolaScelta)){
+                    if(ControllerDatePrenotazioni.isAlreadyBooked(dataArrivo, dataPartenza, piazzolaScelta)){
                         MessageController.getErrorMessage(dialogNuovaPrenotazione, String.format("La piazzola %s è già prenotata per le date selezionate", piazzolaScelta));
                         datePickerArrivo.setText("");
                         datePickerPartenza.setText("");
@@ -842,21 +831,13 @@ public class MenuPrenotazioni extends JPanel {
             LocalDate partenza = dateChangeEvent.getNewDate();
             LocalDate arrivo = datePickerArrivo.getDate();
 
-            if (arrivo != null && arrivo.isAfter(partenza)) {
-                datePickerPartenza.closePopup();
-                MessageController.getErrorMessage(dialogFiltraPrenotazione, "La data di partenza deve essere successiva alla data di arrivo");
-                datePickerPartenza.clear();
-            }
+            ControllerDatePrenotazioni.checkOrdineDate(arrivo, arrivo.isAfter(partenza), datePickerPartenza, dialogFiltraPrenotazione);
         });
         datePickerArrivo.addDateChangeListener((dateChangeEvent) -> {
             LocalDate arrivo = dateChangeEvent.getNewDate();
             LocalDate partenza = datePickerPartenza.getDate();
 
-            if (partenza != null && partenza.isBefore(arrivo)) {
-                datePickerArrivo.closePopup();
-                MessageController.getErrorMessage(dialogFiltraPrenotazione, "La data di partenza deve essere successiva alla data di arrivo");
-                datePickerArrivo.clear();
-            }
+            ControllerDatePrenotazioni.checkOrdineDate(partenza, partenza.isBefore(arrivo), datePickerArrivo, dialogFiltraPrenotazione);
         });
 
         // Label scelta piazzola

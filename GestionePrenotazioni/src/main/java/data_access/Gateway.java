@@ -1,10 +1,9 @@
 package data_access;
 
+import controllers.ControllerDatePrenotazioni;
 import controllers.MessageController;
 import controllers.TablePrenotazioniController;
 import views.HomePage;
-import views.MenuArriviPartenze;
-import views.MenuPrenotazioni;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -115,7 +114,7 @@ public class Gateway {
                 dataPartenza = LocalDate.parse(table.getValueAt(row, 2).toString(), dtf);
 
                 try {
-                    if(TablePrenotazioniController.isAlreadyBooked(dataArrivo.toString(), dataPartenza.toString(), newValue.toString())){
+                    if(ControllerDatePrenotazioni.isAlreadyBooked(dataArrivo.toString(), dataPartenza.toString(), newValue.toString())){
                         MessageController.getErrorMessage(HomePage.getFrames()[0], String.format("La piazzola %s è già prenotata per le date selezionate", newValue.toString()));
 
                         return -1;
@@ -142,7 +141,7 @@ public class Gateway {
                 // Verifica se è già presente una prenotazione
                 String piazzolaScelta = table.getValueAt(row, 0).toString();
                 try {
-                    if(TablePrenotazioniController.isAlreadyBooked(dataArrivo.toString(), dataPartenza.toString(), piazzolaScelta)){
+                    if(ControllerDatePrenotazioni.isAlreadyBooked(dataArrivo.toString(), dataPartenza.toString(), piazzolaScelta)){
                         MessageController.getErrorMessage(HomePage.getFrames()[0], String.format("La piazzola %s è già prenotata per le date selezionate", piazzolaScelta));
 
                         return -1;
@@ -182,7 +181,7 @@ public class Gateway {
                 // Verifica se è già presente una prenotazione
                 piazzolaScelta = table.getValueAt(row, 0).toString();
                 try {
-                    if(TablePrenotazioniController.isAlreadyBooked(dataArrivo.toString(), dataPartenza.toString(), piazzolaScelta)){
+                    if(ControllerDatePrenotazioni.isAlreadyBooked(dataArrivo.toString(), dataPartenza.toString(), piazzolaScelta)){
                         MessageController.getErrorMessage(HomePage.getFrames()[0], String.format("La piazzola %s è già prenotata per le date selezionate", piazzolaScelta));
 
                         return -1;

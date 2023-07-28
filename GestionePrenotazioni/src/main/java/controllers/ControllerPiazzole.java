@@ -19,12 +19,12 @@ public class ControllerPiazzole {
         piazzoleRs.close();
     }
 
-    public static ArrayList<String> getListaPiazzole() {
-        return listaPiazzole;
-    }
-
     // Rimuove le piazzole dalla lista
     public static void removePiazzolaFromList(String value){
         listaPiazzole.remove(value);
+    }
+
+    public static ArrayList<String> getListaPiazzole() {
+        return listaPiazzole;
     }
 }
