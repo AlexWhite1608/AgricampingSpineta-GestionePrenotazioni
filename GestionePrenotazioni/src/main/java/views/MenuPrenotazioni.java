@@ -46,8 +46,8 @@ public class MenuPrenotazioni extends JPanel {
     private JButton btnSalva;
     private JButton btnAggiungiPiazzola;
     private JButton btnRimuoviPiazzola;
-    private JLabel lblFiltro;
     private JTable tabellaPrenotazioni;
+    private JLabel lblFiltro;
     private JComboBox cbFiltroAnni;
     private JScrollPane scrollPane;
     private JPopupMenu popupMenu;
@@ -82,6 +82,7 @@ public class MenuPrenotazioni extends JPanel {
         btnRimuoviPiazzola = new JButton("Rimuovi piazzola");
 
         // ComboBox filtraggio anni
+        lblFiltro = new JLabel("Filtra per anno: ");
         cbFiltroAnni = new JComboBox(YEARS.toArray());
 
         // Mostra la query in base al valore della comboBox
@@ -186,6 +187,30 @@ public class MenuPrenotazioni extends JPanel {
     // Setup toolbar
     private void setupToolbar() {
 
+        // Layout toolbar
+        pnlToolbar.setLayout(new BorderLayout());
+
+        // Crea il pannello per i bottoni
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+        buttonPanel.add(btnSalva);
+        buttonPanel.add(btnAggiungiPrenotazione);
+        buttonPanel.add(btnFiltraPrenotazione);
+        buttonPanel.add(btnAggiungiPiazzola);
+        buttonPanel.add(btnRimuoviPiazzola);
+        toolBar.add(buttonPanel, BorderLayout.WEST);
+
+        // Panel spazio orizzontale
+        JPanel pnlHorizontalStrut = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        pnlHorizontalStrut.setPreferredSize(new Dimension(SEPARATOR_WIDTH, 1));
+        toolBar.add(pnlHorizontalStrut, BorderLayout.CENTER);
+
+        // Panel comboBox filtro anni
+        JPanel pnlFiltroAnni = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        pnlFiltroAnni.add(lblFiltro);
+        pnlFiltroAnni.add(cbFiltroAnni);
+        toolBar.add(pnlFiltroAnni, BorderLayout.EAST);
+
         // Setting buttons
         btnSalva.setFocusPainted(false);
         btnAggiungiPrenotazione.setFocusPainted(false);
@@ -197,6 +222,10 @@ public class MenuPrenotazioni extends JPanel {
         btnFiltraPrenotazione.setToolTipText("Filtra prenotazione");
         btnAggiungiPiazzola.setToolTipText("Aggiungi piazzola ");
         btnRimuoviPiazzola.setToolTipText("Rimuovi piazzola");
+
+        // Setting combobox
+        cbFiltroAnni.setFocusable(false);
+        ((JLabel) cbFiltroAnni.getRenderer()).setHorizontalAlignment(SwingConstants.CENTER);
 
         // Azione: aggiunta di una nuova prenotazione
         btnAggiungiPrenotazione.addActionListener(new ActionListener() {
@@ -242,21 +271,7 @@ public class MenuPrenotazioni extends JPanel {
             }
         });
 
-        // Crea un separatore orizzontale per distanziare i bottoni dalla combobox
-        Component horizontalStrut = Box.createHorizontalStrut(SEPARATOR_WIDTH);
-        toolBar.add(btnSalva);
-        toolBar.add(btnAggiungiPrenotazione);
-        toolBar.add(btnFiltraPrenotazione);
-        toolBar.add(btnAggiungiPiazzola);
-        toolBar.add(btnRimuoviPiazzola);
-        toolBar.add(horizontalStrut);
-
-        // Setting combobox
-        cbFiltroAnni.setFocusable(false);
-        lblFiltro = new JLabel("Filtra per anno: ");
-        toolBar.add(lblFiltro);
-        toolBar.add(cbFiltroAnni);
-        ((JLabel) cbFiltroAnni.getRenderer()).setHorizontalAlignment(SwingConstants.CENTER);
+        // Azione: cambia anni nel filtro per la visualizzazione
         cbFiltroAnni.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
 
@@ -269,7 +284,6 @@ public class MenuPrenotazioni extends JPanel {
         });
 
         toolBar.setFloatable(false);
-
         pnlToolbar.add(toolBar, BorderLayout.CENTER);
         mainPanelPrenotazioni.add(pnlToolbar, BorderLayout.NORTH);
     }
