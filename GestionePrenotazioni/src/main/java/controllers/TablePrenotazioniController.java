@@ -8,7 +8,6 @@ import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -23,8 +22,7 @@ public class TablePrenotazioniController {
     private final Color HEADER_BACKGROUND = Color.LIGHT_GRAY;
     private final Color BORDER_CELL_SELECTED = Color.blue;
 
-    // Liste dei valori
-    static ArrayList<String> listaPiazzole = new ArrayList<>();
+    // Lista dei nomi delle prenotazioni
     static ArrayList<String> listaNomi = new ArrayList<>();
 
     private JTable tblPrenotazioni;
@@ -189,21 +187,6 @@ public class TablePrenotazioniController {
         };
     }
 
-    // Carica tutte le piazzole
-    public static void setListaPiazzole() throws SQLException {
-        ResultSet piazzoleRs = new Gateway().execSelectQuery("SELECT * FROM Piazzole");
-        while (piazzoleRs.next()) {
-            if(!listaPiazzole.contains(piazzoleRs.getString("Nome")))
-                listaPiazzole.add(piazzoleRs.getString("Nome"));
-        }
-        piazzoleRs.close();
-    }
-
-    // Rimuove le piazzole dalla lista
-    public void removePiazzolaFromList(String value){
-        listaPiazzole.remove(value);
-    }
-
     // Ritorna tutti i nomi delle prenotazioni
     public static ArrayList<String> getAllNames() throws SQLException {
         ResultSet nomiRs = new Gateway().execSelectQuery("SELECT Nome FROM Prenotazioni");
@@ -284,10 +267,6 @@ public class TablePrenotazioniController {
         }
 
         return isAlreadyBooked;
-    }
-
-    public static ArrayList<String> getListaPiazzole() {
-        return listaPiazzole;
     }
 
     public static ArrayList<String> getListaNomi() {

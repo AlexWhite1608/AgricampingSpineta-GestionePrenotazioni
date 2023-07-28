@@ -1,15 +1,10 @@
 package utils;
 
-import controllers.MessageController;
+import controllers.ControllerPiazzole;
 import controllers.TablePrenotazioniController;
 import data_access.Gateway;
-import views.HomePage;
-import views.MenuPrenotazioni;
 
 import javax.swing.*;
-import javax.swing.event.PopupMenuEvent;
-import javax.swing.event.PopupMenuListener;
-import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableCellEditor;
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -47,11 +42,11 @@ public class CustomCellEditorPrenotazioni extends AbstractCellEditor implements 
 
             // Aggiunge tutti i valori delle piazzole
             try {
-                TablePrenotazioniController.setListaPiazzole();
+                ControllerPiazzole.setListaPiazzole();
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
-            for(String piazzola : TablePrenotazioniController.getListaPiazzole()){
+            for(String piazzola : ControllerPiazzole.getListaPiazzole()){
                 comboBox.addItem(piazzola);
             }
 

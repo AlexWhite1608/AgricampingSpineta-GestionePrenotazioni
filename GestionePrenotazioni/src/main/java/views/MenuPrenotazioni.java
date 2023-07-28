@@ -2,6 +2,7 @@ package views;
 
 import com.github.lgooddatepicker.components.DatePicker;
 import com.github.lgooddatepicker.components.DatePickerSettings;
+import controllers.ControllerPiazzole;
 import controllers.MessageController;
 import controllers.TablePrenotazioniController;
 import controllers.TextFieldsController;
@@ -16,8 +17,6 @@ import javax.swing.border.Border;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableColumn;
-import javax.swing.text.JTextComponent;
 import java.awt.*;
 import java.awt.event.*;
 import java.sql.ResultSet;
@@ -379,8 +378,8 @@ public class MenuPrenotazioni extends JPanel {
         gbc.anchor = GridBagConstraints.WEST;
         pnlForm.add(nameLabel, gbc);
 
-        tablePrenotazioniController.setListaPiazzole();
-        JComboBox cbPiazzole = new JComboBox(TablePrenotazioniController.getListaPiazzole().toArray());
+        ControllerPiazzole.setListaPiazzole();
+        JComboBox cbPiazzole = new JComboBox(ControllerPiazzole.getListaPiazzole().toArray());
         cbPiazzole.setFocusable(false);
         cbPiazzole.setSelectedItem(null);
         ((JLabel) cbPiazzole.getRenderer()).setHorizontalAlignment(SwingConstants.CENTER);
@@ -418,7 +417,7 @@ public class MenuPrenotazioni extends JPanel {
                 } else {
                     try {
                         new Gateway().execUpdateQuery(query, selectedPiazzola);
-                        tablePrenotazioniController.removePiazzolaFromList(selectedPiazzola);
+                        ControllerPiazzole.removePiazzolaFromList(selectedPiazzola);
                         rimuoviPiazzolaDialog.dispose();
 
                         MessageController.getInfoMessage(rimuoviPiazzolaDialog, String.format("Piazzola %s rimossa correttamente!", selectedPiazzola));
@@ -528,8 +527,8 @@ public class MenuPrenotazioni extends JPanel {
         pnlForm.add(lblPiazzola, gbc);
 
         // ComboBox scelta piazzola
-        tablePrenotazioniController.setListaPiazzole();
-        JComboBox cbSceltaPiazzola = new JComboBox<>(tablePrenotazioniController.getListaPiazzole().toArray());
+        ControllerPiazzole.setListaPiazzole();
+        JComboBox cbSceltaPiazzola = new JComboBox<>(ControllerPiazzole.getListaPiazzole().toArray());
         cbSceltaPiazzola.setPreferredSize(datePickerArrivo.getPreferredSize());
         cbSceltaPiazzola.setFocusable(false);
         cbSceltaPiazzola.setSelectedItem(null);
@@ -868,8 +867,8 @@ public class MenuPrenotazioni extends JPanel {
         pnlForm.add(lblPiazzola, gbc);
 
         // ComboBox scelta piazzola
-        tablePrenotazioniController.setListaPiazzole();
-        JComboBox cbSceltaPiazzola = new JComboBox<>(tablePrenotazioniController.getListaPiazzole().toArray());
+        ControllerPiazzole.setListaPiazzole();
+        JComboBox cbSceltaPiazzola = new JComboBox<>(ControllerPiazzole.getListaPiazzole().toArray());
         cbSceltaPiazzola.setPreferredSize(datePickerArrivo.getPreferredSize());
         cbSceltaPiazzola.setFocusable(false);
         cbSceltaPiazzola.setSelectedItem(null);
