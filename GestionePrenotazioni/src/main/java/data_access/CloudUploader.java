@@ -40,7 +40,9 @@ public class CloudUploader {
     //FIXME: rimuovi quando funziona e chiama direttamente uploadFile
     public static void main(String[] args) {
         try {
-            uploadFile();
+            //uploadFile();
+            String provaFile = "201712041856511000.jpg";
+            importFileFromDrive(provaFile);
         } catch (IOException | GeneralSecurityException e) {
             e.printStackTrace();
         }
@@ -64,6 +66,47 @@ public class CloudUploader {
 
         // Delete the temporary file
         tempFile.delete();
+    }
+
+    // Metodo per importare un file specifico dal Drive e inserirlo nella cartella delle risorse del progetto
+    private static void importFileFromDrive(String fileName) throws IOException, GeneralSecurityException {
+        final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
+        Drive service = new Drive.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT)).setApplicationName(APPLICATION_NAME).build();
+
+        // Recupera l'elenco dei file dal Drive
+        FileList result = service.files().list().setQ("name='" + fileName + "'").setFields("files(id, name)").execute();
+        List<File> files = result.getFiles();
+
+        if (files.isEmpty()) {
+            System.out.println("File not found on Drive: " + fileName);
+            return;
+        }
+
+        String fileId = files.get(0).getId();
+
+        // Scarica il file dal Drive
+        java.io.File tempFile = new java.io.File(System.getProperty("java.io.tmpdir"), fileName);
+        try (OutputStream outputStream = new FileOutputStream(tempFile)) {
+            service.files().get(fileId).executeMediaAndDownloadTo(outputStream);
+        }
+
+        // Copia il file nella cartella delle risorse del progetto
+        java.io.File resourcesFolder = new java.io.File(CloudUploader.class.getResource("/").getFile());
+        java.io.File importedFile = new java.io.File(resourcesFolder, fileName);
+
+        try (InputStream inputStream = new FileInputStream(tempFile);
+             OutputStream outputStream = new FileOutputStream(importedFile)) {
+            byte[] buffer = new byte[1024];
+            int bytesRead;
+            while ((bytesRead = inputStream.read(buffer)) != -1) {
+                outputStream.write(buffer, 0, bytesRead);
+            }
+        }
+
+        // Elimina il file temporaneo
+        tempFile.delete();
+
+        System.out.println("File " + fileName + " imported successfully.");
     }
 
     private static Credential getCredentials(final HttpTransport httpTransport) throws IOException {
