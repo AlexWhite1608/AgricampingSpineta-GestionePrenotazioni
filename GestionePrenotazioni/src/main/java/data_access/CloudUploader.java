@@ -41,7 +41,7 @@ public class CloudUploader {
     public static void main(String[] args) {
         try {
             //uploadFile();
-            String provaFile = "201712041856511000.jpg";
+            String provaFile = "provadatabase.db";
             importFileFromDrive(provaFile);
         } catch (IOException | GeneralSecurityException e) {
             e.printStackTrace();
@@ -50,6 +50,8 @@ public class CloudUploader {
 
     //TODO: se il file è già presente sostituiscilo oppure fai una cartella con il giorno del caricamento?
     private static void uploadFile() throws IOException, GeneralSecurityException {
+        //TODO: deve ricevere in input il nome del file (database.db e database.csv?)
+
         final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
         Drive service = new Drive.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT)).setApplicationName(APPLICATION_NAME).build();
 
