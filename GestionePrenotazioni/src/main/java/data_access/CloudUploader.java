@@ -25,9 +25,9 @@ import java.util.List;
 import java.util.Objects;
 
 public class CloudUploader {
-    private static final String APPLICATION_NAME = "ProvaCampeggio";
+    private static final String APPLICATION_NAME = "AgricampingSpineta";
     private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
-    private static final String CREDENTIALS_FILE_PATH = "/prova_credenziali_drive.json";
+    private static final String CREDENTIALS_FILE_PATH = "/credentials.json";
     private static final String TOKENS_DIRECTORY_PATH = System.getProperty("user.home") + FileSystems.getDefault().getSeparator() + "GestionePrenotazioni" + FileSystems.getDefault().getSeparator() + "tokens";    //FIXME: crea cartella da qualche parte!
     private static final List<String> SCOPES = Collections.singletonList(DriveScopes.DRIVE_FILE);
 
