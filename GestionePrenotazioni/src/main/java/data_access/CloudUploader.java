@@ -31,17 +31,6 @@ public class CloudUploader {
     private static final String TOKENS_DIRECTORY_PATH = System.getProperty("user.home") + FileSystems.getDefault().getSeparator() + "GestionePrenotazioni" + FileSystems.getDefault().getSeparator() + "tokens";    //FIXME: crea cartella da qualche parte!
     private static final List<String> SCOPES = Collections.singletonList(DriveScopes.DRIVE_FILE);
 
-    //FIXME: rimuovi quando funziona e chiama direttamente i metodi
-//    public static void main(String[] args) {
-//        try {
-//            //uploadFile();
-//            String provaFile = "provadatabase.db";
-//            importFileFromDrive(provaFile);
-//        } catch (IOException | GeneralSecurityException e) {
-//            e.printStackTrace();
-//        }
-//    }
-
     //TODO: se il file è già presente sostituiscilo oppure fai una cartella con il giorno del caricamento?
     public static boolean uploadDatabaseFile() throws IOException, GeneralSecurityException {
         final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
