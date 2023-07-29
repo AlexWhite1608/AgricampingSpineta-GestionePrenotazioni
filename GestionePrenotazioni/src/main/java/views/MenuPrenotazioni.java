@@ -3,6 +3,7 @@ package views;
 import com.github.lgooddatepicker.components.DatePicker;
 import com.github.lgooddatepicker.components.DatePickerSettings;
 import controllers.*;
+import data_access.CloudUploader;
 import data_access.Gateway;
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 import org.jdesktop.swingx.autocomplete.ObjectToStringConverter;
@@ -16,6 +17,8 @@ import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -222,6 +225,21 @@ public class MenuPrenotazioni extends JPanel {
         // Setting combobox
         cbFiltroAnni.setFocusable(false);
         ((JLabel) cbFiltroAnni.getRenderer()).setHorizontalAlignment(SwingConstants.CENTER);
+
+        // Azione: salvataggio del database sul drive
+        btnSalva.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    if(CloudUploader.uploadDatabaseFile())
+                        MessageController.getInfoMessage(MenuPrenotazioni.this, "Backup eseguito correttamente!");
+                    else
+                        MessageController.getErrorMessage(MenuPrenotazioni.this, "Impossibile eseguire il backup");
+                } catch (IOException | GeneralSecurityException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
 
         // Azione: aggiunta di una nuova prenotazione
         btnAggiungiPrenotazione.addActionListener(new ActionListener() {
@@ -1157,6 +1175,11 @@ public class MenuPrenotazioni extends JPanel {
                 tabellaPrenotazioni.repaint(selectedRow);
             }
         });
+    }
+
+    // Setup button salvataggio su drive
+    private void setupSaveButton(){
+
     }
 
     // Setting della modifica dinamica della tabella (doppio click)

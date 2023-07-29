@@ -4,10 +4,7 @@ import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInstalledApp;
 import com.google.api.client.extensions.jetty.auth.oauth2.LocalServerReceiver;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
-import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeTokenRequest;
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
-import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
-import com.google.api.client.googleapis.auth.oauth2.GoogleTokenResponse;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.http.FileContent;
 import com.google.api.client.http.HttpTransport;
@@ -21,10 +18,7 @@ import com.google.api.services.drive.model.File;
 import com.google.api.services.drive.model.FileList;
 
 import java.io.*;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.nio.file.FileSystems;
-import java.nio.file.Paths;
 import java.security.GeneralSecurityException;
 import java.util.Collections;
 import java.util.List;
@@ -37,21 +31,19 @@ public class CloudUploader {
     private static final String TOKENS_DIRECTORY_PATH = System.getProperty("user.home") + FileSystems.getDefault().getSeparator() + "GestionePrenotazioni" + FileSystems.getDefault().getSeparator() + "tokens";    //FIXME: crea cartella da qualche parte!
     private static final List<String> SCOPES = Collections.singletonList(DriveScopes.DRIVE_FILE);
 
-    //FIXME: rimuovi quando funziona e chiama direttamente uploadFile
-    public static void main(String[] args) {
-        try {
-            //uploadFile();
-            String provaFile = "provadatabase.db";
-            importFileFromDrive(provaFile);
-        } catch (IOException | GeneralSecurityException e) {
-            e.printStackTrace();
-        }
-    }
+    //FIXME: rimuovi quando funziona e chiama direttamente i metodi
+//    public static void main(String[] args) {
+//        try {
+//            //uploadFile();
+//            String provaFile = "provadatabase.db";
+//            importFileFromDrive(provaFile);
+//        } catch (IOException | GeneralSecurityException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
     //TODO: se il file è già presente sostituiscilo oppure fai una cartella con il giorno del caricamento?
-    private static void uploadFile() throws IOException, GeneralSecurityException {
-        //TODO: deve ricevere in input il nome del file (database.db e database.csv?)
-
+    public static boolean uploadDatabaseFile() throws IOException, GeneralSecurityException {
         final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
         Drive service = new Drive.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT)).setApplicationName(APPLICATION_NAME).build();
 
@@ -68,10 +60,15 @@ public class CloudUploader {
 
         // Delete the temporary file
         tempFile.delete();
+        return true;
     }
 
+    //TODO: fai anche una versione per database.csv?
+
+    //TODO: quando si importa il file e lo si ricarica c'è da gestire il fatto che il file ha lo stesso nome (-> lo sostituisce automaticamente?)
+
     // Metodo per importare un file specifico dal Drive e inserirlo nella cartella delle risorse del progetto
-    private static void importFileFromDrive(String fileName) throws IOException, GeneralSecurityException {
+    public static boolean importFileFromDrive(String fileName) throws IOException, GeneralSecurityException {
         final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
         Drive service = new Drive.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT)).setApplicationName(APPLICATION_NAME).build();
 
@@ -81,7 +78,7 @@ public class CloudUploader {
 
         if (files.isEmpty()) {
             System.out.println("File not found on Drive: " + fileName);
-            return;
+            return false;
         }
 
         String fileId = files.get(0).getId();
@@ -109,6 +106,7 @@ public class CloudUploader {
         tempFile.delete();
 
         System.out.println("File " + fileName + " imported successfully.");
+        return true;
     }
 
     private static Credential getCredentials(final HttpTransport httpTransport) throws IOException {
