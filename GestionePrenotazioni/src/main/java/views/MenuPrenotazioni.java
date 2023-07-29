@@ -230,14 +230,7 @@ public class MenuPrenotazioni extends JPanel {
         btnSalva.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                try {
-                    if(CloudUploader.uploadDatabaseFile())
-                        MessageController.getInfoMessage(MenuPrenotazioni.this, "Backup eseguito correttamente!");
-                    else
-                        MessageController.getErrorMessage(MenuPrenotazioni.this, "Impossibile eseguire il backup");
-                } catch (IOException | GeneralSecurityException ex) {
-                    ex.printStackTrace();
-                }
+                setupSalva();
             }
         });
 
@@ -1183,6 +1176,18 @@ public class MenuPrenotazioni extends JPanel {
                 tabellaPrenotazioni.repaint(selectedRow);
             }
         });
+    }
+
+    // Setup del button del salvataggio dei file su drive
+    private void setupSalva() {
+        try {
+            if(CloudUploader.uploadDatabaseFile())
+                MessageController.getInfoMessage(MenuPrenotazioni.this, "Backup eseguito correttamente!");
+            else
+                MessageController.getErrorMessage(MenuPrenotazioni.this, "Impossibile eseguire il backup");
+        } catch (IOException | GeneralSecurityException ex) {
+            ex.printStackTrace();
+        }
     }
 
     // Setting della modifica dinamica della tabella (doppio click)
