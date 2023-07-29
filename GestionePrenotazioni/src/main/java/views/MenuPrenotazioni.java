@@ -1123,17 +1123,23 @@ public class MenuPrenotazioni extends JPanel {
                     String nome = (String) tabellaPrenotazioni.getValueAt(selectedRow, 3);
                     String acconto = (String) tabellaPrenotazioni.getValueAt(selectedRow, 4);
 
+                    // Messaggio di conferma di eliminazione della prenotazione
+                    int confirmResult = JOptionPane.showConfirmDialog(MenuPrenotazioni.this,
+                            "Vuoi eliminare la prenotazione?",
+                            "Elimina prenotazione",
+                            JOptionPane.YES_NO_OPTION);
+                    if (confirmResult == JOptionPane.YES_OPTION) {
+                        // Eseguo la query di eliminazione
+                        new Gateway().execUpdateQuery(deleteQuery, id);
+                        tablePrenotazioniController.getListaNomi().remove(nome);
 
-                    // Eseguo la query di eliminazione
-                    new Gateway().execUpdateQuery(deleteQuery, id);
-                    tablePrenotazioniController.getListaNomi().remove(nome);
+                        // Elimino anche dalla tabella SaldoAcconti
+                        String deleteSaldoAccontiQuery = "DELETE FROM SaldoAcconti WHERE Nome = ? AND Arrivo = ? AND Partenza = ? AND Acconto = ?";
+                        new Gateway().execUpdateQuery(deleteSaldoAccontiQuery, nome, arrivo, partenza, acconto);
 
-                    // Elimino anche dalla tabella SaldoAcconti
-                    String deleteSaldoAccontiQuery = "DELETE FROM SaldoAcconti WHERE Nome = ? AND Arrivo = ? AND Partenza = ? AND Acconto = ?";
-                    new Gateway().execUpdateQuery(deleteSaldoAccontiQuery, nome, arrivo, partenza, acconto);
-
-                    // Aggiorno la tabella dopo l'eliminazione
-                    tablePrenotazioniController.refreshTable(tabellaPrenotazioni);
+                        // Aggiorno la tabella dopo l'eliminazione
+                        tablePrenotazioniController.refreshTable(tabellaPrenotazioni);
+                    }
                 } catch (SQLException ex) {
                     MessageController.getErrorMessage(MenuPrenotazioni.this, "Errore durante l'eliminazione della riga: " + ex.getMessage());
                     ex.printStackTrace();
@@ -1175,11 +1181,6 @@ public class MenuPrenotazioni extends JPanel {
                 tabellaPrenotazioni.repaint(selectedRow);
             }
         });
-    }
-
-    // Setup button salvataggio su drive
-    private void setupSaveButton(){
-
     }
 
     // Setting della modifica dinamica della tabella (doppio click)
