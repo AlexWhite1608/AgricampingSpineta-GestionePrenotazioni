@@ -661,8 +661,10 @@ public class MenuPrenotazioni extends JPanel {
                 // Controllo di aver inserito i valori obbligatori (nome, piazzola)
                 } else if (tfNome.getText().isEmpty()) {
                     MessageController.getErrorMessage(dialogNuovaPrenotazione, "Inserire il nome!");
+                    return;
                 } else if(cbSceltaPiazzola.getSelectedItem() == null) {
                     MessageController.getErrorMessage(dialogNuovaPrenotazione, "Inserire la piazzola!");
+                    return;
                 }
 
                 // Ricavo tutte le info inserite
