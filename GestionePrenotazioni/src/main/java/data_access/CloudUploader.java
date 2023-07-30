@@ -56,7 +56,6 @@ public class CloudUploader {
 
     //TODO: quando si importa il file e lo si ricarica c'è da gestire il fatto che il file ha lo stesso nome (-> lo sostituisce automaticamente?)
 
-    // Metodo per importare un file specifico dal Drive e inserirlo nella cartella delle risorse del progetto
     public static boolean importFileFromDrive(String fileName) throws IOException, GeneralSecurityException {
         final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
         Drive service = new Drive.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT)).setApplicationName(APPLICATION_NAME).build();
@@ -78,10 +77,9 @@ public class CloudUploader {
             service.files().get(fileId).executeMediaAndDownloadTo(outputStream);
         }
 
-        // Copia il file nella cartella delle risorse del progetto
+        // Sovrascrivi il database esistente con il nuovo database importato
         java.io.File resourcesFolder = new java.io.File(CloudUploader.class.getResource("/").getFile());
         java.io.File importedFile = new java.io.File(resourcesFolder, fileName);
-
         try (InputStream inputStream = new FileInputStream(tempFile);
              OutputStream outputStream = new FileOutputStream(importedFile)) {
             byte[] buffer = new byte[1024];

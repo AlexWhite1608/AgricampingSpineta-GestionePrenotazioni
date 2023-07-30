@@ -9,7 +9,6 @@ import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 import org.jdesktop.swingx.autocomplete.ObjectToStringConverter;
 import utils.CustomCellEditorPrenotazioni;
 import utils.DataFilter;
-
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -43,6 +42,7 @@ public class MenuPrenotazioni extends JPanel {
     private JButton btnAggiungiPrenotazione;
     private JButton btnFiltraPrenotazione;
     private JButton btnSalva;
+    private JButton btnImportaDrive;
     private JButton btnAggiungiPiazzola;
     private JButton btnRimuoviPiazzola;
     private JTable tabellaPrenotazioni;
@@ -75,6 +75,7 @@ public class MenuPrenotazioni extends JPanel {
 
         // Bottoni azioni nella toolbar
         btnSalva = new JButton("Salva");
+        btnImportaDrive = new JButton("Importa");
         btnAggiungiPrenotazione = new JButton("Aggiungi");
         btnFiltraPrenotazione = new JButton("Filtra");
         btnAggiungiPiazzola = new JButton("Aggiungi piazzola");
@@ -193,6 +194,7 @@ public class MenuPrenotazioni extends JPanel {
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
         buttonPanel.add(btnSalva);
+        buttonPanel.add(btnImportaDrive);
         buttonPanel.add(btnAggiungiPrenotazione);
         buttonPanel.add(btnFiltraPrenotazione);
         toolBar.add(buttonPanel, BorderLayout.WEST);
@@ -202,7 +204,7 @@ public class MenuPrenotazioni extends JPanel {
         pnlHorizontalStrut.setPreferredSize(new Dimension(SEPARATOR_WIDTH, 1));
         toolBar.add(pnlHorizontalStrut, BorderLayout.CENTER);
 
-        // Panel comboBox filtro anni
+        // Panel comboBox filtro anni + bottoni piazzole
         JPanel pnlFiltroAnni = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         pnlFiltroAnni.add(btnAggiungiPiazzola);
         pnlFiltroAnni.add(btnRimuoviPiazzola);
@@ -212,11 +214,13 @@ public class MenuPrenotazioni extends JPanel {
 
         // Setting buttons
         btnSalva.setFocusPainted(false);
+        btnImportaDrive.setFocusPainted(false);
         btnAggiungiPrenotazione.setFocusPainted(false);
         btnFiltraPrenotazione.setFocusPainted(false);
         btnAggiungiPiazzola.setFocusPainted(false);
         btnRimuoviPiazzola.setFocusPainted(false);
         btnSalva.setToolTipText("Salva sul drive");
+        btnImportaDrive.setToolTipText("Importa prenotazioni dal backup");
         btnAggiungiPrenotazione.setToolTipText("Aggiungi prenotazione");
         btnFiltraPrenotazione.setToolTipText("Filtra prenotazione");
         btnAggiungiPiazzola.setToolTipText("Aggiungi piazzola ");
@@ -231,6 +235,25 @@ public class MenuPrenotazioni extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 setupSalva();
+            }
+        });
+
+        // Azione: importa il database dal backup sul drive
+        btnImportaDrive.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                // Si connette all'ultima versione del database importato dal drive
+                try {
+                    CloudUploader.importFileFromDrive("database.db");
+                } catch (IOException | GeneralSecurityException ex) {
+                    throw new RuntimeException(ex);
+                }
+
+                // Ricarica la vista della tabella
+                tablePrenotazioniController.refreshTable(tabellaPrenotazioni);
+
+                MessageController.getInfoMessage(MenuPrenotazioni.this, "Backup importato correttamente!");
             }
         });
 
