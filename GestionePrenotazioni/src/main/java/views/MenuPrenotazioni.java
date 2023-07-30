@@ -234,7 +234,14 @@ public class MenuPrenotazioni extends JPanel {
         btnSalva.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                setupSalva();
+                int confirmResult = JOptionPane.showConfirmDialog(MenuPrenotazioni.this,
+                        "Salvare le prenotazioni sul drive?",
+                        "Salva prenotazioni",
+                        JOptionPane.YES_NO_OPTION);
+
+                if(confirmResult == JOptionPane.YES_OPTION){
+                    setupSalva();
+                }
             }
         });
 
@@ -243,17 +250,24 @@ public class MenuPrenotazioni extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
 
-                // Si connette all'ultima versione del database importato dal drive
-                try {
-                    CloudUploader.importFileFromDrive("database.db");
-                } catch (IOException | GeneralSecurityException ex) {
-                    throw new RuntimeException(ex);
+                int confirmResult = JOptionPane.showConfirmDialog(MenuPrenotazioni.this,
+                        "Importare l'ultimo backup eseguito?",
+                        "Importa backup",
+                        JOptionPane.YES_NO_OPTION);
+
+                if(confirmResult == JOptionPane.YES_OPTION){
+                    // Si connette all'ultima versione del database importato dal drive
+                    try {
+                        CloudUploader.importFileFromDrive("database.db");
+                    } catch (IOException | GeneralSecurityException ex) {
+                        throw new RuntimeException(ex);
+                    }
+
+                    // Ricarica la vista della tabella
+                    tablePrenotazioniController.refreshTable(tabellaPrenotazioni);
+
+                    MessageController.getInfoMessage(MenuPrenotazioni.this, "Backup importato correttamente!");
                 }
-
-                // Ricarica la vista della tabella
-                tablePrenotazioniController.refreshTable(tabellaPrenotazioni);
-
-                MessageController.getInfoMessage(MenuPrenotazioni.this, "Backup importato correttamente!");
             }
         });
 
