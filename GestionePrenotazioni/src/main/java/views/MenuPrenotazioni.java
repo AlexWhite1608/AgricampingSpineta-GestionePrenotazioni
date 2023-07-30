@@ -195,8 +195,6 @@ public class MenuPrenotazioni extends JPanel {
         buttonPanel.add(btnSalva);
         buttonPanel.add(btnAggiungiPrenotazione);
         buttonPanel.add(btnFiltraPrenotazione);
-        buttonPanel.add(btnAggiungiPiazzola);
-        buttonPanel.add(btnRimuoviPiazzola);
         toolBar.add(buttonPanel, BorderLayout.WEST);
 
         // Panel spazio orizzontale
@@ -206,6 +204,8 @@ public class MenuPrenotazioni extends JPanel {
 
         // Panel comboBox filtro anni
         JPanel pnlFiltroAnni = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        pnlFiltroAnni.add(btnAggiungiPiazzola);
+        pnlFiltroAnni.add(btnRimuoviPiazzola);
         pnlFiltroAnni.add(lblFiltro);
         pnlFiltroAnni.add(cbFiltroAnni);
         toolBar.add(pnlFiltroAnni, BorderLayout.EAST);
