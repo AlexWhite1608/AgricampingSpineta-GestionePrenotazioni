@@ -754,45 +754,6 @@ public class MenuPrenotazioni extends JPanel {
         dialogFiltraPrenotazione.setLocationRelativeTo(SwingUtilities.getWindowAncestor(this)); // Utilizza HomePage come riferimento
         dialogFiltraPrenotazione.setResizable(false);
 
-        /* Panel scelta corrispondenze */
-        JPanel pnlCorrispondenze = new JPanel(new FlowLayout());
-        Border pnlBorder = BorderFactory.createTitledBorder("Filtra corrispondenze");
-        pnlCorrispondenze.setBorder(pnlBorder);
-        JLabel lblTutteCorrispondenze = new JLabel("TUTTI i valori inseriti");
-        JLabel lblAlcuneCorrispondenze = new JLabel("ALMENO un valore inserito");
-        JRadioButton rbTutteCorrispondenze = new JRadioButton();
-        JRadioButton rbAlcuneCorrispondenze = new JRadioButton();
-
-        // Di default si vuole filtrare per tutti i valori inseriti
-        rbTutteCorrispondenze.setSelected(true);
-
-        // Gestisce la mutua esclusione dei radiobutton
-        rbTutteCorrispondenze.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                rbAlcuneCorrispondenze.setSelected(false);
-            }
-        });
-        rbAlcuneCorrispondenze.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                rbTutteCorrispondenze.setSelected(false);
-            }
-        });
-
-        pnlCorrispondenze.add(lblTutteCorrispondenze);
-        pnlCorrispondenze.add(rbTutteCorrispondenze);
-        pnlCorrispondenze.add(Box.createHorizontalStrut(DIALOG_SEPARATOR_WIDTH));
-        pnlCorrispondenze.add(lblAlcuneCorrispondenze);
-        pnlCorrispondenze.add(rbAlcuneCorrispondenze);
-
-        pnlCorrispondenze.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createEmptyBorder(10, 10, 10, 10),
-                pnlCorrispondenze.getBorder()
-        ));
-        /* --------------------------------------- */
-
-
         /* Panel dedicato agli elementi del form */
         JPanel pnlForm = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
@@ -1011,13 +972,7 @@ public class MenuPrenotazioni extends JPanel {
 
                 // Eseguo la query del filtro (in base al radio button selezionato) con eventuale messaggio se non esiste nessun valore per il filtro scelto
                 String filterQuery = "SELECT * FROM Prenotazioni WHERE ";
-                String conjunction = "";
-
-                if (rbTutteCorrispondenze.isSelected()) {
-                    conjunction = "AND";
-                } else if (rbAlcuneCorrispondenze.isSelected()) {
-                    conjunction = "OR";
-                }
+                String conjunction = "AND";
 
                 ArrayList<String> conditions = new ArrayList<>();
 
@@ -1075,7 +1030,6 @@ public class MenuPrenotazioni extends JPanel {
         pnlButtons.add(btnAnnulla, CENTER_ALIGNMENT);
         /* --------------------------------------- */
 
-        dialogFiltraPrenotazione.add(pnlCorrispondenze, BorderLayout.NORTH);
         dialogFiltraPrenotazione.add(pnlForm, BorderLayout.CENTER);
         dialogFiltraPrenotazione.add(pnlButtons, BorderLayout.SOUTH);
         dialogFiltraPrenotazione.pack();
