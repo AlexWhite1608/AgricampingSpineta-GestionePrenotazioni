@@ -345,6 +345,7 @@ public class Gateway {
         try {
             // Esegui una query per verificare la connessione al database specificato
             String checkQuery = "SELECT 1 FROM Prenotazioni WHERE 1 = 0";
+            connect();
             PreparedStatement statement = connection.prepareStatement(checkQuery);
             statement.executeQuery();
 

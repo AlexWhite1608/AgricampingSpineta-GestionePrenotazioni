@@ -17,6 +17,7 @@ import javax.swing.table.TableCellRenderer;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.security.GeneralSecurityException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -240,7 +241,9 @@ public class MenuPrenotazioni extends JPanel {
                         JOptionPane.YES_NO_OPTION);
 
                 if(confirmResult == JOptionPane.YES_OPTION){
+                    setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
                     setupSalva();
+                    setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
                 }
             }
         });
@@ -256,6 +259,8 @@ public class MenuPrenotazioni extends JPanel {
                         JOptionPane.YES_NO_OPTION);
 
                 if(confirmResult == JOptionPane.YES_OPTION){
+                    setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+
                     // Si connette all'ultima versione del database importato dal drive
                     try {
                         CloudUploader.importFileFromDrive("database.db");
@@ -268,6 +273,7 @@ public class MenuPrenotazioni extends JPanel {
                     tablePrenotazioniController.getGateway().connect();
                     tablePrenotazioniController.refreshTable(tabellaPrenotazioni);
 
+                    setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
                     MessageController.getInfoMessage(MenuPrenotazioni.this, "Backup importato correttamente!");
                 }
             }
@@ -1178,7 +1184,7 @@ public class MenuPrenotazioni extends JPanel {
                 MessageController.getInfoMessage(MenuPrenotazioni.this, "Backup eseguito correttamente!");
             else
                 MessageController.getErrorMessage(MenuPrenotazioni.this, "Impossibile eseguire il backup");
-        } catch (IOException | GeneralSecurityException ex) {
+        } catch (IOException | GeneralSecurityException | URISyntaxException ex) {
             ex.printStackTrace();
         }
     }
