@@ -44,11 +44,9 @@ public class Gateway {
             if (downloadedDbFile.exists()) {
                 // Se il file "scaricato.db" esiste, connettiti a quel database
                 connection = DriverManager.getConnection("jdbc:sqlite:" + downloadedDbFile.getAbsolutePath());
-                System.out.println("Connesso al database scaricato.");
             } else {
                 // Altrimenti, connettiti al database interno "database.db"
                 connection = DriverManager.getConnection("jdbc:sqlite::resource:" + dbName);
-                System.out.println("Connesso al database interno.");
             }
 
         } catch (ClassNotFoundException e) {
