@@ -342,4 +342,19 @@ public class Gateway {
 
         return model;
     }
+
+    public boolean isConnectedToDatabase(String databasePath) {
+        try {
+            // Esegui una query per verificare la connessione al database specificato
+            String checkQuery = "SELECT 1 FROM Prenotazioni WHERE 1 = 0";
+            PreparedStatement statement = connection.prepareStatement(checkQuery);
+            statement.executeQuery();
+
+            // Se l'esecuzione della query non ha causato errori, siamo connessi al database
+            return true;
+        } catch (SQLException e) {
+            // Se si verifica un errore, non siamo connessi al database
+            return false;
+        }
+    }
 }

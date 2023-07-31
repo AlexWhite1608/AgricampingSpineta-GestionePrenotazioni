@@ -30,25 +30,40 @@ public class CloudUploader {
     private static final String CREDENTIALS_FILE_PATH = "/credentials.json";
     private static final String TOKENS_DIRECTORY_PATH = System.getProperty("user.home") + FileSystems.getDefault().getSeparator() + "GestionePrenotazioni" + FileSystems.getDefault().getSeparator() + "tokens";    //FIXME: crea cartella da qualche parte!
     private static final List<String> SCOPES = Collections.singletonList(DriveScopes.DRIVE_FILE);
+    private static final String backupFolder = System.getProperty("user.home") + FileSystems.getDefault().getSeparator()
+            + "GestionePrenotazioni" + FileSystems.getDefault().getSeparator() + "backup";
 
     //TODO: se il file è già presente sostituiscilo oppure fai una cartella con il giorno del caricamento?
     public static boolean uploadDatabaseFile() throws IOException, GeneralSecurityException {
         final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
         Drive service = new Drive.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT)).setApplicationName(APPLICATION_NAME).build();
 
-        // Create a new file on Drive
-        InputStream fileStream = Objects.requireNonNull(CloudUploader.class.getResourceAsStream("/database.db"));
-        java.io.File tempFile = createTempFile(fileStream, "database", ".db");
+        boolean isBackupConnected = false;
+        java.io.File backupFile = new java.io.File(backupFolder + FileSystems.getDefault().getSeparator() + "database.db");
+
+        // Qui aggiungi il codice per determinare se sei connesso al file di backup o al file corrente
+        isBackupConnected = new Gateway().isConnectedToDatabase(backupFolder + FileSystems.getDefault().getSeparator() + "database.db");
+
+        // Crea un oggetto File con il nome del file da caricare
+        java.io.File fileToUpload;
+        if (isBackupConnected) {
+            // Se siamo connessi al file di backup, carica quel file
+            fileToUpload = backupFile;
+        } else {
+            // Altrimenti carica il file corrente
+            fileToUpload = new java.io.File("jdbc:sqlite::resource:database.db");
+        }
+
         File fileMetadata = new File();
         fileMetadata.setName("database.db");
 
-        FileContent mediaContent = new FileContent("application/sqlite", tempFile);
+        // Crea un oggetto FileContent con il file da caricare
+        FileContent mediaContent = new FileContent("application/sqlite", fileToUpload);
+
+        // Esegui l'upload del file nella radice di Google Drive
         File uploadedFile = service.files().create(fileMetadata, mediaContent).setFields("id").execute();
 
         System.out.println("File ID: " + uploadedFile.getId());
-
-        // Delete the temporary file
-        tempFile.delete();
         return true;
     }
 
@@ -78,29 +93,26 @@ public class CloudUploader {
             service.files().get(fileId).executeMediaAndDownloadTo(outputStream);
         }
 
-        // Cartella di destinazione
-        String destinationFolder = System.getProperty("user.home") + FileSystems.getDefault().getSeparator()
-                + "GestionePrenotazioni" + FileSystems.getDefault().getSeparator() + "backup";
-
         // Crea la cartella di destinazione se non esiste
-        java.io.File destinationDir = new java.io.File(destinationFolder);
+        java.io.File destinationDir = new java.io.File(backupFolder);
         if (!destinationDir.exists()) {
             destinationDir.mkdirs();
         }
 
-        // Rinomina il file scaricato in "scaricato.db"
-        java.io.File renamedFile = new java.io.File(destinationDir, fileName);
-        if (tempFile.renameTo(renamedFile)) {
-            System.out.println("File renamed to scaricato.db and moved to the destination folder.");
-        } else {
-            System.out.println("Failed to rename and move the file.");
-            return false;
+        // Copia il file temporaneo nella cartella di destinazione
+        java.io.File destinationFile = new java.io.File(destinationDir, fileName);
+        try (InputStream inputStream = new FileInputStream(tempFile);
+             OutputStream outputStream = new FileOutputStream(destinationFile)) {
+            byte[] buffer = new byte[1024];
+            int bytesRead;
+            while ((bytesRead = inputStream.read(buffer)) != -1) {
+                outputStream.write(buffer, 0, bytesRead);
+            }
         }
 
         System.out.println("File " + fileName + " imported successfully.");
         return true;
     }
-
 
     private static Credential getCredentials(final HttpTransport httpTransport) throws IOException {
         InputStream in = Objects.requireNonNull(CloudUploader.class.getResource(CREDENTIALS_FILE_PATH)).openStream();
