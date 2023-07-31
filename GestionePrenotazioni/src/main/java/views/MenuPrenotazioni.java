@@ -269,7 +269,6 @@ public class MenuPrenotazioni extends JPanel {
                     }
 
                     // Ricarica la vista della tabella
-                    tablePrenotazioniController.getGateway().disconnect();
                     tablePrenotazioniController.getGateway().connect();
                     tablePrenotazioniController.refreshTable(tabellaPrenotazioni);
 
