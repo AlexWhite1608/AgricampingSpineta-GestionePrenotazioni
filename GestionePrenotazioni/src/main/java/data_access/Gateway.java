@@ -36,8 +36,7 @@ public class Gateway {
             Class.forName("org.sqlite.JDBC");
 
             // Cartella di destinazione del database scaricato
-            String destinationFolder = System.getProperty("user.home") + FileSystems.getDefault().getSeparator()
-                    + "GestionePrenotazioni" + FileSystems.getDefault().getSeparator() + "backup";
+            String destinationFolder = System.getProperty("user.home") + FileSystems.getDefault().getSeparator() + "GestionePrenotazioni" + FileSystems.getDefault().getSeparator() + "backup";
 
             // Verifica se il file "scaricato.db" esiste nella cartella di destinazione
             java.io.File downloadedDbFile = new java.io.File(destinationFolder, dbName);
