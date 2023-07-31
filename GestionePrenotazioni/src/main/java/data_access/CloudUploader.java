@@ -58,7 +58,8 @@ public class CloudUploader {
 
     public static boolean importFileFromDrive(String fileName) throws IOException, GeneralSecurityException {
         final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
-        Drive service = new Drive.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT)).setApplicationName(APPLICATION_NAME).build();
+        Drive service = new Drive.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT))
+                .setApplicationName(APPLICATION_NAME).build();
 
         // Recupera l'elenco dei file dal Drive
         FileList result = service.files().list().setQ("name='" + fileName + "'").setFields("files(id, name)").execute();
@@ -77,24 +78,29 @@ public class CloudUploader {
             service.files().get(fileId).executeMediaAndDownloadTo(outputStream);
         }
 
-        // Sovrascrivi il database esistente con il nuovo database importato
-        java.io.File resourcesFolder = new java.io.File(CloudUploader.class.getResource("/").getFile());
-        java.io.File importedFile = new java.io.File(resourcesFolder, fileName);
-        try (InputStream inputStream = new FileInputStream(tempFile);
-             OutputStream outputStream = new FileOutputStream(importedFile)) {
-            byte[] buffer = new byte[1024];
-            int bytesRead;
-            while ((bytesRead = inputStream.read(buffer)) != -1) {
-                outputStream.write(buffer, 0, bytesRead);
-            }
+        // Cartella di destinazione
+        String destinationFolder = System.getProperty("user.home") + FileSystems.getDefault().getSeparator()
+                + "GestionePrenotazioni" + FileSystems.getDefault().getSeparator() + "backup";
+
+        // Crea la cartella di destinazione se non esiste
+        java.io.File destinationDir = new java.io.File(destinationFolder);
+        if (!destinationDir.exists()) {
+            destinationDir.mkdirs();
         }
 
-        // Elimina il file temporaneo
-        tempFile.delete();
+        // Rinomina il file scaricato in "scaricato.db"
+        java.io.File renamedFile = new java.io.File(destinationDir, fileName);
+        if (tempFile.renameTo(renamedFile)) {
+            System.out.println("File renamed to scaricato.db and moved to the destination folder.");
+        } else {
+            System.out.println("Failed to rename and move the file.");
+            return false;
+        }
 
         System.out.println("File " + fileName + " imported successfully.");
         return true;
     }
+
 
     private static Credential getCredentials(final HttpTransport httpTransport) throws IOException {
         InputStream in = Objects.requireNonNull(CloudUploader.class.getResource(CREDENTIALS_FILE_PATH)).openStream();

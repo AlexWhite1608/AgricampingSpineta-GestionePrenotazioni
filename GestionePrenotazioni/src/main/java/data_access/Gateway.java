@@ -7,6 +7,7 @@ import views.HomePage;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.nio.file.FileSystems;
 import java.sql.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -24,18 +25,31 @@ public class Gateway {
     }
 
     // Esegue connessione al database
-    private void connect(){
+    public void connect() {
         try {
             // Verifica se la connessione esiste già
             if (connection != null && !connection.isClosed()) {
-                return;
+                disconnect();   //FIXME
             }
 
             // Carica il driver JDBC per SQLite
             Class.forName("org.sqlite.JDBC");
 
-            // Apre la connessione al database SQLite
-            connection = DriverManager.getConnection("jdbc:sqlite::resource:" + dbName);
+            // Cartella di destinazione del database scaricato
+            String destinationFolder = System.getProperty("user.home") + FileSystems.getDefault().getSeparator()
+                    + "GestionePrenotazioni" + FileSystems.getDefault().getSeparator() + "backup";
+
+            // Verifica se il file "scaricato.db" esiste nella cartella di destinazione
+            java.io.File downloadedDbFile = new java.io.File(destinationFolder, dbName);
+            if (downloadedDbFile.exists()) {
+                // Se il file "scaricato.db" esiste, connettiti a quel database
+                connection = DriverManager.getConnection("jdbc:sqlite:" + downloadedDbFile.getAbsolutePath());
+                System.out.println("Connesso al database scaricato.");
+            } else {
+                // Altrimenti, connettiti al database interno "database.db"
+                connection = DriverManager.getConnection("jdbc:sqlite::resource:" + dbName);
+                System.out.println("Connesso al database interno.");
+            }
 
         } catch (ClassNotFoundException e) {
             System.out.println("JDBC driver non trovato");

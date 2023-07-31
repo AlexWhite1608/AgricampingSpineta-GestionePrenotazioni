@@ -27,6 +27,11 @@ public class TablePrenotazioniController {
 
     private JTable tblPrenotazioni;
     private JComboBox cbFiltro;
+
+    public Gateway getGateway() {
+        return gateway;
+    }
+
     private final Gateway gateway;
 
     public TablePrenotazioniController(JTable tblPrenotazioni) {

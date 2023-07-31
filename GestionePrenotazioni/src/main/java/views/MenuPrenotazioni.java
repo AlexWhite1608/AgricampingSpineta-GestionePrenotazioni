@@ -264,6 +264,8 @@ public class MenuPrenotazioni extends JPanel {
                     }
 
                     // Ricarica la vista della tabella
+                    tablePrenotazioniController.getGateway().disconnect();
+                    tablePrenotazioniController.getGateway().connect();
                     tablePrenotazioniController.refreshTable(tabellaPrenotazioni);
 
                     MessageController.getInfoMessage(MenuPrenotazioni.this, "Backup importato correttamente!");
