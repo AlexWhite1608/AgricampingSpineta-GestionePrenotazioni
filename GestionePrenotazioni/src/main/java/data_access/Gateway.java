@@ -7,6 +7,11 @@ import views.HomePage;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URL;
 import java.nio.file.FileSystems;
 import java.sql.*;
 import java.time.LocalDate;
@@ -19,8 +24,49 @@ public class Gateway {
 
     private Connection connection;
     private final String dbName = "database.db";
+    private static final String BACKUP_FOLDER = System.getProperty("user.home") + FileSystems.getDefault().getSeparator()
+            + "GestionePrenotazioni" + FileSystems.getDefault().getSeparator() + "backup";
 
     public Gateway() {
+
+        //TODO: se non è presente la cartella del backup, allora la creo e ci copio il file delle risorse
+        java.io.File backupFile = new java.io.File(BACKUP_FOLDER + FileSystems.getDefault().getSeparator() + "database.db");
+
+        // Verifica se la cartella di destinazione esiste, altrimenti crea la cartella
+        java.io.File backupFolder = new java.io.File(BACKUP_FOLDER);
+        if (!backupFolder.exists()) {
+            boolean created = backupFolder.mkdirs();
+            if (!created) {
+                System.out.println("Impossibile creare la cartella di backup.");
+                return;
+            }
+        }
+
+        if (!backupFile.exists()) {
+            URL resourceURL = CloudUploader.class.getResource("/database.db");
+            try {
+                // Crea il nuovo file backupFile
+                boolean created = backupFile.createNewFile();
+                if (created) {
+                    // Copia il contenuto del file resourceURL nel nuovo file backupFile
+                    try (InputStream inputStream = resourceURL.openStream();
+                         OutputStream outputStream = new FileOutputStream(backupFile)) {
+                        byte[] buffer = new byte[1024];
+                        int bytesRead;
+                        while ((bytesRead = inputStream.read(buffer)) != -1) {
+                            outputStream.write(buffer, 0, bytesRead);
+                        }
+                    }
+                    System.out.println("Database di risorsa copiato nella cartella di backup.");
+                } else {
+                    System.out.println("Impossibile copiare il database di risorse nella cartella di backup.");
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+                System.out.println("Errore durante la creazione del file di backup.");
+            }
+        }
+
         connect();
     }
 
@@ -38,14 +84,13 @@ public class Gateway {
             // Cartella di destinazione del database scaricato
             String destinationFolder = System.getProperty("user.home") + FileSystems.getDefault().getSeparator() + "GestionePrenotazioni" + FileSystems.getDefault().getSeparator() + "backup";
 
-            // Verifica se il file "scaricato.db" esiste nella cartella di destinazione
+            // Verifica se il file scaricato esiste nella cartella di destinazione
             java.io.File downloadedDbFile = new java.io.File(destinationFolder, dbName);
             if (downloadedDbFile.exists()) {
-                // Se il file "scaricato.db" esiste, connettiti a quel database
+                // Se il file scaricato esiste, connettiti a quel database
                 connection = DriverManager.getConnection("jdbc:sqlite:" + downloadedDbFile.getAbsolutePath());
             } else {
-                // Altrimenti, connettiti al database interno "database.db"
-                connection = DriverManager.getConnection("jdbc:sqlite::resource:" + dbName);
+                MessageController.getErrorMessage(HomePage.getFrames()[0], "Impossibile connettersi al database!");
             }
 
         } catch (ClassNotFoundException e) {

@@ -50,16 +50,7 @@ public class CloudUploader {
         isBackupConnected = new Gateway().isConnectedToDatabase(BACKUP_FOLDER + FileSystems.getDefault().getSeparator() + "database.db");
 
         // Crea un oggetto File con il nome del file da caricare
-        if (!backupFile.exists()) {
-            // Ottieni l'InputStream della risorsa del file database.db
-            URL resourceURL = CloudUploader.class.getResource("/database.db");
-            InputStream resourceInputStream = resourceURL.openStream();
-
-            // Crea un file temporaneo per copiare il contenuto del file di risorsa
-            java.io.File tempFile = createTempFile(resourceInputStream, "database", ".db");
-
-            fileToUpload = tempFile;
-        } else if (isBackupConnected) {
+        if (isBackupConnected) {
             // Se siamo connessi al file di backup, carica quel file
             fileToUpload = backupFile;
         } else {
@@ -103,8 +94,6 @@ public class CloudUploader {
     }
 
     //TODO: fai anche una versione per database.csv?
-
-    //TODO: quando si importa il file e lo si ricarica c'è da gestire il fatto che il file ha lo stesso nome (-> lo sostituisce automaticamente?)
 
     public static boolean importFileFromDrive(String fileName) throws IOException, GeneralSecurityException {
         final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
