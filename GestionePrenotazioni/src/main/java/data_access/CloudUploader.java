@@ -36,6 +36,9 @@ public class CloudUploader {
             + "GestionePrenotazioni" + FileSystems.getDefault().getSeparator() + "backup";
 
     //TODO: se il file è già presente sostituiscilo oppure fai una cartella con il giorno del caricamento?
+
+    //TODO: fai anche una versione per database.csv?
+
     public static boolean uploadDatabaseFile() throws IOException, GeneralSecurityException, URISyntaxException {
         final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
         Drive service = new Drive.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT)).setApplicationName(APPLICATION_NAME).build();
@@ -93,8 +96,6 @@ public class CloudUploader {
         return tempFile;
     }
 
-    //TODO: fai anche una versione per database.csv?
-
     public static boolean importFileFromDrive(String fileName) throws IOException, GeneralSecurityException {
         final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
         Drive service = new Drive.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT))
@@ -138,6 +139,47 @@ public class CloudUploader {
         return true;
     }
 
+    // Nel caso del primo avvio viene copiato in locale in file database.db
+    public static void copyResourceDBtoLocal() {
+        java.io.File backupFile = new java.io.File(BACKUP_FOLDER + FileSystems.getDefault().getSeparator() + "database.db");
+
+        // Verifica se la cartella di destinazione esiste, altrimenti crea la cartella
+        java.io.File backupFolder = new java.io.File(BACKUP_FOLDER);
+        if (!backupFolder.exists()) {
+            boolean created = backupFolder.mkdirs();
+            if (!created) {
+                System.out.println("Impossibile creare la cartella di backup.");
+                return;
+            }
+        }
+
+        if (!backupFile.exists()) {
+            URL resourceURL = CloudUploader.class.getResource("/database.db");
+            try {
+                // Crea il nuovo file backupFile
+                boolean created = backupFile.createNewFile();
+                if (created) {
+                    // Copia il contenuto del file resourceURL nel nuovo file backupFile
+                    try (InputStream inputStream = resourceURL.openStream();
+                         OutputStream outputStream = new FileOutputStream(backupFile)) {
+                        byte[] buffer = new byte[1024];
+                        int bytesRead;
+                        while ((bytesRead = inputStream.read(buffer)) != -1) {
+                            outputStream.write(buffer, 0, bytesRead);
+                        }
+                    }
+                    System.out.println("Database di risorsa copiato nella cartella di backup.");
+                } else {
+                    System.out.println("Impossibile copiare il database di risorse nella cartella di backup.");
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+                System.out.println("Errore durante la creazione del file database.db.");
+            }
+        }
+    }
+
+    // Ricava le credenziali salvata nelle risorss
     private static Credential getCredentials(final HttpTransport httpTransport) throws IOException {
         InputStream in = Objects.requireNonNull(CloudUploader.class.getResource(CREDENTIALS_FILE_PATH)).openStream();
         GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(JSON_FACTORY, new InputStreamReader(in));
