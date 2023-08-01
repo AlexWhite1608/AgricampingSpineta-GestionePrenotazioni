@@ -303,7 +303,7 @@ public class Gateway {
     }
 
     // Costruisce il table model passando il result set della query
-    public DefaultTableModel buildCustomTableModel(ResultSet rs) throws SQLException {
+    public DefaultTableModel buildPrenotazioniTableModel(ResultSet rs) throws SQLException {
         ResultSetMetaData metaData = rs.getMetaData();
 
         // Nome delle colonne
