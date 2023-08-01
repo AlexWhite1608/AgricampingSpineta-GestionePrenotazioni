@@ -43,36 +43,13 @@ public class CloudUploader {
         final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
         Drive service = new Drive.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT)).setApplicationName(APPLICATION_NAME).build();
 
-        boolean isBackupConnected = false;
         java.io.File backupFile = new java.io.File(BACKUP_FOLDER + FileSystems.getDefault().getSeparator() + "database.db");
-        java.io.File fileToUpload;
-
-        // Verifica la presenza del file
-
-        // Qui aggiungi il codice per determinare se sei connesso al file di backup o al file corrente
-        isBackupConnected = new Gateway().isConnectedToDatabase(BACKUP_FOLDER + FileSystems.getDefault().getSeparator() + "database.db");
-
-        // Crea un oggetto File con il nome del file da caricare
-        if (isBackupConnected) {
-            // Se siamo connessi al file di backup, carica quel file
-            fileToUpload = backupFile;
-        } else {
-            // Altrimenti carica il file corrente
-            // Ottieni l'InputStream della risorsa del file database.db
-            URL resourceURL = CloudUploader.class.getResource("/database.db");
-            InputStream resourceInputStream = resourceURL.openStream();
-
-            // Crea un file temporaneo per copiare il contenuto del file di risorsa
-            java.io.File tempFile = createTempFile(resourceInputStream, "database", ".db");
-
-            fileToUpload = tempFile;
-        }
 
         File fileMetadata = new File();
         fileMetadata.setName("database.db");
 
         // Crea un oggetto FileContent con il file da caricare
-        FileContent mediaContent = new FileContent("application/sqlite", fileToUpload);
+        FileContent mediaContent = new FileContent("application/sqlite", backupFile);
 
         // Esegui l'upload del file nella radice di Google Drive
         File uploadedFile = service.files().create(fileMetadata, mediaContent).setFields("id").execute();

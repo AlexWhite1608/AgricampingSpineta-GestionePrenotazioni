@@ -41,14 +41,14 @@ public class Gateway {
             // Carica il driver JDBC per SQLite
             Class.forName("org.sqlite.JDBC");
 
-            // Cartella di destinazione del database scaricato
+            // Cartella di destinazione del database
             String destinationFolder = System.getProperty("user.home") + FileSystems.getDefault().getSeparator() + "GestionePrenotazioni" + FileSystems.getDefault().getSeparator() + "backup";
 
-            // Verifica se il file scaricato esiste nella cartella di destinazione
-            java.io.File downloadedDbFile = new java.io.File(destinationFolder, dbName);
-            if (downloadedDbFile.exists()) {
+            // Verifica se il file esiste nella cartella di destinazione
+            java.io.File dbFile = new java.io.File(destinationFolder, dbName);
+            if (dbFile.exists()) {
                 // Se il file scaricato esiste, connettiti a quel database
-                connection = DriverManager.getConnection("jdbc:sqlite:" + downloadedDbFile.getAbsolutePath());
+                connection = DriverManager.getConnection("jdbc:sqlite:" + dbFile.getAbsolutePath());
             } else {
                 MessageController.getErrorMessage(HomePage.getFrames()[0], "Impossibile connettersi al database!");
             }
