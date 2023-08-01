@@ -1,5 +1,7 @@
 package views;
 
+import data_access.CloudUploader;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
@@ -14,6 +16,10 @@ public class HomePage extends JFrame{
     private final static String MENU_ARRIVI_PARTENZE = "Arrivi/Partenze";
 
     public HomePage() throws IOException, SQLException {
+
+        // Se non è presente la cartella del backup, allora la creo e ci copio il file delle risorse (primo avvio)
+        CloudUploader.copyResourceDBtoLocal();
+
         JTabbedPane tabbedPane = new JTabbedPane();
 
         //Imposta l'icona

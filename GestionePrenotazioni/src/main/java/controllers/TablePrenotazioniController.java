@@ -27,6 +27,11 @@ public class TablePrenotazioniController {
 
     private JTable tblPrenotazioni;
     private JComboBox cbFiltro;
+
+    public Gateway getGateway() {
+        return gateway;
+    }
+
     private final Gateway gateway;
 
     public TablePrenotazioniController(JTable tblPrenotazioni) {
@@ -50,10 +55,10 @@ public class TablePrenotazioniController {
             }
 
             ResultSet resultSet = this.gateway.execSelectQuery(initialQuery);
-            tblPrenotazioni = new JTable(gateway.buildCustomTableModel(resultSet));
+            tblPrenotazioni = new JTable(gateway.buildPrenotazioniTableModel(resultSet));
         } else {
             ResultSet resultSet = this.gateway.execSelectQuery(filterQuery);
-            tblPrenotazioni = new JTable(gateway.buildCustomTableModel(resultSet));
+            tblPrenotazioni = new JTable(gateway.buildPrenotazioniTableModel(resultSet));
         }
 
         return tblPrenotazioni;

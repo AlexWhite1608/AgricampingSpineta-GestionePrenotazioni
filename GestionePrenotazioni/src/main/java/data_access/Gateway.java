@@ -7,6 +7,12 @@ import views.HomePage;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URL;
+import java.nio.file.FileSystems;
 import java.sql.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -19,23 +25,33 @@ public class Gateway {
     private Connection connection;
     private final String dbName = "database.db";
 
+
     public Gateway() {
         connect();
     }
 
     // Esegue connessione al database
-    private void connect(){
+    public void connect() {
         try {
             // Verifica se la connessione esiste già
             if (connection != null && !connection.isClosed()) {
-                return;
+                disconnect();   //FIXME
             }
 
             // Carica il driver JDBC per SQLite
             Class.forName("org.sqlite.JDBC");
 
-            // Apre la connessione al database SQLite
-            connection = DriverManager.getConnection("jdbc:sqlite::resource:" + dbName);
+            // Cartella di destinazione del database
+            String destinationFolder = System.getProperty("user.home") + FileSystems.getDefault().getSeparator() + "GestionePrenotazioni" + FileSystems.getDefault().getSeparator() + "backup";
+
+            // Verifica se il file esiste nella cartella di destinazione
+            java.io.File dbFile = new java.io.File(destinationFolder, dbName);
+            if (dbFile.exists()) {
+                // Se il file scaricato esiste, connettiti a quel database
+                connection = DriverManager.getConnection("jdbc:sqlite:" + dbFile.getAbsolutePath());
+            } else {
+                MessageController.getErrorMessage(HomePage.getFrames()[0], "Impossibile connettersi al database!");
+            }
 
         } catch (ClassNotFoundException e) {
             System.out.println("JDBC driver non trovato");
@@ -291,8 +307,10 @@ public class Gateway {
             return 0;
     }
 
-    // Costruisce il table model passando il result set della query
-    public DefaultTableModel buildCustomTableModel(ResultSet rs) throws SQLException {
+    //TODO: sposta i metodi di costruzione delle tabelle nei rispettivi controller per non intasare il gateway!
+
+    // Costruisce il table model della tabella Prenotazioni passando il result set della query
+    public DefaultTableModel buildPrenotazioniTableModel(ResultSet rs) throws SQLException {
         ResultSetMetaData metaData = rs.getMetaData();
 
         // Nome delle colonne
@@ -312,13 +330,12 @@ public class Gateway {
             data.add(vector);
         }
 
-        DefaultTableModel tableModel = setTableModelParams(data, columnNames);
+        DefaultTableModel tableModel = setPrenotazioniTableModelParams(data, columnNames);
         return tableModel;
     }
 
-    // Modifica i metodi del DefaultTableModel per la modifica della tabella
-    //TODO: implementare
-    private DefaultTableModel setTableModelParams(Vector<Vector<Object>> data, Vector<String> columnNames){
+    // Modifica i metodi del DefaultTableModel per la modifica della tabella delle prenotazioni
+    private DefaultTableModel setPrenotazioniTableModelParams(Vector<Vector<Object>> data, Vector<String> columnNames){
         DefaultTableModel model = new DefaultTableModel(data, columnNames){
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -327,5 +344,21 @@ public class Gateway {
         };
 
         return model;
+    }
+
+    public boolean isConnectedToDatabase(String databasePath) {
+        try {
+            // Esegui una query per verificare la connessione al database specificato
+            String checkQuery = "SELECT 1 FROM Prenotazioni WHERE 1 = 0";
+            connect();
+            PreparedStatement statement = connection.prepareStatement(checkQuery);
+            statement.executeQuery();
+
+            // Se l'esecuzione della query non ha causato errori, siamo connessi al database
+            return true;
+        } catch (SQLException e) {
+            // Se si verifica un errore, non siamo connessi al database
+            return false;
+        }
     }
 }

@@ -3,12 +3,12 @@ package views;
 import com.github.lgooddatepicker.components.DatePicker;
 import com.github.lgooddatepicker.components.DatePickerSettings;
 import controllers.*;
+import data_access.CloudUploader;
 import data_access.Gateway;
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 import org.jdesktop.swingx.autocomplete.ObjectToStringConverter;
 import utils.CustomCellEditorPrenotazioni;
 import utils.DataFilter;
-
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -16,6 +16,9 @@ import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.security.GeneralSecurityException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -40,6 +43,7 @@ public class MenuPrenotazioni extends JPanel {
     private JButton btnAggiungiPrenotazione;
     private JButton btnFiltraPrenotazione;
     private JButton btnSalva;
+    private JButton btnImportaDrive;
     private JButton btnAggiungiPiazzola;
     private JButton btnRimuoviPiazzola;
     private JTable tabellaPrenotazioni;
@@ -72,6 +76,7 @@ public class MenuPrenotazioni extends JPanel {
 
         // Bottoni azioni nella toolbar
         btnSalva = new JButton("Salva");
+        btnImportaDrive = new JButton("Importa");
         btnAggiungiPrenotazione = new JButton("Aggiungi");
         btnFiltraPrenotazione = new JButton("Filtra");
         btnAggiungiPiazzola = new JButton("Aggiungi piazzola");
@@ -190,10 +195,9 @@ public class MenuPrenotazioni extends JPanel {
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
         buttonPanel.add(btnSalva);
+        buttonPanel.add(btnImportaDrive);
         buttonPanel.add(btnAggiungiPrenotazione);
         buttonPanel.add(btnFiltraPrenotazione);
-        buttonPanel.add(btnAggiungiPiazzola);
-        buttonPanel.add(btnRimuoviPiazzola);
         toolBar.add(buttonPanel, BorderLayout.WEST);
 
         // Panel spazio orizzontale
@@ -201,19 +205,23 @@ public class MenuPrenotazioni extends JPanel {
         pnlHorizontalStrut.setPreferredSize(new Dimension(SEPARATOR_WIDTH, 1));
         toolBar.add(pnlHorizontalStrut, BorderLayout.CENTER);
 
-        // Panel comboBox filtro anni
+        // Panel comboBox filtro anni + bottoni piazzole
         JPanel pnlFiltroAnni = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        pnlFiltroAnni.add(btnAggiungiPiazzola);
+        pnlFiltroAnni.add(btnRimuoviPiazzola);
         pnlFiltroAnni.add(lblFiltro);
         pnlFiltroAnni.add(cbFiltroAnni);
         toolBar.add(pnlFiltroAnni, BorderLayout.EAST);
 
         // Setting buttons
         btnSalva.setFocusPainted(false);
+        btnImportaDrive.setFocusPainted(false);
         btnAggiungiPrenotazione.setFocusPainted(false);
         btnFiltraPrenotazione.setFocusPainted(false);
         btnAggiungiPiazzola.setFocusPainted(false);
         btnRimuoviPiazzola.setFocusPainted(false);
         btnSalva.setToolTipText("Salva sul drive");
+        btnImportaDrive.setToolTipText("Importa prenotazioni dal backup");
         btnAggiungiPrenotazione.setToolTipText("Aggiungi prenotazione");
         btnFiltraPrenotazione.setToolTipText("Filtra prenotazione");
         btnAggiungiPiazzola.setToolTipText("Aggiungi piazzola ");
@@ -222,6 +230,53 @@ public class MenuPrenotazioni extends JPanel {
         // Setting combobox
         cbFiltroAnni.setFocusable(false);
         ((JLabel) cbFiltroAnni.getRenderer()).setHorizontalAlignment(SwingConstants.CENTER);
+
+        // Azione: salvataggio del database sul drive
+        btnSalva.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int confirmResult = JOptionPane.showConfirmDialog(MenuPrenotazioni.this,
+                        "Salvare le prenotazioni sul drive?",
+                        "Salva prenotazioni",
+                        JOptionPane.YES_NO_OPTION);
+
+                if(confirmResult == JOptionPane.YES_OPTION){
+                    setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+                    setupSalva();
+                    setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+                }
+            }
+        });
+
+        // Azione: importa il database dal backup sul drive
+        btnImportaDrive.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                int confirmResult = JOptionPane.showConfirmDialog(MenuPrenotazioni.this,
+                        "Importare l'ultimo backup eseguito?",
+                        "Importa backup",
+                        JOptionPane.YES_NO_OPTION);
+
+                if(confirmResult == JOptionPane.YES_OPTION){
+                    setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+
+                    // Si connette all'ultima versione del database importato dal drive
+                    try {
+                        CloudUploader.importFileFromDrive("database.db");
+                    } catch (IOException | GeneralSecurityException ex) {
+                        throw new RuntimeException(ex);
+                    }
+
+                    // Ricarica la vista della tabella
+                    tablePrenotazioniController.getGateway().connect();
+                    tablePrenotazioniController.refreshTable(tabellaPrenotazioni);
+
+                    setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+                    MessageController.getInfoMessage(MenuPrenotazioni.this, "Backup importato correttamente!");
+                }
+            }
+        });
 
         // Azione: aggiunta di una nuova prenotazione
         btnAggiungiPrenotazione.addActionListener(new ActionListener() {
@@ -643,8 +698,10 @@ public class MenuPrenotazioni extends JPanel {
                 // Controllo di aver inserito i valori obbligatori (nome, piazzola)
                 } else if (tfNome.getText().isEmpty()) {
                     MessageController.getErrorMessage(dialogNuovaPrenotazione, "Inserire il nome!");
+                    return;
                 } else if(cbSceltaPiazzola.getSelectedItem() == null) {
                     MessageController.getErrorMessage(dialogNuovaPrenotazione, "Inserire la piazzola!");
+                    return;
                 }
 
                 // Ricavo tutte le info inserite
@@ -740,45 +797,6 @@ public class MenuPrenotazioni extends JPanel {
         dialogFiltraPrenotazione.pack();
         dialogFiltraPrenotazione.setLocationRelativeTo(SwingUtilities.getWindowAncestor(this)); // Utilizza HomePage come riferimento
         dialogFiltraPrenotazione.setResizable(false);
-
-        /* Panel scelta corrispondenze */
-        JPanel pnlCorrispondenze = new JPanel(new FlowLayout());
-        Border pnlBorder = BorderFactory.createTitledBorder("Filtra corrispondenze");
-        pnlCorrispondenze.setBorder(pnlBorder);
-        JLabel lblTutteCorrispondenze = new JLabel("TUTTI i valori inseriti");
-        JLabel lblAlcuneCorrispondenze = new JLabel("ALMENO un valore inserito");
-        JRadioButton rbTutteCorrispondenze = new JRadioButton();
-        JRadioButton rbAlcuneCorrispondenze = new JRadioButton();
-
-        // Di default si vuole filtrare per tutti i valori inseriti
-        rbTutteCorrispondenze.setSelected(true);
-
-        // Gestisce la mutua esclusione dei radiobutton
-        rbTutteCorrispondenze.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                rbAlcuneCorrispondenze.setSelected(false);
-            }
-        });
-        rbAlcuneCorrispondenze.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                rbTutteCorrispondenze.setSelected(false);
-            }
-        });
-
-        pnlCorrispondenze.add(lblTutteCorrispondenze);
-        pnlCorrispondenze.add(rbTutteCorrispondenze);
-        pnlCorrispondenze.add(Box.createHorizontalStrut(DIALOG_SEPARATOR_WIDTH));
-        pnlCorrispondenze.add(lblAlcuneCorrispondenze);
-        pnlCorrispondenze.add(rbAlcuneCorrispondenze);
-
-        pnlCorrispondenze.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createEmptyBorder(10, 10, 10, 10),
-                pnlCorrispondenze.getBorder()
-        ));
-        /* --------------------------------------- */
-
 
         /* Panel dedicato agli elementi del form */
         JPanel pnlForm = new JPanel(new GridBagLayout());
@@ -998,13 +1016,7 @@ public class MenuPrenotazioni extends JPanel {
 
                 // Eseguo la query del filtro (in base al radio button selezionato) con eventuale messaggio se non esiste nessun valore per il filtro scelto
                 String filterQuery = "SELECT * FROM Prenotazioni WHERE ";
-                String conjunction = "";
-
-                if (rbTutteCorrispondenze.isSelected()) {
-                    conjunction = "AND";
-                } else if (rbAlcuneCorrispondenze.isSelected()) {
-                    conjunction = "OR";
-                }
+                String conjunction = "AND";
 
                 ArrayList<String> conditions = new ArrayList<>();
 
@@ -1062,7 +1074,6 @@ public class MenuPrenotazioni extends JPanel {
         pnlButtons.add(btnAnnulla, CENTER_ALIGNMENT);
         /* --------------------------------------- */
 
-        dialogFiltraPrenotazione.add(pnlCorrispondenze, BorderLayout.NORTH);
         dialogFiltraPrenotazione.add(pnlForm, BorderLayout.CENTER);
         dialogFiltraPrenotazione.add(pnlButtons, BorderLayout.SOUTH);
         dialogFiltraPrenotazione.pack();
@@ -1105,17 +1116,23 @@ public class MenuPrenotazioni extends JPanel {
                     String nome = (String) tabellaPrenotazioni.getValueAt(selectedRow, 3);
                     String acconto = (String) tabellaPrenotazioni.getValueAt(selectedRow, 4);
 
+                    // Messaggio di conferma di eliminazione della prenotazione
+                    int confirmResult = JOptionPane.showConfirmDialog(MenuPrenotazioni.this,
+                            "Vuoi eliminare la prenotazione?",
+                            "Elimina prenotazione",
+                            JOptionPane.YES_NO_OPTION);
+                    if (confirmResult == JOptionPane.YES_OPTION) {
+                        // Eseguo la query di eliminazione
+                        new Gateway().execUpdateQuery(deleteQuery, id);
+                        tablePrenotazioniController.getListaNomi().remove(nome);
 
-                    // Eseguo la query di eliminazione
-                    new Gateway().execUpdateQuery(deleteQuery, id);
-                    tablePrenotazioniController.getListaNomi().remove(nome);
+                        // Elimino anche dalla tabella SaldoAcconti
+                        String deleteSaldoAccontiQuery = "DELETE FROM SaldoAcconti WHERE Nome = ? AND Arrivo = ? AND Partenza = ? AND Acconto = ?";
+                        new Gateway().execUpdateQuery(deleteSaldoAccontiQuery, nome, arrivo, partenza, acconto);
 
-                    // Elimino anche dalla tabella SaldoAcconti
-                    String deleteSaldoAccontiQuery = "DELETE FROM SaldoAcconti WHERE Nome = ? AND Arrivo = ? AND Partenza = ? AND Acconto = ?";
-                    new Gateway().execUpdateQuery(deleteSaldoAccontiQuery, nome, arrivo, partenza, acconto);
-
-                    // Aggiorno la tabella dopo l'eliminazione
-                    tablePrenotazioniController.refreshTable(tabellaPrenotazioni);
+                        // Aggiorno la tabella dopo l'eliminazione
+                        tablePrenotazioniController.refreshTable(tabellaPrenotazioni);
+                    }
                 } catch (SQLException ex) {
                     MessageController.getErrorMessage(MenuPrenotazioni.this, "Errore durante l'eliminazione della riga: " + ex.getMessage());
                     ex.printStackTrace();
@@ -1157,6 +1174,18 @@ public class MenuPrenotazioni extends JPanel {
                 tabellaPrenotazioni.repaint(selectedRow);
             }
         });
+    }
+
+    // Setup del button del salvataggio dei file su drive
+    private void setupSalva() {
+        try {
+            if(CloudUploader.uploadDatabaseFile())
+                MessageController.getInfoMessage(MenuPrenotazioni.this, "Backup eseguito correttamente!");
+            else
+                MessageController.getErrorMessage(MenuPrenotazioni.this, "Impossibile eseguire il backup");
+        } catch (IOException | GeneralSecurityException | URISyntaxException ex) {
+            ex.printStackTrace();
+        }
     }
 
     // Setting della modifica dinamica della tabella (doppio click)
