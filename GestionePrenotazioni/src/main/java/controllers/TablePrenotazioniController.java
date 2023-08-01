@@ -55,10 +55,10 @@ public class TablePrenotazioniController {
             }
 
             ResultSet resultSet = this.gateway.execSelectQuery(initialQuery);
-            tblPrenotazioni = new JTable(gateway.buildCustomTableModel(resultSet));
+            tblPrenotazioni = new JTable(gateway.buildPrenotazioniTableModel(resultSet));
         } else {
             ResultSet resultSet = this.gateway.execSelectQuery(filterQuery);
-            tblPrenotazioni = new JTable(gateway.buildCustomTableModel(resultSet));
+            tblPrenotazioni = new JTable(gateway.buildPrenotazioniTableModel(resultSet));
         }
 
         return tblPrenotazioni;
