@@ -38,14 +38,12 @@ public class MenuCalendario extends JPanel {
 
     // Setup tabella calendario
     private void setupTable() {
+
+        // Impostazioni di base, sempre fisse
         tabellaCalendario.getTableHeader().setReorderingAllowed(false);
         tabellaCalendario.setCellSelectionEnabled(false);
         tabellaCalendario.setRowSelectionAllowed(true);
         tabellaCalendario.setDefaultEditor(Object.class, null);
-
-        // Dimensione righe tabella
-        int rowHeight = 40;
-        tabellaCalendario.setRowHeight(rowHeight);
 
         JScrollPane scrollPane = new JScrollPane(tabellaCalendario);
         mainPanelCalendario.add(scrollPane, BorderLayout.CENTER);
