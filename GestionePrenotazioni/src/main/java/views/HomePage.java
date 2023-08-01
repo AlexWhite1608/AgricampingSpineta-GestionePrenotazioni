@@ -6,7 +6,9 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.Objects;
 
 public class HomePage extends JFrame{
@@ -15,10 +17,13 @@ public class HomePage extends JFrame{
     private final static String MENU_PRENOTAZIONI = "Prenotazioni";
     private final static String MENU_ARRIVI_PARTENZE = "Arrivi/Partenze";
 
-    public HomePage() throws IOException, SQLException {
+    public HomePage() throws IOException, SQLException, GeneralSecurityException {
 
         // Se non è presente la cartella del backup, allora la creo e ci copio il file delle risorse (primo avvio)
         CloudUploader.copyResourceDBtoLocal();
+
+        // TODO: cancella i backup della settimana scorsa
+        CloudUploader.deleteFilesBeforeDate(LocalDate.now().minusDays(1));
 
         JTabbedPane tabbedPane = new JTabbedPane();
 

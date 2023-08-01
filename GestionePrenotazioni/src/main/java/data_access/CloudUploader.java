@@ -22,6 +22,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.FileSystems;
 import java.security.GeneralSecurityException;
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -152,6 +153,32 @@ public class CloudUploader {
             } catch (IOException e) {
                 e.printStackTrace();
                 System.out.println("Errore durante la creazione del file database.db.");
+            }
+        }
+    }
+
+    //TODO: funzione che periodicamente cancella i vecchi backup dal drive (cancella da dateToDeleteBefore) (Drive driveService = getDriveService();)
+    public static void deleteFilesBeforeDate(LocalDate dateToDeleteBefore) throws IOException, GeneralSecurityException {
+        final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
+        Drive service = new Drive.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT)).setApplicationName(APPLICATION_NAME).build();
+
+        // Recupera l'elenco dei file dal Drive
+        List<File> files = service.files().list()
+                .setQ("name contains 'database'")  // Filtro per i file con nomi che iniziano con "database"
+                .setFields("files(id, name, createdTime)")
+                .execute()
+                .getFiles();
+
+        // Scansiona l'elenco dei file e cancella quelli con data precedente a quella specificata
+        for (File file : files) {
+            LocalDate fileCreationDate = LocalDate.parse(file.getCreatedTime().toStringRfc3339().substring(0, 10));
+            if (fileCreationDate.isBefore(dateToDeleteBefore)) {
+                try {
+                    service.files().delete(file.getId()).execute();
+                    System.out.println("File " + file.getName() + " deleted successfully.");
+                } catch (IOException e) {
+                    System.out.println("Error deleting file " + file.getName() + ": " + e.getMessage());
+                }
             }
         }
     }

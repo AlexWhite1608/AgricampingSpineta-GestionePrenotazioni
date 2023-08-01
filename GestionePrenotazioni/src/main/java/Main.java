@@ -2,6 +2,7 @@ import views.HomePage;
 
 import javax.swing.*;
 import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.sql.SQLException;
 
 public class Main {
@@ -10,7 +11,7 @@ public class Main {
             public void run() {
                 try {
                     new HomePage();
-                } catch (SQLException | IOException e) {
+                } catch (SQLException | IOException | GeneralSecurityException e) {
                     throw new RuntimeException(e);
                 }
             }
