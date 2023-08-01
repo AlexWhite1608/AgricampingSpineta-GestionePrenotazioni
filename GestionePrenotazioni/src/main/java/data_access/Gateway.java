@@ -302,7 +302,7 @@ public class Gateway {
             return 0;
     }
 
-    // Costruisce il table model passando il result set della query
+    // Costruisce il table model della tabella Prenotazioni passando il result set della query
     public DefaultTableModel buildPrenotazioniTableModel(ResultSet rs) throws SQLException {
         ResultSetMetaData metaData = rs.getMetaData();
 
@@ -323,13 +323,12 @@ public class Gateway {
             data.add(vector);
         }
 
-        DefaultTableModel tableModel = setTableModelParams(data, columnNames);
+        DefaultTableModel tableModel = setPrenotazioniTableModelParams(data, columnNames);
         return tableModel;
     }
 
-    // Modifica i metodi del DefaultTableModel per la modifica della tabella
-    //TODO: implementare
-    private DefaultTableModel setTableModelParams(Vector<Vector<Object>> data, Vector<String> columnNames){
+    // Modifica i metodi del DefaultTableModel per la modifica della tabella delle prenotazioni
+    private DefaultTableModel setPrenotazioniTableModelParams(Vector<Vector<Object>> data, Vector<String> columnNames){
         DefaultTableModel model = new DefaultTableModel(data, columnNames){
             @Override
             public boolean isCellEditable(int row, int column) {
