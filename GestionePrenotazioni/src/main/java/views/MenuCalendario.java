@@ -1,9 +1,12 @@
 package views;
 
+import controllers.ControllerDatePrenotazioni;
 import controllers.TableCalendarioController;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MenuCalendario extends JPanel {
 
@@ -14,10 +17,11 @@ public class MenuCalendario extends JPanel {
     private JTable tabellaCalendario;
 
     public MenuCalendario() {
+
         tableCalendarioController = new TableCalendarioController(tabellaCalendario);
 
         createUIComponents();
-        setupTable();
+        //setupTable();
 
         setLayout(new BorderLayout());
         add(mainPanelCalendario, BorderLayout.CENTER);

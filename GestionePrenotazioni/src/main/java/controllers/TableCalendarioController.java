@@ -6,12 +6,21 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
 import java.sql.SQLException;
+import java.util.List;
 
 public class TableCalendarioController {
+
+    // Lista delle date
+    private List<String> dateList;
+
     private JTable tabellaCalendario;
     private final Gateway gateway;
 
     public TableCalendarioController(JTable tabellaCalendario) {
+
+        // Inizializzo la lista delle date per l'header dal giorno corrente
+        dateList = ControllerDatePrenotazioni.getDatesFromCurrentDate();
+
         this.tabellaCalendario = tabellaCalendario;
         this.gateway = new Gateway();
     }
