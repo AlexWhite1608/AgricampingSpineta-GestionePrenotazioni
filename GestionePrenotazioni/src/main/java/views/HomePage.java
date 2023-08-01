@@ -1,11 +1,15 @@
 package views;
 
+import controllers.MessageController;
 import data_access.CloudUploader;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.security.GeneralSecurityException;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -43,11 +47,20 @@ public class HomePage extends JFrame{
 
         this.add(tabbedPane, BorderLayout.CENTER);
 
-        //Imposta parametri visualizzazione HomePage
-//        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-//        double width = screenSize.getWidth();
-//        double height = screenSize.getHeight();
-//        this.setSize((int) width, (int) height);
+        // Salva sul drive quando si chiude l'applicazione
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent windowEvent) {
+                try {
+                    setCursor(Cursor.WAIT_CURSOR);
+                    CloudUploader.uploadDatabaseFile();
+                    setCursor(Cursor.DEFAULT_CURSOR);
+                } catch (IOException | GeneralSecurityException | URISyntaxException e) {
+                    e.printStackTrace();
+                    MessageController.getErrorMessage(HomePage.this, "Errore nel salvataggio del backup sul Drive");
+                }
+            }
+        });
 
         this.setTitle("Gestione prenotazioni");
         this.setLocationRelativeTo(null);
