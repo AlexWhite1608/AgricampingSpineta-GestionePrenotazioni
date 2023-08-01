@@ -302,6 +302,8 @@ public class Gateway {
             return 0;
     }
 
+    //TODO: sposta i metodi di costruzione delle tabelle nei rispettivi controller per non intasare il gateway!
+
     // Costruisce il table model della tabella Prenotazioni passando il result set della query
     public DefaultTableModel buildPrenotazioniTableModel(ResultSet rs) throws SQLException {
         ResultSetMetaData metaData = rs.getMetaData();
