@@ -1,8 +1,10 @@
 package controllers;
 
 import data_access.Gateway;
+import observer.PrenotazioniObservers;
 import renderers_calendario.CalendarioCellRenderer;
 import renderers_calendario.VerticalTableHeaderCellRenderer;
+import views.MenuPrenotazioni;
 
 import javax.swing.*;
 import javax.swing.table.*;
@@ -12,7 +14,7 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.Vector;
 
-public class TableCalendarioController {
+public class TableCalendarioController implements PrenotazioniObservers {
 
     private final Font HEADER_FONT = new Font("Segoe UI", Font.BOLD, 12);
     private final Color HEADER_BACKGROUND = Color.LIGHT_GRAY;
@@ -37,8 +39,12 @@ public class TableCalendarioController {
         ControllerPiazzole.setListaPiazzole();
         listaPiazzole = ControllerPiazzole.getListaPiazzole();
 
+        // Si iscrive alle notifiche del MenuPrenotazioni
+        MenuPrenotazioni.getPrenotazioniObserversList().add(this);
+
     }
 
+    // Imposta il tableModel iniziale della tabella
     public void setCalendarioTableModel() {
 
         // Imposta le colonne (Piazzole seguite dalle date)
@@ -65,6 +71,12 @@ public class TableCalendarioController {
         };
 
         tabellaCalendario.setModel(model);
+    }
+
+    // Ricarica la tabella a seguito di modifiche delle prenotazioni
+    @Override
+    public void refreshView() {
+        //TODO: implementa il refresh
     }
 
 //    public void updateTableModel(List<Prenotazione> nuovePrenotazioni) {

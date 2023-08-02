@@ -24,6 +24,7 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Objects;
+import observer.PrenotazioniObservers;
 
 public class MenuPrenotazioni extends JPanel {
 
@@ -36,6 +37,9 @@ public class MenuPrenotazioni extends JPanel {
 
     // Controller della tabella
     TablePrenotazioniController tablePrenotazioniController;
+
+    // Lista dei controller observer di MenuCalenario e MenuArriviPartenze
+    private static ArrayList<PrenotazioniObservers> prenotazioniObserversList = new ArrayList<>();
 
     private JPanel mainPanelPrenotazioni;
     private JPanel pnlToolbar;
@@ -760,8 +764,9 @@ public class MenuPrenotazioni extends JPanel {
                     throw new RuntimeException(ex);
                 }
 
-                // Ricarico la tabella prenotazioni
+                // Ricarico la tabella prenotazioni e notifico gli observers
                 tablePrenotazioniController.refreshTable(tabellaPrenotazioni);
+                notifyPrenotazioneChanged();
 
                 // Controlla che la nuova prenotazione sia stata inserita
                 String checkQuery = "SELECT * FROM Prenotazioni WHERE Nome = ? AND Piazzola = ? AND Arrivo = ? AND Partenza = ?";
@@ -775,6 +780,7 @@ public class MenuPrenotazioni extends JPanel {
                 } catch (SQLException ex) {
                     throw new RuntimeException(ex);
                 }
+
 
                 dialogNuovaPrenotazione.dispose();
             }
@@ -1130,8 +1136,9 @@ public class MenuPrenotazioni extends JPanel {
                         String deleteSaldoAccontiQuery = "DELETE FROM SaldoAcconti WHERE Nome = ? AND Arrivo = ? AND Partenza = ? AND Acconto = ?";
                         new Gateway().execUpdateQuery(deleteSaldoAccontiQuery, nome, arrivo, partenza, acconto);
 
-                        // Aggiorno la tabella dopo l'eliminazione
+                        // Aggiorno la tabella dopo l'eliminazione e notifico gli observers
                         tablePrenotazioniController.refreshTable(tabellaPrenotazioni);
+                        notifyPrenotazioneChanged();
                     }
                 } catch (SQLException ex) {
                     MessageController.getErrorMessage(MenuPrenotazioni.this, "Errore durante l'eliminazione della riga: " + ex.getMessage());
@@ -1203,7 +1210,21 @@ public class MenuPrenotazioni extends JPanel {
             // Se l'editor è nullo o non è già un editor personalizzato, crea un nuovo editor
             if (cellEditor == null || !(cellEditor instanceof CustomCellEditorPrenotazioni)) {
                 tabellaPrenotazioni.getColumnModel().getColumn(column).setCellEditor(new CustomCellEditorPrenotazioni(tablePrenotazioniController));
+
+                // Notifico gli observers che è stata modificata la prenotazione
+                notifyPrenotazioneChanged();
             }
         }
+    }
+
+    // Notifica i controllers observer della modifica della prenotazione
+    private void notifyPrenotazioneChanged() {
+        for (PrenotazioniObservers listener : prenotazioniObserversList) {
+            listener.refreshView();
+        }
+    }
+
+    public static ArrayList<PrenotazioniObservers> getPrenotazioniObserversList() {
+        return prenotazioniObserversList;
     }
 }
