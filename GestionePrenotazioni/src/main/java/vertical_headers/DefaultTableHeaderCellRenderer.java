@@ -27,10 +27,7 @@ import javax.swing.table.JTableHeader;
  */
 public class DefaultTableHeaderCellRenderer extends DefaultTableCellRenderer {
 
-    private final Color HEADER_BACKGROUND = Color.LIGHT_GRAY;
     private final Font HEADER_FONT = new Font("Segoe UI", Font.BOLD, 12);
-
-
 
     /**
      * Constructs a <code>DefaultTableHeaderCellRenderer</code>.
@@ -76,7 +73,6 @@ public class DefaultTableHeaderCellRenderer extends DefaultTableCellRenderer {
         setIcon(getIcon(table, column));
         setFont(HEADER_FONT);
         setBorder(UIManager.getBorder("TableHeader.cellBorder"));
-        setBackground(HEADER_BACKGROUND);
         return this;
     }
 

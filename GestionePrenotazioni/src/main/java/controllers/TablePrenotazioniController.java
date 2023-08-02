@@ -19,7 +19,6 @@ public class TablePrenotazioniController {
     private final Color ALTERNATE_CELL_COLOR = new Color(220, 232, 234);
     private final Color SELECTION_COLOR = new Color(255, 255, 102);
     private final Color ACCONTO_SALDATO_COLOR = new Color(14, 129, 60);
-    private final Color HEADER_BACKGROUND = Color.LIGHT_GRAY;
     private final Color BORDER_CELL_SELECTED = Color.blue;
 
     // Lista dei nomi delle prenotazioni
@@ -185,7 +184,7 @@ public class TablePrenotazioniController {
                 setHorizontalAlignment(SwingConstants.CENTER);
                 setFont(HEADER_FONT);
                 setBorder(UIManager.getBorder("TableHeader.cellBorder"));
-                setBackground(HEADER_BACKGROUND);
+                setOpaque(false);
 
                 return c;
             }

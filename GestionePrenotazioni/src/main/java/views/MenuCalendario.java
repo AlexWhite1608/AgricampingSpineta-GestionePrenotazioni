@@ -46,13 +46,14 @@ public class MenuCalendario extends JPanel {
         tabellaCalendario.setCellSelectionEnabled(false);
         tabellaCalendario.setRowSelectionAllowed(true);
         tabellaCalendario.setDefaultEditor(Object.class, null);
+        tabellaCalendario.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 
         //TODO: Renderer per il testo delle celle
 
         // Renderer per l'header
         tableCalendarioController.createHeaderRenderer();
 
-        JScrollPane scrollPane = new JScrollPane(tabellaCalendario);
+        JScrollPane scrollPane = new JScrollPane(tabellaCalendario, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         mainPanelCalendario.add(scrollPane, BorderLayout.CENTER);
     }
 }

@@ -110,9 +110,25 @@ public class TableCalendarioController {
             TableColumn column = columns.nextElement();
             if (columnIndex > 0) { // Imposta il renderer dell'header solo per le colonne con indice maggiore di 0
                 column.setHeaderRenderer(headerRenderer);
-            }
+            } else 
+                column.setHeaderRenderer(createHeaderPiazzole());
             columnIndex++;
         }
+    }
+
+    private DefaultTableCellRenderer createHeaderPiazzole() {
+        return new DefaultTableCellRenderer() {
+            @Override
+            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+                Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+
+                setHorizontalAlignment(SwingConstants.CENTER);
+                setFont(HEADER_FONT);
+                setBorder(UIManager.getBorder("TableHeader.cellBorder"));
+                setOpaque(false);
+                return c;
+            }
+        };
     }
 
 
