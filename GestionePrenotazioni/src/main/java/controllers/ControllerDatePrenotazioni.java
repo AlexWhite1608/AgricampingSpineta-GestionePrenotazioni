@@ -23,11 +23,13 @@ public class ControllerDatePrenotazioni {
         List<String> dateList = new ArrayList<>();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
+        LocalDate currentDate = CURRENT_DATE;
+
         for (int i = 0; i < NUM_DAYS; i++) {
-            String formattedDate = CURRENT_DATE.format(formatter);
-            String dayOfWeek = CURRENT_DATE.getDayOfWeek().getDisplayName(TextStyle.SHORT, Locale.ITALIAN).toUpperCase();
+            String formattedDate = currentDate.format(formatter);
+            String dayOfWeek = currentDate.getDayOfWeek().getDisplayName(TextStyle.SHORT, Locale.ITALIAN).toUpperCase();
             dateList.add(formattedDate + " (" + dayOfWeek + ")");
-            CURRENT_DATE = CURRENT_DATE.plusDays(1);
+            currentDate = currentDate.plusDays(1);
         }
 
         return dateList;

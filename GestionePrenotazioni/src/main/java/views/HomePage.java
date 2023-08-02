@@ -24,7 +24,7 @@ public class HomePage extends JFrame{
 
     private final static int DAYS_BEFORE_DELETE = 4;
 
-    private final static boolean DEBUG_MODE = false;     //TODO: imposta false per avere il funzionamento completo!!
+    private final static boolean DEBUG_MODE = true;     //TODO: imposta false per avere il funzionamento completo!!
 
     public HomePage() throws IOException, SQLException, GeneralSecurityException {
 
