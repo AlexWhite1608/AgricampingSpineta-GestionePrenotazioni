@@ -3,7 +3,7 @@
  */
 package vertical_headers;
 
-import java.awt.Component;
+import java.awt.*;
 import java.util.List;
 import javax.swing.Icon;
 import javax.swing.JTable;
@@ -27,6 +27,11 @@ import javax.swing.table.JTableHeader;
  */
 public class DefaultTableHeaderCellRenderer extends DefaultTableCellRenderer {
 
+    private final Color HEADER_BACKGROUND = Color.LIGHT_GRAY;
+    private final Font HEADER_FONT = new Font("Segoe UI", Font.BOLD, 12);
+
+
+
     /**
      * Constructs a <code>DefaultTableHeaderCellRenderer</code>.
      * <P>
@@ -34,6 +39,7 @@ public class DefaultTableHeaderCellRenderer extends DefaultTableCellRenderer {
      * table header cell, and the opaque property is set to false.
      */
     public DefaultTableHeaderCellRenderer() {
+
         setHorizontalAlignment(CENTER);
         setHorizontalTextPosition(LEFT);
         setVerticalAlignment(BOTTOM);
@@ -68,7 +74,9 @@ public class DefaultTableHeaderCellRenderer extends DefaultTableCellRenderer {
             setForeground(tableHeader.getForeground());
         }
         setIcon(getIcon(table, column));
+        setFont(HEADER_FONT);
         setBorder(UIManager.getBorder("TableHeader.cellBorder"));
+        setBackground(HEADER_BACKGROUND);
         return this;
     }
 
