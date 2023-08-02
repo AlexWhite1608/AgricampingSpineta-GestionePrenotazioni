@@ -1,8 +1,6 @@
 package vertical_headers;
 
-import java.awt.Component;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
+import java.awt.*;
 import javax.swing.Icon;
 import javax.swing.JTable;
 import javax.swing.RowSorter.SortKey;
@@ -25,12 +23,17 @@ public class VerticalTableHeaderCellRenderer extends DefaultTableHeaderCellRende
      * The horizontal and vertical alignments and text positions are set as
      * appropriate to a vertical table header cell.
      */
-    public VerticalTableHeaderCellRenderer() {
+    public VerticalTableHeaderCellRenderer(boolean isWeekend) {
         setHorizontalAlignment(LEFT);
         setHorizontalTextPosition(CENTER);
         setVerticalAlignment(CENTER);
         setVerticalTextPosition(TOP);
         setUI(new VerticalLabelUI());
+
+        if(isWeekend)
+            setBackground(Color.lightGray);
+        else
+            setOpaque(false);
     }
 
     /**

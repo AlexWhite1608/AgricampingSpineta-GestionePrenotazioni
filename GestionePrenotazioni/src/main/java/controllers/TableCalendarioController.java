@@ -100,9 +100,9 @@ public class TableCalendarioController {
         };
     }
 
-    // Imposta il renderer per l'header
+    // Imposta il renderer per l'header (verticale)
     public void createHeaderRenderer() {
-        TableCellRenderer headerRenderer = new VerticalTableHeaderCellRenderer();
+        TableCellRenderer headerRenderer = new VerticalTableHeaderCellRenderer(false);
         Enumeration<TableColumn> columns = tabellaCalendario.getColumnModel().getColumns();
         int columnIndex = 0; // Contatore per tenere traccia dell'indice della colonna corrente
 
@@ -110,12 +110,18 @@ public class TableCalendarioController {
             TableColumn column = columns.nextElement();
             if (columnIndex > 0) { // Imposta il renderer dell'header solo per le colonne con indice maggiore di 0
                 column.setHeaderRenderer(headerRenderer);
+                String columnHeaderText = column.getHeaderValue().toString();
+
+                if(columnHeaderText.contains("(S)") || columnHeaderText.contains("(D)")) {
+                    column.setHeaderRenderer(new VerticalTableHeaderCellRenderer(true));
+                }
             } else 
                 column.setHeaderRenderer(createHeaderPiazzole());
             columnIndex++;
         }
     }
 
+    // Crea il renderer per la colonna delle Piazzole
     private DefaultTableCellRenderer createHeaderPiazzole() {
         return new DefaultTableCellRenderer() {
             @Override
@@ -126,6 +132,23 @@ public class TableCalendarioController {
                 setFont(HEADER_FONT);
                 setBorder(UIManager.getBorder("TableHeader.cellBorder"));
                 setOpaque(false);
+                return c;
+            }
+        };
+    }
+
+    // Crea il renderer per le colonne dei giorni Sabato e Domenica
+    private DefaultTableCellRenderer createHeaderSabatoDomenica() {
+        return new DefaultTableCellRenderer() {
+            @Override
+            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+                Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+
+                setHorizontalAlignment(SwingConstants.CENTER);
+                setFont(HEADER_FONT);
+                setBorder(UIManager.getBorder("TableHeader.cellBorder"));
+                setOpaque(false);
+                setForeground(Color.LIGHT_GRAY);
                 return c;
             }
         };

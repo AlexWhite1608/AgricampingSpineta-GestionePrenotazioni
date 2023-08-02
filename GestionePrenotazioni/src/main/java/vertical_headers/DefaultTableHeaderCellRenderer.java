@@ -40,7 +40,7 @@ public class DefaultTableHeaderCellRenderer extends DefaultTableCellRenderer {
         setHorizontalAlignment(CENTER);
         setHorizontalTextPosition(LEFT);
         setVerticalAlignment(BOTTOM);
-        setOpaque(false);
+
     }
 
     /**
