@@ -137,22 +137,4 @@ public class TableCalendarioController {
         };
     }
 
-    // Crea il renderer per le colonne dei giorni Sabato e Domenica
-    private DefaultTableCellRenderer createHeaderSabatoDomenica() {
-        return new DefaultTableCellRenderer() {
-            @Override
-            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-                Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-
-                setHorizontalAlignment(SwingConstants.CENTER);
-                setFont(HEADER_FONT);
-                setBorder(UIManager.getBorder("TableHeader.cellBorder"));
-                setOpaque(false);
-                setForeground(Color.LIGHT_GRAY);
-                return c;
-            }
-        };
-    }
-
-
 }
