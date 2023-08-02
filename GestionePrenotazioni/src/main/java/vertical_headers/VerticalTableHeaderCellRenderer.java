@@ -23,12 +23,17 @@ public class VerticalTableHeaderCellRenderer extends DefaultTableHeaderCellRende
      * The horizontal and vertical alignments and text positions are set as
      * appropriate to a vertical table header cell.
      */
-    public VerticalTableHeaderCellRenderer(boolean isWeekend) {
+    public VerticalTableHeaderCellRenderer(boolean isWeekend, boolean isToday) {
         setHorizontalAlignment(LEFT);
         setHorizontalTextPosition(CENTER);
         setVerticalAlignment(CENTER);
         setVerticalTextPosition(TOP);
         setUI(new VerticalLabelUI());
+
+        if(isToday) {
+            setBackground(new Color(52, 201, 235));
+            return;
+        }
 
         if(isWeekend)
             setBackground(Color.lightGray);

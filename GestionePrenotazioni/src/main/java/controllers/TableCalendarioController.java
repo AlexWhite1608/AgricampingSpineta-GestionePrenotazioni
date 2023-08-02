@@ -102,7 +102,7 @@ public class TableCalendarioController {
 
     // Imposta il renderer per l'header (verticale)
     public void createHeaderRenderer() {
-        TableCellRenderer headerRenderer = new VerticalTableHeaderCellRenderer(false);
+        TableCellRenderer headerRenderer = new VerticalTableHeaderCellRenderer(false, false);
         Enumeration<TableColumn> columns = tabellaCalendario.getColumnModel().getColumns();
         int columnIndex = 0; // Contatore per tenere traccia dell'indice della colonna corrente
 
@@ -113,9 +113,14 @@ public class TableCalendarioController {
                 String columnHeaderText = column.getHeaderValue().toString();
 
                 if(columnHeaderText.contains("(S)") || columnHeaderText.contains("(D)")) {
-                    column.setHeaderRenderer(new VerticalTableHeaderCellRenderer(true));
+                    column.setHeaderRenderer(new VerticalTableHeaderCellRenderer(true, false));
                 }
-            } else 
+
+                if(columnIndex == 1) {
+                    column.setHeaderRenderer(new VerticalTableHeaderCellRenderer(false, true));
+                }
+
+            } else
                 column.setHeaderRenderer(createHeaderPiazzole());
             columnIndex++;
         }
