@@ -174,6 +174,13 @@ public class CloudUploader {
             int totalFiles = files.size();
             int deletedFiles = 0;
 
+            if(totalFiles == 0){
+                int progressValue = 100;
+                progressBar.setValue(progressValue);
+
+                return;
+            }
+
             // Scansiona l'elenco dei file e cancella quelli con data precedente a quella specificata
             for (File file : files) {
                 LocalDate fileCreationDate = LocalDate.parse(file.getCreatedTime().toStringRfc3339().substring(0, 10));
