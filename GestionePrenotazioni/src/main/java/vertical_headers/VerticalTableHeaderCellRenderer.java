@@ -1,4 +1,4 @@
-package headers;
+package vertical_headers;
 
 import java.awt.Component;
 import java.awt.Graphics;

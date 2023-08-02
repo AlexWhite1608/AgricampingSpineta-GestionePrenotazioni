@@ -1,7 +1,7 @@
 package controllers;
 
 import data_access.Gateway;
-import headers.VerticalTableHeaderCellRenderer;
+import vertical_headers.VerticalTableHeaderCellRenderer;
 
 import javax.swing.*;
 import javax.swing.table.*;

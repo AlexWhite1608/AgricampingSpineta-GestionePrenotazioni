@@ -1,7 +1,7 @@
 /**
  * @(#)DefaultTableHeaderCellRenderer.java	1.0 02/24/09
  */
-package headers;
+package vertical_headers;
 
 import java.awt.Component;
 import java.util.List;
