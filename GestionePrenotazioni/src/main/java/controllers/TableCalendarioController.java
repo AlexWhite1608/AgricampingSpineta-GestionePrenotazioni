@@ -104,8 +104,14 @@ public class TableCalendarioController {
     public void createHeaderRenderer() {
         TableCellRenderer headerRenderer = new VerticalTableHeaderCellRenderer();
         Enumeration<TableColumn> columns = tabellaCalendario.getColumnModel().getColumns();
+        int columnIndex = 0; // Contatore per tenere traccia dell'indice della colonna corrente
+
         while (columns.hasMoreElements()) {
-            columns.nextElement().setHeaderRenderer(headerRenderer);
+            TableColumn column = columns.nextElement();
+            if (columnIndex > 0) { // Imposta il renderer dell'header solo per le colonne con indice maggiore di 0
+                column.setHeaderRenderer(headerRenderer);
+            }
+            columnIndex++;
         }
     }
 
