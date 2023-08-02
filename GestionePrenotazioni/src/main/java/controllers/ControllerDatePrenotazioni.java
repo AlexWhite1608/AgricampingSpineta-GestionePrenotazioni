@@ -16,7 +16,7 @@ import java.util.Locale;
 public class ControllerDatePrenotazioni {
 
     private static LocalDate CURRENT_DATE = LocalDate.now(); // Variabile per memorizzare la data di oggi
-    private static final int NUM_DAYS = 90; // Numero di giorni successivi alla data odierna
+    private static final int NUM_DAYS = 180; // Numero di giorni successivi alla data odierna
 
     // Ritorna le date (dalla corrente fino a CURRENT_DATE + NUM_DAYS) per l'header della tabella Calendario
     public static List<String> getDatesFromCurrentDate() {
