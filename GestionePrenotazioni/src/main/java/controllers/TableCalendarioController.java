@@ -13,7 +13,7 @@ import java.util.Vector;
 
 public class TableCalendarioController {
 
-    private final Font HEADER_FONT = new Font("Segoe UI", Font.BOLD, 14);
+    private final Font HEADER_FONT = new Font("Segoe UI", Font.BOLD, 12);
     private final Color HEADER_BACKGROUND = Color.LIGHT_GRAY;
 
     // Lista delle date
@@ -36,18 +36,6 @@ public class TableCalendarioController {
         ControllerPiazzole.setListaPiazzole();
         listaPiazzole = ControllerPiazzole.getListaPiazzole();
 
-    }
-
-    // Imposta la visualizzazione iniziale della tabella Calendario
-    public JTable initView() {
-
-        // Dimensione righe tabella in base al numero di piazzole
-        tabellaCalendario.setRowHeight(tabellaCalendario.getHeight() / listaPiazzole.size());
-
-        // Imposta il modello per la tabella
-
-
-        return tabellaCalendario;
     }
 
     public void setCalendarioTableModel() {

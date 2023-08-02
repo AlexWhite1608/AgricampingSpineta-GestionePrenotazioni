@@ -28,7 +28,7 @@ public class ControllerDatePrenotazioni {
         for (int i = 0; i < NUM_DAYS; i++) {
             String formattedDate = currentDate.format(formatter);
             String dayOfWeek = currentDate.getDayOfWeek().getDisplayName(TextStyle.SHORT, Locale.ITALIAN).toUpperCase();
-            dateList.add(formattedDate + " (" + dayOfWeek + ")");
+            dateList.add(formattedDate + " (" + dayOfWeek.charAt(0) + ")");
             currentDate = currentDate.plusDays(1);
         }
 
