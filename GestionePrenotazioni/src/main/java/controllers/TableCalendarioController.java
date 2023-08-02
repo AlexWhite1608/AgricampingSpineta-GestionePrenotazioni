@@ -1,11 +1,13 @@
 package controllers;
 
 import data_access.Gateway;
+import vertical_header.VerticalTableHeaderCellRenderer;
 
 import javax.swing.*;
 import javax.swing.table.*;
 import java.awt.*;
 import java.sql.SQLException;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.Vector;
 
@@ -99,51 +101,13 @@ public class TableCalendarioController {
     }
 
     // Imposta il renderer per l'header
-    public DefaultTableCellRenderer createHeaderRenderer() {
-        return new DefaultTableCellRenderer() {
-            @Override
-            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-                Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-
-                setHorizontalAlignment(SwingConstants.CENTER);
-                setFont(HEADER_FONT);
-                setBorder(UIManager.getBorder("TableHeader.cellBorder"));
-                setBackground(HEADER_BACKGROUND);
-
-                // Adatta la larghezza della cella al testo
-                if (value != null) {
-                    String text = value.toString();
-                    int width = table.getFontMetrics(HEADER_FONT).stringWidth(text) + 10;
-                    Dimension preferredSize = new Dimension(width, c.getPreferredSize().height);
-                    setPreferredSize(preferredSize);
-                }
-
-                return c;
-            }
-        };
-    }
-
-    // Adatta la larghezza delle colonne
-    public void adaptColumnsWidthToHeader() {
-        int padding = 20; // Aggiungi un valore di padding desiderato
-        for (int column = 0; column < tabellaCalendario.getColumnCount(); column++) {
-            TableColumn tableColumn = tabellaCalendario.getColumnModel().getColumn(column);
-            TableCellRenderer headerRenderer = tabellaCalendario.getTableHeader().getDefaultRenderer();
-            Object headerValue = tableColumn.getHeaderValue();
-            Component headerComp = headerRenderer.getTableCellRendererComponent(tabellaCalendario, headerValue, false, false, 0, column);
-            int headerWidth = headerComp.getPreferredSize().width;
-            int maxCellWidth = 0;
-
-            for (int row = 0; row < tabellaCalendario.getRowCount(); row++) {
-                TableCellRenderer cellRenderer = tabellaCalendario.getCellRenderer(row, column);
-                Component cellComp = tabellaCalendario.prepareRenderer(cellRenderer, row, column);
-                int cellWidth = cellComp.getPreferredSize().width + tabellaCalendario.getIntercellSpacing().width;
-                maxCellWidth = Math.max(maxCellWidth, cellWidth);
-            }
-
-            int preferredWidth = Math.max(headerWidth, maxCellWidth) + padding; // Aggiungi il padding
-            tableColumn.setPreferredWidth(preferredWidth);
+    public void createHeaderRenderer() {
+        TableCellRenderer headerRenderer = new VerticalTableHeaderCellRenderer();
+        Enumeration<TableColumn> columns = tabellaCalendario.getColumnModel().getColumns();
+        while (columns.hasMoreElements()) {
+            columns.nextElement().setHeaderRenderer(headerRenderer);
         }
     }
+
 
 }

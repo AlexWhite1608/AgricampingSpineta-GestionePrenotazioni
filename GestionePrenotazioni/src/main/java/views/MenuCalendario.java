@@ -1,15 +1,14 @@
 package views;
 
 import controllers.TableCalendarioController;
+import vertical_header.VerticalTableHeaderCellRenderer;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.sql.SQLException;
+import java.util.Enumeration;
 
 
 public class MenuCalendario extends JPanel {
@@ -51,21 +50,13 @@ public class MenuCalendario extends JPanel {
         tabellaCalendario.setCellSelectionEnabled(false);
         tabellaCalendario.setRowSelectionAllowed(true);
         tabellaCalendario.setDefaultEditor(Object.class, null);
-        tabellaCalendario.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-
-        // Adatta la larghezza delle colonne!
-        tableCalendarioController.adaptColumnsWidthToHeader();
 
         //TODO: Renderer per il testo delle celle
 
         // Renderer per l'header
-        DefaultTableCellRenderer headerRenderer = tableCalendarioController.createHeaderRenderer();
-
-        // Assegna i renderer
-        tabellaCalendario.getTableHeader().setDefaultRenderer(headerRenderer);
+        tableCalendarioController.createHeaderRenderer();
 
         JScrollPane scrollPane = new JScrollPane(tabellaCalendario);
-        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
         mainPanelCalendario.add(scrollPane, BorderLayout.CENTER);
     }
 }
