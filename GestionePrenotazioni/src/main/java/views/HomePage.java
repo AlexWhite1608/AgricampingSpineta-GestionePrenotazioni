@@ -20,6 +20,7 @@ public class HomePage extends JFrame{
     private final static String MENU_CALENDARIO = "Calendario";
     private final static String MENU_PRENOTAZIONI = "Prenotazioni";
     private final static String MENU_ARRIVI_PARTENZE = "Arrivi/Partenze";
+    private final static boolean DEBUG_MODE = true;     //TODO: imposta false!!
 
     public HomePage() throws IOException, SQLException, GeneralSecurityException {
 
@@ -44,21 +45,6 @@ public class HomePage extends JFrame{
 
         this.add(tabbedPane, BorderLayout.CENTER);
 
-        // Salva sul drive quando si chiude l'applicazione
-        addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowClosing(WindowEvent windowEvent) {
-                try {
-                    setCursor(Cursor.WAIT_CURSOR);
-                    CloudUploader.uploadDatabaseFile();
-                    setCursor(Cursor.DEFAULT_CURSOR);
-                } catch (IOException | GeneralSecurityException | URISyntaxException e) {
-                    e.printStackTrace();
-                    MessageController.getErrorMessage(HomePage.this, "Errore nel salvataggio del backup sul Drive");
-                }
-            }
-        });
-
         this.setTitle("Gestione prenotazioni");
         this.setLocationRelativeTo(null);
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -68,7 +54,25 @@ public class HomePage extends JFrame{
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setVisible(true);
 
-        // TODO: cancella i backup della settimana scorsa
-        CloudUploader.deleteFilesBeforeDate(LocalDate.now().minusDays(4));
+        if(!DEBUG_MODE) {
+
+            // Cancella i vecchi backup
+            CloudUploader.deleteFilesBeforeDate(LocalDate.now().minusDays(4));
+
+            // Salva sul drive quando si chiude l'applicazione
+            addWindowListener(new WindowAdapter() {
+                @Override
+                public void windowClosing(WindowEvent windowEvent) {
+                    try {
+                        setCursor(Cursor.WAIT_CURSOR);
+                        CloudUploader.uploadDatabaseFile();
+                        setCursor(Cursor.DEFAULT_CURSOR);
+                    } catch (IOException | GeneralSecurityException | URISyntaxException e) {
+                        e.printStackTrace();
+                        MessageController.getErrorMessage(HomePage.this, "Errore nel salvataggio del backup sul Drive");
+                    }
+                }
+            });
+        }
     }
 }
