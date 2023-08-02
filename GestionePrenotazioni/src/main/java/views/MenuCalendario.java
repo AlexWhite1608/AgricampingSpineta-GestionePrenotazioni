@@ -1,14 +1,10 @@
 package views;
 
 import controllers.TableCalendarioController;
-import vertical_header.VerticalTableHeaderCellRenderer;
 
 import javax.swing.*;
-import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableColumn;
 import java.awt.*;
 import java.sql.SQLException;
-import java.util.Enumeration;
 
 
 public class MenuCalendario extends JPanel {

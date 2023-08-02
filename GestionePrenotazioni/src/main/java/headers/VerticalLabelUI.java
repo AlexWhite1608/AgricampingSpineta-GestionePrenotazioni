@@ -1,4 +1,4 @@
-package vertical_header;
+package headers;
 
 import java.awt.Component;
 import java.awt.Dimension;
