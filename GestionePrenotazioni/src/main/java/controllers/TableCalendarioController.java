@@ -60,7 +60,6 @@ public class TableCalendarioController {
         };
     }
 
-
     // Imposta il renderer per l'header
     public DefaultTableCellRenderer createHeaderRenderer() {
         return new DefaultTableCellRenderer() {

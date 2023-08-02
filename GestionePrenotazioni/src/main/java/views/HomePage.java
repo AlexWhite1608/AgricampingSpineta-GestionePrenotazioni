@@ -26,9 +26,6 @@ public class HomePage extends JFrame{
         // Se non è presente la cartella del backup, allora la creo e ci copio il file delle risorse (primo avvio)
         CloudUploader.copyResourceDBtoLocal();
 
-        // TODO: cancella i backup della settimana scorsa
-        CloudUploader.deleteFilesBeforeDate(LocalDate.now().minusDays(1));
-
         JTabbedPane tabbedPane = new JTabbedPane();
 
         //Imposta l'icona
@@ -70,5 +67,8 @@ public class HomePage extends JFrame{
         this.setResizable(true);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setVisible(true);
+
+        // TODO: cancella i backup della settimana scorsa
+        CloudUploader.deleteFilesBeforeDate(LocalDate.now().minusDays(4));
     }
 }
