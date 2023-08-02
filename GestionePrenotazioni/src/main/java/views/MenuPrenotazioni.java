@@ -397,6 +397,10 @@ public class MenuPrenotazioni extends JPanel {
                     try {
                         new Gateway().execUpdateQuery(query, nomePiazzola);
                         aggiungiPiazzolaDialog.dispose();
+
+                        // Notifica aggiunta piazzola
+                        notifyPiazzolaChanged();
+
                         MessageController.getInfoMessage(aggiungiPiazzolaDialog, String.format("Piazzola %s aggiunta correttamente!", nomePiazzola));
                     } catch (SQLException ex) {
                         ex.printStackTrace();
@@ -474,6 +478,10 @@ public class MenuPrenotazioni extends JPanel {
                     try {
                         new Gateway().execUpdateQuery(query, selectedPiazzola);
                         ControllerPiazzole.removePiazzolaFromList(selectedPiazzola);
+
+                        // Notifica della rimozione della piazzola
+                        notifyPiazzolaChanged();
+
                         rimuoviPiazzolaDialog.dispose();
 
                         MessageController.getInfoMessage(rimuoviPiazzolaDialog, String.format("Piazzola %s rimossa correttamente!", selectedPiazzola));
@@ -773,16 +781,15 @@ public class MenuPrenotazioni extends JPanel {
 
                 try {
                     if(new Gateway().execSelectQuery(checkQuery) != null) {
-                        MessageController.getInfoMessage(dialogNuovaPrenotazione, "Prenotazione aggiunta");
+                        dialogNuovaPrenotazione.dispose();
+                        MessageController.getInfoMessage(MenuPrenotazioni.this, "Prenotazione aggiunta");
                     } else {
-                        MessageController.getErrorMessage(dialogNuovaPrenotazione, "Impossibile inserire la nuova prenotazione");
+                        dialogNuovaPrenotazione.dispose();
+                        MessageController.getErrorMessage(MenuPrenotazioni.this, "Impossibile inserire la nuova prenotazione");
                     }
                 } catch (SQLException ex) {
                     throw new RuntimeException(ex);
                 }
-
-
-                dialogNuovaPrenotazione.dispose();
             }
         });
 
@@ -1211,7 +1218,7 @@ public class MenuPrenotazioni extends JPanel {
             if (cellEditor == null || !(cellEditor instanceof CustomCellEditorPrenotazioni)) {
                 tabellaPrenotazioni.getColumnModel().getColumn(column).setCellEditor(new CustomCellEditorPrenotazioni(tablePrenotazioniController));
 
-                // Notifico gli observers che è stata modificata la prenotazione
+                //FIXME: Notifico gli observers che è stata modificata la prenotazione
                 notifyPrenotazioneChanged();
             }
         }
@@ -1221,6 +1228,13 @@ public class MenuPrenotazioni extends JPanel {
     private void notifyPrenotazioneChanged() {
         for (PrenotazioniObservers listener : prenotazioniObserversList) {
             listener.refreshView();
+        }
+    }
+
+    // Notifica i controllers observer della modifica della modifica della piazzola
+    private void notifyPiazzolaChanged() {
+        for (PrenotazioniObservers listener : prenotazioniObserversList) {
+            listener.refreshPiazzola();
         }
     }
 

@@ -77,9 +77,17 @@ public class TableCalendarioController implements PrenotazioniObservers {
     @Override
     public void refreshView() {
         //TODO: implementa il refresh
+        System.out.println("NOTIFICA RICEVUTA!");
     }
 
-//    public void updateTableModel(List<Prenotazione> nuovePrenotazioni) {
+    // Ricarica la tabella a seguito di inserimento/rimozione piazzole
+    @Override
+    public void refreshPiazzola() {
+        //TODO: implementa il refresh
+        System.out.println("PIAZZOLA MODIFICATA!");
+    }
+
+    //    public void updateTableModel(List<Prenotazione> nuovePrenotazioni) {
 //        // Supponiamo che tu abbia un elenco di oggetti Prenotazione, ciascuno contenente la piazzola e la data di prenotazione.
 //
 //        // Cicla attraverso le nuove prenotazioni e aggiorna i dati nel modello tableModel
