@@ -3,6 +3,7 @@ package views;
 import controllers.TableCalendarioController;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
 import java.sql.SQLException;
 
@@ -49,6 +50,7 @@ public class MenuCalendario extends JPanel {
         tabellaCalendario.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 
         //TODO: Renderer per il testo delle celle
+        tableCalendarioController.createCellRenderer();
 
         // Renderer per l'header
         tableCalendarioController.createHeaderRenderer();

@@ -1,4 +1,4 @@
-package vertical_headers;
+package renderers_calendario;
 
 import java.awt.*;
 import javax.swing.Icon;

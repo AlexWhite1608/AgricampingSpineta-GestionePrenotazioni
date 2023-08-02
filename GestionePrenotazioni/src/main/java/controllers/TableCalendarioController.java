@@ -1,7 +1,8 @@
 package controllers;
 
 import data_access.Gateway;
-import vertical_headers.VerticalTableHeaderCellRenderer;
+import renderers_calendario.CalendarioCellRenderer;
+import renderers_calendario.VerticalTableHeaderCellRenderer;
 
 import javax.swing.*;
 import javax.swing.table.*;
@@ -89,15 +90,11 @@ public class TableCalendarioController {
 
 
     // Imposta il renderer per le celle
-    public DefaultTableCellRenderer createCellRenderer() {
-        return new DefaultTableCellRenderer() {
-            @Override
-            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-                Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-
-                return c;
-            }
-        };
+    public void createCellRenderer() {
+        DefaultTableCellRenderer cellRenderer = new CalendarioCellRenderer();
+        for(int columnIndex = 0; columnIndex < tabellaCalendario.getColumnCount(); columnIndex++) {
+            tabellaCalendario.getColumnModel().getColumn(columnIndex).setCellRenderer(cellRenderer);
+        }
     }
 
     // Imposta il renderer per l'header (verticale)
