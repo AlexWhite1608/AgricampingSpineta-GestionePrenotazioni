@@ -3,6 +3,7 @@ package views;
 import controllers.MessageController;
 import data_access.CloudUploader;
 import loading_dialogs.DeleteOldBackups;
+import utils.TableConstants;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -21,8 +22,6 @@ public class HomePage extends JFrame{
     private final static String MENU_CALENDARIO = "Calendario";
     private final static String MENU_PRENOTAZIONI = "Prenotazioni";
     private final static String MENU_ARRIVI_PARTENZE = "Arrivi/Partenze";
-
-    private final static int DAYS_BEFORE_DELETE = 4;
 
     private final static boolean DEBUG_MODE = true;     //TODO: imposta false per avere il funzionamento completo!!
 
@@ -61,7 +60,7 @@ public class HomePage extends JFrame{
         if(!DEBUG_MODE) {
 
             // Cancella i vecchi backup
-            new DeleteOldBackups(LocalDate.now().minusDays(DAYS_BEFORE_DELETE)).start();
+            new DeleteOldBackups(LocalDate.now().minusDays(TableConstants.DAYS_BEFORE_DELETE)).start();
 
             // Salva sul drive quando si chiude l'applicazione
             addWindowListener(new WindowAdapter() {

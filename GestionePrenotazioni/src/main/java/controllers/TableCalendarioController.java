@@ -114,6 +114,13 @@ public class TableCalendarioController implements PrenotazioniObservers {
         for(int columnIndex = 0; columnIndex < tabellaCalendario.getColumnCount(); columnIndex++) {
             tabellaCalendario.getColumnModel().getColumn(columnIndex).setCellRenderer(cellRenderer);
         }
+
+        // Imposta la larghezza delle colonne (tranne Piazzole)
+        TableColumnModel columnModel = tabellaCalendario.getColumnModel();
+        for (int i = 1; i < columnModel.getColumnCount(); i++) {
+            TableColumn column = columnModel.getColumn(i);
+            column.setPreferredWidth(TableConstants.COLUMNS_WIDTH_CALENDARIO);
+        }
     }
 
     // Imposta il renderer per l'header (verticale)

@@ -13,5 +13,7 @@ public class TableConstants {
     public static final Color CALENDARIO_FIRST_DAY_COLOR = new Color(52, 201, 235);
     public static final Color CALENDARIO_WEEKEND_COLOR = Color.lightGray;
     public static final Color BORDER_CELL_SELECTED = Color.blue;
+    public static final int COLUMNS_WIDTH_CALENDARIO = 45;
     public static final int SEPARATOR_BORDER_WIDTH = 3;
+    public static final int DAYS_BEFORE_DELETE = 4;
 }
