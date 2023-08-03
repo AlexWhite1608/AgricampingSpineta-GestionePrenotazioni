@@ -104,6 +104,7 @@ public class MenuPrenotazioni extends JPanel {
         tabellaPrenotazioni.setRowSelectionAllowed(true);
         tabellaPrenotazioni.setDefaultEditor(Object.class, null);
         tabellaPrenotazioni.removeColumn(tabellaPrenotazioni.getColumnModel().getColumn(0));
+        tabellaPrenotazioni.setGridColor(Color.BLACK);
 
         // Dimensione righe tabella
         int rowHeight = 40;

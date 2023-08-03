@@ -25,6 +25,10 @@ public class CalendarioCellRenderer extends DefaultTableCellRenderer {
         //TODO: colorare in modo diverso la colonna delle piazzole
         if (column == 0) {
             c.setBackground(table.getBackground());
+            int borderPadding = 3;
+            ((JLabel) c).setBorder(BorderFactory.createMatteBorder(0, 0, 0, borderPadding, Color.BLACK));
+        } else {
+            ((JLabel) c).setBorder(null);
         }
 
         return c;
