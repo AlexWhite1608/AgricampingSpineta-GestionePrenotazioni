@@ -10,9 +10,18 @@ public class CalendarioCellRenderer extends DefaultTableCellRenderer {
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
         Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 
-        //TODO: Impostazioni generiche (colore, font, ecc..)
-        setBackground(Color.ORANGE);
+        // Imposta altezza righe in base al numero di righe
+        setTableRowHeight(table);
 
         return c;
+    }
+
+    // Calcola l'altezza delle righe
+    private void setTableRowHeight(JTable table) {
+        int totalRows = table.getRowCount();
+        int availableHeight = table.getParent().getHeight();
+        int rowHeight = Math.max(1, availableHeight / totalRows);
+
+        table.setRowHeight(rowHeight);
     }
 }

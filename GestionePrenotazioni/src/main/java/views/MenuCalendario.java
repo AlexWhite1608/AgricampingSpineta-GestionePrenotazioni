@@ -49,6 +49,7 @@ public class MenuCalendario extends JPanel {
         tabellaCalendario.setDefaultEditor(Object.class, null);
         tabellaCalendario.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 
+
         //TODO: Renderer per il testo delle celle
         tableCalendarioController.createCellRenderer();
 

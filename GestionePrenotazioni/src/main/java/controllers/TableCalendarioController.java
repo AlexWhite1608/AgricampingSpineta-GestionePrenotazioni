@@ -159,4 +159,10 @@ public class TableCalendarioController implements PrenotazioniObservers {
         };
     }
 
+    // Imposta l'altezza delle celle in base a quante piazzole sono presenti
+    private void setTableRowHeight(int tableHeight, int rowCount) {
+
+    }
+
+
 }
