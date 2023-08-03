@@ -13,6 +13,10 @@ public class CalendarioCellRenderer extends DefaultTableCellRenderer {
         // Imposta altezza righe in base al numero di righe
         setTableRowHeight(table);
 
+        // Centra le celle
+        setHorizontalAlignment(HORIZONTAL);
+        setVerticalAlignment(CENTER);
+
         // La prima colonna (diversa dalle piazzole) deve essere sempre evidenziata
         if (column == 1) {
             c.setBackground(new Color(52, 201, 235));
