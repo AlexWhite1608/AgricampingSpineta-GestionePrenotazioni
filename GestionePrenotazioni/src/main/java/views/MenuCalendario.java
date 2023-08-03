@@ -45,7 +45,8 @@ public class MenuCalendario extends JPanel {
         // Impostazioni di base, sempre fisse
         tabellaCalendario.getTableHeader().setReorderingAllowed(false);
         tabellaCalendario.setCellSelectionEnabled(false);
-        tabellaCalendario.setRowSelectionAllowed(true);
+        tabellaCalendario.setRowSelectionAllowed(false);
+        tabellaCalendario.setColumnSelectionAllowed(false);
         tabellaCalendario.setDefaultEditor(Object.class, null);
         tabellaCalendario.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 

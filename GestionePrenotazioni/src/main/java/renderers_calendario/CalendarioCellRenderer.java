@@ -13,6 +13,15 @@ public class CalendarioCellRenderer extends DefaultTableCellRenderer {
         // Imposta altezza righe in base al numero di righe
         setTableRowHeight(table);
 
+        // La prima colonna (diversa dalle piazzole) deve essere sempre evidenziata
+        if (column == 0) {
+            //TODO: colorare in modo diverso la colonna delle piazzole
+        } else if (column == 1) {
+            c.setBackground(new Color(52, 201, 235));
+        } else {
+            c.setBackground(table.getBackground());
+        }
+
         return c;
     }
 
