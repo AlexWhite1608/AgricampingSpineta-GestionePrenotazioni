@@ -1,5 +1,7 @@
 package renderers_calendario;
 
+import utils.TableConstants;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
@@ -19,9 +21,9 @@ public class CalendarioCellRenderer extends DefaultTableCellRenderer {
 
         // La prima colonna (diversa dalle piazzole) deve essere sempre evidenziata
         if (column == 1) {
-            c.setBackground(new Color(52, 201, 235));
+            c.setBackground(TableConstants.CALENDARIO_FIRST_DAY_COLOR);
         } else if (table.getColumnName(column).contains("(S)") || table.getColumnName(column).contains("(D)")){
-            c.setBackground(Color.lightGray);
+            c.setBackground(TableConstants.CALENDARIO_WEEKEND_COLOR);
         } else {
             c.setBackground(table.getBackground());
         }
@@ -29,8 +31,7 @@ public class CalendarioCellRenderer extends DefaultTableCellRenderer {
         //TODO: colorare in modo diverso la colonna delle piazzole
         if (column == 0) {
             c.setBackground(table.getBackground());
-            int borderPadding = 3;
-            ((JLabel) c).setBorder(BorderFactory.createMatteBorder(0, 0, 0, borderPadding, Color.BLACK));
+            ((JLabel) c).setBorder(BorderFactory.createMatteBorder(0, 0, 0, TableConstants.SEPARATOR_BORDER_WIDTH, Color.BLACK));
         } else {
             ((JLabel) c).setBorder(null);
         }

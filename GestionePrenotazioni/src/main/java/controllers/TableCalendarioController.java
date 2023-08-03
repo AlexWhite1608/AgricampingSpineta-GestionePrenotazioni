@@ -4,6 +4,7 @@ import data_access.Gateway;
 import observer.PrenotazioniObservers;
 import renderers_calendario.CalendarioCellRenderer;
 import renderers_calendario.VerticalTableHeaderCellRenderer;
+import utils.TableConstants;
 import views.MenuPrenotazioni;
 
 import javax.swing.*;
@@ -15,9 +16,6 @@ import java.util.List;
 import java.util.Vector;
 
 public class TableCalendarioController implements PrenotazioniObservers {
-
-    private final Font HEADER_FONT = new Font("Segoe UI", Font.BOLD, 12);
-    private final Color HEADER_BACKGROUND = Color.LIGHT_GRAY;
 
     // Lista delle date
     private List<String> listaDate;
@@ -151,18 +149,12 @@ public class TableCalendarioController implements PrenotazioniObservers {
                 Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 
                 setHorizontalAlignment(SwingConstants.CENTER);
-                setFont(HEADER_FONT);
+                setFont(TableConstants.HEADER_FONT);
                 setBorder(UIManager.getBorder("TableHeader.cellBorder"));
                 setOpaque(false);
                 return c;
             }
         };
     }
-
-    // Imposta l'altezza delle celle in base a quante piazzole sono presenti
-    private void setTableRowHeight(int tableHeight, int rowCount) {
-
-    }
-
 
 }

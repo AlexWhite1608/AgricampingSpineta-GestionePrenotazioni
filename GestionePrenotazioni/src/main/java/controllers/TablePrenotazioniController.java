@@ -1,6 +1,7 @@
 package controllers;
 
 import data_access.Gateway;
+import utils.TableConstants;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
@@ -12,14 +13,6 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 public class TablePrenotazioniController {
-
-    // Costanti per i renderer della tabella
-    private final Font CELL_FONT = new Font("Segoe UI", Font.PLAIN, 14);
-    private final Font HEADER_FONT = new Font("Segoe UI", Font.BOLD, 16);
-    private final Color ALTERNATE_CELL_COLOR = new Color(220, 232, 234);
-    private final Color SELECTION_COLOR = new Color(255, 255, 102);
-    private final Color ACCONTO_SALDATO_COLOR = new Color(14, 129, 60);
-    private final Color BORDER_CELL_SELECTED = Color.blue;
 
     // Lista dei nomi delle prenotazioni
     static ArrayList<String> listaNomi = new ArrayList<>();
@@ -107,6 +100,8 @@ public class TablePrenotazioniController {
         }
     }
 
+    //TODO: FAI COME PER IL CALENDARIO, SPOSTA I RENDERER IN UNA CLASSE SPECIFICA!
+
     // Renderer estetica celle
     public DefaultTableCellRenderer createCellRenderer() {
         return new DefaultTableCellRenderer() {
@@ -115,18 +110,18 @@ public class TablePrenotazioniController {
                 Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 
                 setHorizontalAlignment(SwingConstants.CENTER);
-                setFont(CELL_FONT);
+                setFont(TableConstants.CELL_FONT);
 
                 // Colora le righe alternativamente
                 if (row % 2 == 0) {
                     c.setBackground(Color.WHITE);
                 } else {
-                    c.setBackground(ALTERNATE_CELL_COLOR);
+                    c.setBackground(TableConstants.ALTERNATE_CELL_COLOR);
                 }
 
                 // Colora di giallo la riga selezionata
                 if (isSelected) {
-                    c.setBackground(SELECTION_COLOR);
+                    c.setBackground(TableConstants.SELECTION_COLOR);
                 }
 
                 // Verifica che nella cella dell'acconto sia sempre visualizzato il simbolo €
@@ -145,7 +140,7 @@ public class TablePrenotazioniController {
 
                 // Imposta il bordo di selezione della cella (sia click sinistro che destro)
                 if (isSelected && table.getSelectedColumn() == column && table.getSelectedRow() == row) {
-                    setBorder(BorderFactory.createLineBorder(BORDER_CELL_SELECTED));
+                    setBorder(BorderFactory.createLineBorder(TableConstants.BORDER_CELL_SELECTED));
                 } else {
                     setBorder(BorderFactory.createEmptyBorder());
                 }
@@ -161,7 +156,7 @@ public class TablePrenotazioniController {
                     if (column == 4 && !checkAccontoIsSaldato(nome, arrivo, partenza, acconto)) {
                         setForeground(Color.RED);
                     } else if (column == 4 && checkAccontoIsSaldato(nome, arrivo, partenza, acconto)) {
-                        setForeground(ACCONTO_SALDATO_COLOR);
+                        setForeground(TableConstants.ACCONTO_SALDATO_COLOR);
                     } else {
                         setForeground(Color.BLACK);
                     }
@@ -182,7 +177,7 @@ public class TablePrenotazioniController {
                 Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 
                 setHorizontalAlignment(SwingConstants.CENTER);
-                setFont(HEADER_FONT);
+                setFont(TableConstants.HEADER_FONT);
                 setBorder(UIManager.getBorder("TableHeader.cellBorder"));
                 setOpaque(false);
 

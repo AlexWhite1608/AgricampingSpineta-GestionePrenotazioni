@@ -1,5 +1,7 @@
 package renderers_calendario;
 
+import utils.TableConstants;
+
 import java.awt.*;
 import javax.swing.Icon;
 import javax.swing.JTable;
@@ -31,12 +33,12 @@ public class VerticalTableHeaderCellRenderer extends DefaultTableHeaderCellRende
         setUI(new VerticalLabelUI());
 
         if(isToday) {
-            setBackground(new Color(52, 201, 235));
+            setBackground(TableConstants.CALENDARIO_FIRST_DAY_COLOR);
             return;
         }
 
         if(isWeekend)
-            setBackground(Color.lightGray);
+            setBackground(TableConstants.CALENDARIO_WEEKEND_COLOR);
         else
             setOpaque(false);
     }

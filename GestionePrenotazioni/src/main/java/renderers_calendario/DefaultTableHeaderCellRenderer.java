@@ -3,6 +3,8 @@
  */
 package renderers_calendario;
 
+import utils.TableConstants;
+
 import java.awt.*;
 import java.util.List;
 import javax.swing.Icon;
@@ -26,8 +28,6 @@ import javax.swing.table.JTableHeader;
  * @author Darryl
  */
 public class DefaultTableHeaderCellRenderer extends DefaultTableCellRenderer {
-
-    private final Font HEADER_FONT = new Font("Segoe UI", Font.BOLD, 12);
 
     /**
      * Constructs a <code>DefaultTableHeaderCellRenderer</code>.
@@ -71,7 +71,7 @@ public class DefaultTableHeaderCellRenderer extends DefaultTableCellRenderer {
             setForeground(tableHeader.getForeground());
         }
         setIcon(getIcon(table, column));
-        setFont(HEADER_FONT);
+        setFont(TableConstants.HEADER_FONT);
         setBorder(UIManager.getBorder("TableHeader.cellBorder"));
         return this;
     }
