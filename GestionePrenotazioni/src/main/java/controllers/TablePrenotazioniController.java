@@ -177,7 +177,7 @@ public class TablePrenotazioniController {
                 Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 
                 setHorizontalAlignment(SwingConstants.CENTER);
-                setFont(TableConstants.HEADER_FONT);
+                setFont(TableConstants.HEADER_FONT_PRENOTAZIONI);
                 setBorder(UIManager.getBorder("TableHeader.cellBorder"));
                 setOpaque(false);
 

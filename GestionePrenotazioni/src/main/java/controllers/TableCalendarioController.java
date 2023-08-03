@@ -8,6 +8,7 @@ import utils.TableConstants;
 import views.MenuPrenotazioni;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import javax.swing.table.*;
 import java.awt.*;
 import java.sql.SQLException;
@@ -149,9 +150,14 @@ public class TableCalendarioController implements PrenotazioniObservers {
                 Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 
                 setHorizontalAlignment(SwingConstants.CENTER);
-                setFont(TableConstants.HEADER_FONT);
+                setFont(TableConstants.HEADER_FONT_CALENDARIO);
                 setBorder(UIManager.getBorder("TableHeader.cellBorder"));
                 setOpaque(false);
+
+                // Aggiunge il bordo solo sulla parte destra dell'header Piazzole
+                Border headerBorder = BorderFactory.createMatteBorder(0, 0, 0, TableConstants.SEPARATOR_BORDER_WIDTH + 1, Color.BLACK);
+                setBorder(BorderFactory.createCompoundBorder(getBorder(), headerBorder));
+
                 return c;
             }
         };

@@ -7,11 +7,9 @@ import utils.TableConstants;
 
 import java.awt.*;
 import java.util.List;
-import javax.swing.Icon;
-import javax.swing.JTable;
-import javax.swing.RowSorter;
+import javax.swing.*;
 import javax.swing.RowSorter.SortKey;
-import javax.swing.UIManager;
+import javax.swing.border.Border;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.JTableHeader;
 
@@ -64,15 +62,16 @@ public class DefaultTableHeaderCellRenderer extends DefaultTableCellRenderer {
     @Override
     public Component getTableCellRendererComponent(JTable table, Object value,
                                                    boolean isSelected, boolean hasFocus, int row, int column) {
-        super.getTableCellRendererComponent(table, value,
+        Component c = super.getTableCellRendererComponent(table, value,
                 isSelected, hasFocus, row, column);
         JTableHeader tableHeader = table.getTableHeader();
         if (tableHeader != null) {
             setForeground(tableHeader.getForeground());
         }
         setIcon(getIcon(table, column));
-        setFont(TableConstants.HEADER_FONT);
+        setFont(TableConstants.HEADER_FONT_CALENDARIO);
         setBorder(UIManager.getBorder("TableHeader.cellBorder"));
+
         return this;
     }
 
