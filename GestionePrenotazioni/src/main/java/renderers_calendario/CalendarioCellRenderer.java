@@ -14,11 +14,16 @@ public class CalendarioCellRenderer extends DefaultTableCellRenderer {
         setTableRowHeight(table);
 
         // La prima colonna (diversa dalle piazzole) deve essere sempre evidenziata
-        if (column == 0) {
-            //TODO: colorare in modo diverso la colonna delle piazzole
-        } else if (column == 1) {
+        if (column == 1) {
             c.setBackground(new Color(52, 201, 235));
+        } else if (table.getColumnName(column).contains("(S)") || table.getColumnName(column).contains("(D)")){
+            c.setBackground(Color.lightGray);
         } else {
+            c.setBackground(table.getBackground());
+        }
+
+        //TODO: colorare in modo diverso la colonna delle piazzole
+        if (column == 0) {
             c.setBackground(table.getBackground());
         }
 
