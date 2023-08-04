@@ -13,6 +13,8 @@ import javax.swing.table.*;
 import java.awt.*;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
@@ -44,8 +46,8 @@ public class TableCalendarioController implements PrenotazioniObservers {
         MenuPrenotazioni.getPrenotazioniObserversList().add(this);
 
         //FIXME:
-        getInfoPrenotazioni();
-
+        ArrayList<String[]> infoPrenotazioni = getInfoPrenotazioni();
+        ArrayList<ArrayList<String>> daysFromDates = getDaysFromDates(infoPrenotazioni);
     }
 
     // Imposta il tableModel iniziale della tabella
@@ -81,7 +83,7 @@ public class TableCalendarioController implements PrenotazioniObservers {
     private ArrayList<String[]> getInfoPrenotazioni() throws SQLException {
         ArrayList<String[]> infoPrenotazioni = new ArrayList<>();
 
-        String query = "SELECT Piazzola, Arrivo, Partenza FROM Prenotazioni \n" +
+        String query = "SELECT Piazzola, Arrivo, Partenza FROM Prenotazioni " +
                 "WHERE strftime('%Y-%m-%d', substr(Arrivo, 7, 4) || '-' || substr(Arrivo, 4, 2) || '-' || substr(Arrivo, 1, 2)) >= date('now') " +
                 "OR strftime('%Y-%m-%d', substr(Partenza, 7, 4) || '-' || substr(Partenza, 4, 2) || '-' || substr(Partenza, 1, 2)) >= date('now') " +
                 "OR date('now') BETWEEN strftime('%Y-%m-%d', substr(Arrivo, 7, 4) || '-' || substr(Arrivo, 4, 2) || '-' || substr(Arrivo, 1, 2)) " +
@@ -97,8 +99,33 @@ public class TableCalendarioController implements PrenotazioniObservers {
             infoPrenotazioni.add(new String[]{piazzola, arrivo, partenza});
         }
 
+        result.close();
+
         return infoPrenotazioni;
     }
+
+    // Ricava i giorni tra le date di arrivo e di partenza fornite
+    private ArrayList<ArrayList<String>> getDaysFromDates(ArrayList<String[]> prenotazioni) {
+        ArrayList<ArrayList<String>> listaGiorni = new ArrayList<>();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+        for (String[] info : prenotazioni) {
+            LocalDate arrivo = LocalDate.parse(info[1], formatter);
+            LocalDate partenza = LocalDate.parse(info[2], formatter);
+
+            LocalDate currentDate = arrivo;
+            ArrayList<String> days = new ArrayList<>();
+            while (!currentDate.isAfter(partenza)) {
+                days.add(currentDate.format(formatter));
+                currentDate = currentDate.plusDays(1);
+            }
+
+            listaGiorni.add(days);
+        }
+
+        return listaGiorni;
+    }
+
 
     // Ricarica la tabella a seguito di modifiche delle prenotazioni
     @Override
