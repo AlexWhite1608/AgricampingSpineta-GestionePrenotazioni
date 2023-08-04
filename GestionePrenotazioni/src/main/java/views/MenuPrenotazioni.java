@@ -5,6 +5,7 @@ import com.github.lgooddatepicker.components.DatePickerSettings;
 import controllers.*;
 import data_access.CloudUploader;
 import data_access.Gateway;
+import observer.StopTableEditObservers;
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 import org.jdesktop.swingx.autocomplete.ObjectToStringConverter;
 import utils.CustomCellEditorPrenotazioni;
@@ -26,7 +27,7 @@ import java.util.ArrayList;
 import java.util.Objects;
 import observer.PrenotazioniObservers;
 
-public class MenuPrenotazioni extends JPanel {
+public class MenuPrenotazioni extends JPanel implements StopTableEditObservers {
 
     // Valori per modifiche estetiche
     private final int SEPARATOR_WIDTH = 1270;
@@ -1217,10 +1218,12 @@ public class MenuPrenotazioni extends JPanel {
 
             // Se l'editor è nullo o non è già un editor personalizzato, crea un nuovo editor
             if (cellEditor == null || !(cellEditor instanceof CustomCellEditorPrenotazioni)) {
-                tabellaPrenotazioni.getColumnModel().getColumn(column).setCellEditor(new CustomCellEditorPrenotazioni(tablePrenotazioniController));
+                CustomCellEditorPrenotazioni customCellEditor = new CustomCellEditorPrenotazioni(tablePrenotazioniController);
 
-                //FIXME: Notifico gli observers che è stata modificata la prenotazione
-                notifyPrenotazioneChanged();
+                // Si iscrive come observer all'evento di terminazione dell'edit della tabella
+                CustomCellEditorPrenotazioni.getObservers().add(this);
+
+                tabellaPrenotazioni.getColumnModel().getColumn(column).setCellEditor(customCellEditor);
             }
         }
     }
@@ -1236,6 +1239,14 @@ public class MenuPrenotazioni extends JPanel {
     private void notifyPiazzolaChanged() {
         for (PrenotazioniObservers listener : prenotazioniObserversList) {
             listener.refreshPiazzola();
+        }
+    }
+
+    // Notifica i controllers quando termina la modifica (da popup) della tabella Prenotazioni
+    @Override
+    public void stopEditNotify() {
+        for (PrenotazioniObservers listener : prenotazioniObserversList) {
+            listener.refreshView();
         }
     }
 

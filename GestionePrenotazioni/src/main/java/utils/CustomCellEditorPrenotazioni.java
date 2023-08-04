@@ -3,12 +3,15 @@ package utils;
 import controllers.ControllerPiazzole;
 import controllers.TablePrenotazioniController;
 import data_access.Gateway;
+import observer.PrenotazioniObservers;
+import observer.StopTableEditObservers;
 
 import javax.swing.*;
 import javax.swing.table.TableCellEditor;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.EventObject;
 
 public class CustomCellEditorPrenotazioni extends AbstractCellEditor implements TableCellEditor {
@@ -19,6 +22,9 @@ public class CustomCellEditorPrenotazioni extends AbstractCellEditor implements 
     private int editingRow;
     private JTable tabellaPrenotazioni;
     private final TablePrenotazioniController tablePrenotazioniController;
+
+    // Lista degli observers di fine edit tabella
+    private static ArrayList<StopTableEditObservers> observers = new ArrayList<>();
 
     public CustomCellEditorPrenotazioni(TablePrenotazioniController tablePrenotazioniController) {
         this.tablePrenotazioniController = tablePrenotazioniController;
@@ -114,6 +120,11 @@ public class CustomCellEditorPrenotazioni extends AbstractCellEditor implements 
             }
         }
         fireEditingStopped();
+
+        // Notifica gli observers che l'editing della tabella è concluso
+        for(StopTableEditObservers observer : observers)
+            observer.stopEditNotify();
+
         return true;
     }
 
@@ -135,6 +146,10 @@ public class CustomCellEditorPrenotazioni extends AbstractCellEditor implements 
             return ((MouseEvent) e).getClickCount() >= 2;
         }
         return false;
+    }
+
+    public static ArrayList<StopTableEditObservers> getObservers() {
+        return observers;
     }
 }
 
