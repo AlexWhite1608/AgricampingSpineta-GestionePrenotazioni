@@ -51,6 +51,7 @@ public class MenuCalendario extends JPanel {
         tabellaCalendario.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         tabellaCalendario.setGridColor(Color.BLACK);
 
+        // TODO: chiama funzione che aggiorna i valori iniziali della tabella da zero --> uno
 
         //TODO: Renderer per il testo delle celle
         tableCalendarioController.createCellRenderer();

@@ -11,7 +11,9 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.table.*;
 import java.awt.*;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Vector;
@@ -40,6 +42,9 @@ public class TableCalendarioController implements PrenotazioniObservers {
 
         // Si iscrive alle notifiche del MenuPrenotazioni
         MenuPrenotazioni.getPrenotazioniObserversList().add(this);
+
+        //FIXME:
+        getInfoPrenotazioni();
 
     }
 
@@ -70,6 +75,29 @@ public class TableCalendarioController implements PrenotazioniObservers {
         };
 
         tabellaCalendario.setModel(model);
+    }
+
+    // Ricava le info sulle prenotazioni come lista di (Piazzola, Arrivo, Partenza)
+    private ArrayList<String[]> getInfoPrenotazioni() throws SQLException {
+        ArrayList<String[]> infoPrenotazioni = new ArrayList<>();
+
+        String query = "SELECT Piazzola, Arrivo, Partenza FROM Prenotazioni \n" +
+                "WHERE strftime('%Y-%m-%d', substr(Arrivo, 7, 4) || '-' || substr(Arrivo, 4, 2) || '-' || substr(Arrivo, 1, 2)) >= date('now') " +
+                "OR strftime('%Y-%m-%d', substr(Partenza, 7, 4) || '-' || substr(Partenza, 4, 2) || '-' || substr(Partenza, 1, 2)) >= date('now') " +
+                "OR date('now') BETWEEN strftime('%Y-%m-%d', substr(Arrivo, 7, 4) || '-' || substr(Arrivo, 4, 2) || '-' || substr(Arrivo, 1, 2)) " +
+                "AND strftime('%Y-%m-%d', substr(Partenza, 7, 4) || '-' || substr(Partenza, 4, 2) || '-' || substr(Partenza, 1, 2));";
+
+        ResultSet result = gateway.execSelectQuery(query);
+
+        while (result.next()) {
+            String piazzola = result.getString("Piazzola");
+            String arrivo = result.getString("Arrivo");
+            String partenza = result.getString("Partenza");
+
+            infoPrenotazioni.add(new String[]{piazzola, arrivo, partenza});
+        }
+
+        return infoPrenotazioni;
     }
 
     // Ricarica la tabella a seguito di modifiche delle prenotazioni
