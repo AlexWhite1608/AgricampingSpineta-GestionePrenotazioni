@@ -42,6 +42,8 @@ public class CalendarioCellRenderer extends DefaultTableCellRenderer {
                 c.setBackground(table.getBackground());
             }
 
+            //TODO: gestisci il colore delle nuove piazzole!!
+
             // Imposta il bordo per la colonna delle Piazzole
             ((JLabel) c).setBorder(BorderFactory.createMatteBorder(0, 0, 0, TableConstants.SEPARATOR_BORDER_WIDTH, Color.BLACK));
         } else {
