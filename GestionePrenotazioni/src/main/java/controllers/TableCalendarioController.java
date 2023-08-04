@@ -15,10 +15,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Enumeration;
+import java.util.*;
 import java.util.List;
-import java.util.Vector;
 
 public class TableCalendarioController implements PrenotazioniObservers {
 
@@ -44,31 +42,50 @@ public class TableCalendarioController implements PrenotazioniObservers {
 
         // Si iscrive alle notifiche del MenuPrenotazioni
         MenuPrenotazioni.getPrenotazioniObserversList().add(this);
-
-        //FIXME:
-        ArrayList<String[]> infoPrenotazioni = getInfoPrenotazioni();
-        ArrayList<ArrayList<String>> daysFromDates = getDaysFromDates(infoPrenotazioni);
     }
 
     // Imposta il tableModel iniziale della tabella
-    public void setCalendarioTableModel() {
+    public void setCalendarioTableModel() throws SQLException {
 
         // Imposta le colonne (Piazzole seguite dalle date)
         Vector<String> columnNames = new Vector<>();
         columnNames.add("Piazzole");
         columnNames.addAll(ControllerDatePrenotazioni.getDatesFromCurrentDate());
 
-        // Imposta i dati di default del modello
+        // Ottengo la lista delle prenotazioni
+        ArrayList<String[]> infoPrenotazioni = getInfoPrenotazioni();
+
+        // Ottengo le date comprese tra Arrivo e Partenza
+        ArrayList<ArrayList<String>> daysFromDates = getDaysFromDates(infoPrenotazioni);
+
+        // Imposta i dati del modello (0 --> nessuna prenotazione, 1 --> prenotazione)
         Vector<Vector<Object>> data = new Vector<>();
         for (int i = 0; i < listaPiazzole.size(); i++) {
             Vector<Object> rowData = new Vector<>();
-            rowData.add(listaPiazzole.get(i)); // Inserisci il nome della piazzola nella prima colonna
-            for (int j = 1; j < listaDate.size() + 1; j++) {
-                rowData.add(0); // Inizializza le celle con valori vuoti
+            rowData.add(listaPiazzole.get(i)); // Inserisce il nome della piazzola nella prima colonna
+
+            for (int j = 0; j < listaDate.size(); j++) {
+                String completeColumnValue = listaDate.get(j);
+                String onlyDateColumnValue = completeColumnValue.substring(0, completeColumnValue.length() - 4);
+                boolean hasPrenotazione = false;
+
+                for (ArrayList<String> prenotazione : daysFromDates) {
+                    if (rowData.get(0).equals(prenotazione.get(0))) {
+                        if (prenotazione.contains(onlyDateColumnValue)) {
+                            hasPrenotazione = true;
+                            break;
+                        }
+                    }
+                }
+
+                rowData.add(hasPrenotazione ? 1 : 0);
             }
+
             data.add(rowData);
         }
 
+
+        // Genera il DefaultTableModel con i dati ricavati
         DefaultTableModel model = new DefaultTableModel(data, columnNames){
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -104,17 +121,20 @@ public class TableCalendarioController implements PrenotazioniObservers {
         return infoPrenotazioni;
     }
 
-    // Ricava i giorni tra le date di arrivo e di partenza fornite
+    // Ricava i giorni tra le date di arrivo e di partenza fornite (il primo elemento è sempre il nome della piazzola)
     private ArrayList<ArrayList<String>> getDaysFromDates(ArrayList<String[]> prenotazioni) {
         ArrayList<ArrayList<String>> listaGiorni = new ArrayList<>();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
         for (String[] info : prenotazioni) {
+            String piazzola = info[0];
             LocalDate arrivo = LocalDate.parse(info[1], formatter);
             LocalDate partenza = LocalDate.parse(info[2], formatter);
 
             LocalDate currentDate = arrivo;
             ArrayList<String> days = new ArrayList<>();
+
+            days.add(piazzola);
             while (!currentDate.isAfter(partenza)) {
                 days.add(currentDate.format(formatter));
                 currentDate = currentDate.plusDays(1);
@@ -125,7 +145,6 @@ public class TableCalendarioController implements PrenotazioniObservers {
 
         return listaGiorni;
     }
-
 
     // Ricarica la tabella a seguito di modifiche delle prenotazioni
     @Override
