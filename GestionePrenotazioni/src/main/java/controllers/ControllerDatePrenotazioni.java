@@ -42,23 +42,26 @@ public class ControllerDatePrenotazioni {
 
         // Se un cliente va via ne può arrivare uno nuovo lo stesso giorno nella stessa piazzola
         String overlapPrenotazione = "SELECT COUNT(*) " +
-                                     "FROM Prenotazioni " +
-                                     "WHERE Piazzola = ? AND Partenza = ?";
+                "FROM Prenotazioni " +
+                "WHERE Piazzola = ? AND (Partenza = ? OR Arrivo = ?)";
 
         try {
-            ResultSet rs = new Gateway().execSelectQuery(overlapPrenotazione, piazzola, arrivo);
+            ResultSet rs = new Gateway().execSelectQuery(overlapPrenotazione, piazzola, arrivo, partenza);
             if (rs.next()) {
-                rs.close();
-                return false;
+                if (rs.getInt(1) != 0) {
+                    rs.close();
+                    return false;
+                }
             }
+            rs.close();
         } catch (SQLException ex) {
             throw new RuntimeException(ex);
         }
 
         // Cerco nel db una prenotazione con le date e la piazzola fornite, se non c'è allora ritorna false, altrimenti true
         String checkPrenotazione = "SELECT COUNT(*) FROM Prenotazioni WHERE Piazzola = ? AND " +
-                                   "((Arrivo BETWEEN ? AND ?) OR (Partenza BETWEEN ? AND ?) OR " +
-                                   "(? BETWEEN Arrivo AND Partenza) OR (? BETWEEN Arrivo AND Partenza))";
+                "((Arrivo BETWEEN ? AND ?) OR (Partenza BETWEEN ? AND ?) OR " +
+                "(? BETWEEN Arrivo AND Partenza) OR (? BETWEEN Arrivo AND Partenza))";
         try {
             ResultSet rs = new Gateway().execSelectQuery(checkPrenotazione, piazzola, arrivo, partenza, arrivo, partenza, arrivo, partenza);
             if (rs.next()) {
@@ -71,6 +74,7 @@ public class ControllerDatePrenotazioni {
 
         return isAlreadyBooked;
     }
+
 
     // Controlla che la data di partenza sia successiva a quella di arrivo
     public static void checkOrdineDate(LocalDate arrivo, boolean isNotCorrectOrder, DatePicker datePickerPartenza, JDialog dialogNuovaPrenotazione) {

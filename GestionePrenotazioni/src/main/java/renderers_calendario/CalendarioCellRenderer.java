@@ -29,6 +29,12 @@ public class CalendarioCellRenderer extends DefaultTableCellRenderer {
     // Imposta il colore e il bordo per le piazzole
     private void setColorCells(JTable table, Object value, int column, Component c) {
 
+//        boolean isPrenotazioneCell = Objects.equals(value.toString(), "1");
+//        boolean isFirstCellOfPrenotazione = isPrenotazioneCell && column != 0 &&
+//                (column == 1 ||
+//                        (table.getValueAt(row, column - 1) != null &&
+//                                !table.getValueAt(row, column - 1).toString().equals("1")));
+
         // Imposta il colore delle celle prenotate
         if(Objects.equals(value.toString(), "1")){
             c.setBackground(TableConstants.CALENDARIO_PRENOTAZIONE_COLOR);
