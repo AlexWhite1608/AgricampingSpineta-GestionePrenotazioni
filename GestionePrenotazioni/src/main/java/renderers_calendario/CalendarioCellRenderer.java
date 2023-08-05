@@ -5,6 +5,7 @@ import utils.TableConstants;
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
+import java.util.Objects;
 
 public class CalendarioCellRenderer extends DefaultTableCellRenderer {
 
@@ -22,7 +23,8 @@ public class CalendarioCellRenderer extends DefaultTableCellRenderer {
         // Imposta il colore e il bordo per le piazzole
         setColorPiazzole(table, value, column, c);
 
-        //TODO: colorazione delle celle per i giorni prenotati
+        //TODO: colorazione delle celle per i giorni prenotati (verifica il valore della cella, lo colori e lo nascondi)
+        setColorPrenotazione(table, value, column, c);
 
         return c;
     }
@@ -58,6 +60,19 @@ public class CalendarioCellRenderer extends DefaultTableCellRenderer {
                 c.setBackground(table.getBackground());
             }
         }
+    }
+
+    // Imposta il colore delle celle prenotate
+    private void setColorPrenotazione(JTable table, Object value, int column, Component c) {
+
+        if(Objects.equals(value.toString(), "1")){
+            c.setBackground(TableConstants.CALENDARIO_PRENOTAZIONE_COLOR);
+            ((JLabel) c).setText("");
+        } else if(Objects.equals(value.toString(), "0")){
+            c.setBackground(table.getBackground());
+            ((JLabel) c).setText("");
+        }
+
     }
 
     // Calcola l'altezza delle righe
