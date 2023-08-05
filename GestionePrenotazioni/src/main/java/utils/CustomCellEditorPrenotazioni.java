@@ -122,8 +122,13 @@ public class CustomCellEditorPrenotazioni extends AbstractCellEditor implements 
         fireEditingStopped();
 
         // Notifica gli observers che l'editing della tabella è concluso
-        for(StopTableEditObservers observer : observers)
-            observer.stopEditNotify();
+        for(StopTableEditObservers observer : observers) {
+            try {
+                observer.stopEditNotify();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
 
         return true;
     }

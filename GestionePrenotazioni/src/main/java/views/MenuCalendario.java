@@ -44,16 +44,14 @@ public class MenuCalendario extends JPanel {
 
         // Impostazioni di base, sempre fisse
         tabellaCalendario.getTableHeader().setReorderingAllowed(false);
-        tabellaCalendario.setCellSelectionEnabled(false);
+        tabellaCalendario.setCellSelectionEnabled(true);
         tabellaCalendario.setRowSelectionAllowed(false);
         tabellaCalendario.setColumnSelectionAllowed(false);
         tabellaCalendario.setDefaultEditor(Object.class, null);
         tabellaCalendario.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         tabellaCalendario.setGridColor(Color.BLACK);
 
-        // TODO: chiama funzione che aggiorna i valori iniziali della tabella da zero --> uno
-
-        //TODO: Renderer per il testo delle celle
+        // Renderer per le celle
         tableCalendarioController.createCellRenderer();
 
         // Renderer per l'header

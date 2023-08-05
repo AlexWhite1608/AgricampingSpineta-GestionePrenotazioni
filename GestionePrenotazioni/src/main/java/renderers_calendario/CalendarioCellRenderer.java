@@ -20,17 +20,14 @@ public class CalendarioCellRenderer extends DefaultTableCellRenderer {
         setHorizontalAlignment(HORIZONTAL);
         setVerticalAlignment(CENTER);
 
-        // Imposta il colore e il bordo per le piazzole
-        setColorPiazzole(table, value, column, c);
-
-        //TODO: colorazione delle celle per i giorni prenotati (verifica il valore della cella, lo colori e lo nascondi)
-        //setColorPrenotazione(table, value, column, c);
+        // Imposta il colore e il bordo per le piazzole e per le celle
+        setColorCells(table, value, column, c);
 
         return c;
     }
 
     // Imposta il colore e il bordo per le piazzole
-    private void setColorPiazzole(JTable table, Object value, int column, Component c) {
+    private void setColorCells(JTable table, Object value, int column, Component c) {
 
         // Imposta il colore delle celle prenotate
         if(Objects.equals(value.toString(), "1")){
@@ -67,20 +64,6 @@ public class CalendarioCellRenderer extends DefaultTableCellRenderer {
                 c.setBackground(TableConstants.CALENDARIO_WEEKEND_COLOR);
             }
         }
-    }
-
-
-    // Imposta il colore delle celle prenotate
-    private void setColorPrenotazione(JTable table, Object value, int column, Component c) {
-
-        if(Objects.equals(value.toString(), "1")){
-            c.setBackground(TableConstants.CALENDARIO_PRENOTAZIONE_COLOR);
-            ((JLabel) c).setText("");
-        } else if(Objects.equals(value.toString(), "0")){
-            c.setBackground(table.getBackground());
-            ((JLabel) c).setText("");
-        }
-
     }
 
     // Calcola l'altezza delle righe

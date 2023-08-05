@@ -776,7 +776,11 @@ public class MenuPrenotazioni extends JPanel implements StopTableEditObservers {
 
                 // Ricarico la tabella prenotazioni e notifico gli observers
                 tablePrenotazioniController.refreshTable(tabellaPrenotazioni);
-                notifyPrenotazioneChanged();
+                try {
+                    notifyPrenotazioneChanged();
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
 
                 // Controlla che la nuova prenotazione sia stata inserita
                 String checkQuery = "SELECT * FROM Prenotazioni WHERE Nome = ? AND Piazzola = ? AND Arrivo = ? AND Partenza = ?";
@@ -1229,7 +1233,7 @@ public class MenuPrenotazioni extends JPanel implements StopTableEditObservers {
     }
 
     // Notifica i controllers observer della modifica della prenotazione
-    private void notifyPrenotazioneChanged() {
+    private void notifyPrenotazioneChanged() throws SQLException {
         for (PrenotazioniObservers listener : prenotazioniObserversList) {
             listener.refreshView();
         }
@@ -1244,7 +1248,7 @@ public class MenuPrenotazioni extends JPanel implements StopTableEditObservers {
 
     // Notifica i controllers quando termina la modifica (da popup) della tabella Prenotazioni
     @Override
-    public void stopEditNotify() {
+    public void stopEditNotify() throws SQLException {
         for (PrenotazioniObservers listener : prenotazioniObserversList) {
             listener.refreshView();
         }
