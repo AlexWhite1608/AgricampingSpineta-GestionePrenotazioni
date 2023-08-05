@@ -24,13 +24,24 @@ public class CalendarioCellRenderer extends DefaultTableCellRenderer {
         setColorPiazzole(table, value, column, c);
 
         //TODO: colorazione delle celle per i giorni prenotati (verifica il valore della cella, lo colori e lo nascondi)
-        setColorPrenotazione(table, value, column, c);
+        //setColorPrenotazione(table, value, column, c);
 
         return c;
     }
 
     // Imposta il colore e il bordo per le piazzole
     private void setColorPiazzole(JTable table, Object value, int column, Component c) {
+
+        // Imposta il colore delle celle prenotate
+        if(Objects.equals(value.toString(), "1")){
+            c.setBackground(TableConstants.CALENDARIO_PRENOTAZIONE_COLOR);
+            ((JLabel) c).setText("");
+            return;
+        } else if(Objects.equals(value.toString(), "0")){
+            c.setBackground(table.getBackground());
+            ((JLabel) c).setText("");
+        }
+
         if (column == 0) {
             if (value.toString().contains("StarBox")) {
                 c.setBackground(TableConstants.CALENDARIO_STARSBOX_COLOR);
@@ -44,8 +55,6 @@ public class CalendarioCellRenderer extends DefaultTableCellRenderer {
                 c.setBackground(table.getBackground());
             }
 
-            //TODO: gestisci il colore delle nuove piazzole!!
-
             // Imposta il bordo per la colonna delle Piazzole
             ((JLabel) c).setBorder(BorderFactory.createMatteBorder(0, 0, 0, TableConstants.SEPARATOR_BORDER_WIDTH, Color.BLACK));
         } else {
@@ -56,11 +65,10 @@ public class CalendarioCellRenderer extends DefaultTableCellRenderer {
                 c.setBackground(TableConstants.CALENDARIO_FIRST_DAY_COLOR);
             } else if (table.getColumnName(column).contains("(S)") || table.getColumnName(column).contains("(D)")) {
                 c.setBackground(TableConstants.CALENDARIO_WEEKEND_COLOR);
-            } else {
-                c.setBackground(table.getBackground());
             }
         }
     }
+
 
     // Imposta il colore delle celle prenotate
     private void setColorPrenotazione(JTable table, Object value, int column, Component c) {
