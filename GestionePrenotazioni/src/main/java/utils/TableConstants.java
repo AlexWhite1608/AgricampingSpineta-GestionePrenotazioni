@@ -18,7 +18,7 @@ public class TableConstants {
     public static final Color CALENDARIO_MARGHERITA_COLOR = new Color(222, 204, 252);
     public static final Color CALENDARIO_BBQ_COLOR = new Color(252, 157, 157);
     public static final Color BORDER_CELL_SELECTED = Color.blue;
-    public static final Color CALENDARIO_PRENOTAZIONE_COLOR =  Color.blue;
+    public static final Color CALENDARIO_PRENOTAZIONE_COLOR =  new Color(54, 70, 255);
 
     public static final int COLUMNS_WIDTH_CALENDARIO = 45;
     public static final int SEPARATOR_BORDER_WIDTH = 3;

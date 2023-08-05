@@ -135,7 +135,7 @@ public class TableCalendarioController implements PrenotazioniObservers {
             ArrayList<String> days = new ArrayList<>();
 
             days.add(piazzola);
-            while (!currentDate.isAfter(partenza)) {
+            while (!currentDate.isAfter(partenza.minusDays(1))) {  // Modificato qui
                 days.add(currentDate.format(formatter));
                 currentDate = currentDate.plusDays(1);
             }
