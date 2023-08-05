@@ -1240,7 +1240,7 @@ public class MenuPrenotazioni extends JPanel implements StopTableEditObservers {
     }
 
     // Notifica i controllers observer della modifica della modifica della piazzola
-    private void notifyPiazzolaChanged() {
+    private void notifyPiazzolaChanged() throws SQLException {
         for (PrenotazioniObservers listener : prenotazioniObserversList) {
             listener.refreshPiazzola();
         }

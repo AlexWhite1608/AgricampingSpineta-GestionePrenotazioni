@@ -149,7 +149,6 @@ public class TableCalendarioController implements PrenotazioniObservers {
     // Ricarica la tabella a seguito di modifiche delle prenotazioni
     @Override
     public void refreshView() throws SQLException {
-        System.out.println("NOTIFICA RICEVUTA!");
 
         // Ricarico il tableModel
         setCalendarioTableModel();
@@ -163,9 +162,20 @@ public class TableCalendarioController implements PrenotazioniObservers {
 
     // Ricarica la tabella a seguito di inserimento/rimozione piazzole
     @Override
-    public void refreshPiazzola() {
-        //TODO: implementa il refresh
-        System.out.println("PIAZZOLA MODIFICATA!");
+    public void refreshPiazzola() throws SQLException {
+
+        // Ricarico la lista delle piazzole
+        ControllerPiazzole.setListaPiazzole();
+        listaPiazzole = ControllerPiazzole.getListaPiazzole();
+
+        // Ricarico il tableModel
+        setCalendarioTableModel();
+
+        // Ricarico il renderer per le celle
+        createCellRenderer();
+
+        // Ricarico il renderer per l'header
+        createHeaderRenderer();
     }
 
     //    public void updateTableModel(List<Prenotazione> nuovePrenotazioni) {
