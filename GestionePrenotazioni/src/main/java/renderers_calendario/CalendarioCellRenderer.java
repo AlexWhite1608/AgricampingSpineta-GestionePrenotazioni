@@ -41,7 +41,7 @@ public class CalendarioCellRenderer extends DefaultTableCellRenderer {
             boolean borderCondition = (Objects.equals(table.getValueAt(row, column + 1).toString(), table.getValueAt(row, column).toString())) &&
                                       (!Objects.equals(table.getValueAt(row, column - 1).toString(), table.getValueAt(row, column).toString()));
             if(borderCondition)
-                ((JLabel) c).setBorder(BorderFactory.createMatteBorder(2, 2, 2, 2, Color.WHITE));
+                ((JLabel) c).setBorder(BorderFactory.createMatteBorder(2, 2, 2, 2, TableConstants.CALENDARIO_CELL_BORDER_COLOR));
 
             return;
         } else {
