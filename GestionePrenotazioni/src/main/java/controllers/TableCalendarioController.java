@@ -21,13 +21,13 @@ import java.util.List;
 public class TableCalendarioController implements PrenotazioniObservers {
 
     // Lista delle date
-    private List<String> listaDate;
+    private static List<String> listaDate;
 
     // Lista delle piazzole
-    private List<String> listaPiazzole;
+    private static List<String> listaPiazzole;
 
-    private JTable tabellaCalendario;
-    private final Gateway gateway;
+    private static JTable tabellaCalendario;
+    private static Gateway gateway;
 
     public TableCalendarioController(JTable tabellaCalendario) throws SQLException {
         this.tabellaCalendario = tabellaCalendario;
@@ -45,7 +45,7 @@ public class TableCalendarioController implements PrenotazioniObservers {
     }
 
     // Imposta il tableModel iniziale della tabella
-    public void setCalendarioTableModel() throws SQLException {
+    public static void setCalendarioTableModel() throws SQLException {
 
         // Imposta le colonne (Piazzole seguite dalle date)
         Vector<String> columnNames = new Vector<>();
@@ -107,7 +107,7 @@ public class TableCalendarioController implements PrenotazioniObservers {
     }
 
     // Ricava le info sulle prenotazioni come lista di (Piazzola, Arrivo, Partenza)
-    private ArrayList<String[]> getInfoPrenotazioni() throws SQLException {
+    private static ArrayList<String[]> getInfoPrenotazioni() throws SQLException {
         ArrayList<String[]> infoPrenotazioni = new ArrayList<>();
 
         String query = "SELECT Id, Piazzola, Arrivo, Partenza FROM Prenotazioni " +
@@ -133,7 +133,7 @@ public class TableCalendarioController implements PrenotazioniObservers {
     }
 
     // Ricava i giorni tra le date di arrivo e di partenza fornite (il primo elemento è sempre il nome della piazzola)
-    private ArrayList<ArrayList<String>> getDaysFromDates(ArrayList<String[]> prenotazioni) {
+    private static ArrayList<ArrayList<String>> getDaysFromDates(ArrayList<String[]> prenotazioni) {
         ArrayList<ArrayList<String>> listaGiorni = new ArrayList<>();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
@@ -191,8 +191,22 @@ public class TableCalendarioController implements PrenotazioniObservers {
         createHeaderRenderer();
     }
 
+    // Viene richiamato quando si intende cambiare il primo giorno di visualizzazione del calendario
+    public static void refreshDate() throws SQLException {
+        listaDate = ControllerDatePrenotazioni.getDatesFromCurrentDate();
+
+        // Ricarico il tableModel
+        setCalendarioTableModel();
+
+        // Ricarico il renderer per le celle
+        createCellRenderer();
+
+        // Ricarico il renderer per l'header
+        createHeaderRenderer();
+    }
+
     // Imposta il renderer per le celle
-    public void createCellRenderer() {
+    public static void createCellRenderer() {
         DefaultTableCellRenderer cellRenderer = new CalendarioCellRenderer();
         for(int columnIndex = 0; columnIndex < tabellaCalendario.getColumnCount(); columnIndex++) {
             tabellaCalendario.getColumnModel().getColumn(columnIndex).setCellRenderer(cellRenderer);
@@ -207,7 +221,7 @@ public class TableCalendarioController implements PrenotazioniObservers {
     }
 
     // Imposta il renderer per l'header (verticale)
-    public void createHeaderRenderer() {
+    public static void createHeaderRenderer() {
         TableCellRenderer headerRenderer = new VerticalTableHeaderCellRenderer(false, false);
         Enumeration<TableColumn> columns = tabellaCalendario.getColumnModel().getColumns();
         int columnIndex = 0; // Contatore per tenere traccia dell'indice della colonna corrente
@@ -233,7 +247,7 @@ public class TableCalendarioController implements PrenotazioniObservers {
     }
 
     // Crea il renderer per la colonna delle Piazzole
-    private DefaultTableCellRenderer createHeaderPiazzole() {
+    private static DefaultTableCellRenderer createHeaderPiazzole() {
         return new DefaultTableCellRenderer() {
             @Override
             public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
