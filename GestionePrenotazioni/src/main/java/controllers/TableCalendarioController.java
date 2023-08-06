@@ -60,6 +60,9 @@ public class TableCalendarioController implements PrenotazioniObservers {
 
         // Imposta i dati del modello (0 --> nessuna prenotazione, 1 --> prenotazione)
         Vector<Vector<Object>> data = new Vector<>();
+        String currentBookingId = "-1";
+        int currentCellValue = 0;
+
         for (int i = 0; i < listaPiazzole.size(); i++) {
             Vector<Object> rowData = new Vector<>();
             rowData.add(listaPiazzole.get(i)); // Inserisce il nome della piazzola nella prima colonna
@@ -70,19 +73,26 @@ public class TableCalendarioController implements PrenotazioniObservers {
                 boolean hasPrenotazione = false;
 
                 for (ArrayList<String> prenotazione : daysFromDates) {
-                    if (rowData.get(0).equals(prenotazione.get(0))) {
+                    if (rowData.get(0).equals(prenotazione.get(1))) {
                         if (prenotazione.contains(onlyDateColumnValue)) {
                             hasPrenotazione = true;
+                            //FIXME: ricava id prenotazione dal db!
+                            String bookingId = prenotazione.get(0);
+                            if (!Objects.equals(bookingId, currentBookingId)) {
+                                currentBookingId = bookingId;
+                                currentCellValue++;
+                            }
                             break;
                         }
                     }
                 }
 
-                rowData.add(hasPrenotazione ? 1 : 0);
+                rowData.add(hasPrenotazione ? currentCellValue : 0);
             }
 
             data.add(rowData);
         }
+
 
 
         // Genera il DefaultTableModel con i dati ricavati
@@ -100,7 +110,7 @@ public class TableCalendarioController implements PrenotazioniObservers {
     private ArrayList<String[]> getInfoPrenotazioni() throws SQLException {
         ArrayList<String[]> infoPrenotazioni = new ArrayList<>();
 
-        String query = "SELECT Piazzola, Arrivo, Partenza FROM Prenotazioni " +
+        String query = "SELECT Id, Piazzola, Arrivo, Partenza FROM Prenotazioni " +
                 "WHERE strftime('%Y-%m-%d', substr(Arrivo, 7, 4) || '-' || substr(Arrivo, 4, 2) || '-' || substr(Arrivo, 1, 2)) >= date('now') " +
                 "OR strftime('%Y-%m-%d', substr(Partenza, 7, 4) || '-' || substr(Partenza, 4, 2) || '-' || substr(Partenza, 1, 2)) >= date('now') " +
                 "OR date('now') BETWEEN strftime('%Y-%m-%d', substr(Arrivo, 7, 4) || '-' || substr(Arrivo, 4, 2) || '-' || substr(Arrivo, 1, 2)) " +
@@ -109,11 +119,12 @@ public class TableCalendarioController implements PrenotazioniObservers {
         ResultSet result = gateway.execSelectQuery(query);
 
         while (result.next()) {
+            String id = result.getString("Id");
             String piazzola = result.getString("Piazzola");
             String arrivo = result.getString("Arrivo");
             String partenza = result.getString("Partenza");
 
-            infoPrenotazioni.add(new String[]{piazzola, arrivo, partenza});
+            infoPrenotazioni.add(new String[]{id, piazzola, arrivo, partenza});
         }
 
         result.close();
@@ -127,13 +138,15 @@ public class TableCalendarioController implements PrenotazioniObservers {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
         for (String[] info : prenotazioni) {
-            String piazzola = info[0];
-            LocalDate arrivo = LocalDate.parse(info[1], formatter);
-            LocalDate partenza = LocalDate.parse(info[2], formatter);
+            String id = info[0];
+            String piazzola = info[1];
+            LocalDate arrivo = LocalDate.parse(info[2], formatter);
+            LocalDate partenza = LocalDate.parse(info[3], formatter);
 
             LocalDate currentDate = arrivo;
             ArrayList<String> days = new ArrayList<>();
 
+            days.add(id);
             days.add(piazzola);
             while (!currentDate.isAfter(partenza.minusDays(1))) {  // Modificato qui
                 days.add(currentDate.format(formatter));
@@ -177,28 +190,6 @@ public class TableCalendarioController implements PrenotazioniObservers {
         // Ricarico il renderer per l'header
         createHeaderRenderer();
     }
-
-    //    public void updateTableModel(List<Prenotazione> nuovePrenotazioni) {
-//        // Supponiamo che tu abbia un elenco di oggetti Prenotazione, ciascuno contenente la piazzola e la data di prenotazione.
-//
-//        // Cicla attraverso le nuove prenotazioni e aggiorna i dati nel modello tableModel
-//        for (Prenotazione prenotazione : nuovePrenotazioni) {
-//            // Recupera i nuovi dati delle prenotazioni dal database
-//
-//            // Trova l'indice della riga associata alla piazzola e l'indice della colonna associata alla data di prenotazione
-//            int row = listaPiazzole.indexOf(piazzola);
-//            int column = listaDate.indexOf(dataPrenotazione.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
-//
-//            // Aggiorna il valore nella cella corrispondente con le nuove informazioni della prenotazione
-//            tableModel.setValueAt(VALUE, row, column);
-//        }
-//
-//        // Aggiorna la tabella Calendario
-//        tabellaCalendario.setModel(tableModel);
-//        ((AbstractTableModel) tabellaCalendario.getModel()).fireTableDataChanged();
-//
-//    }
-
 
     // Imposta il renderer per le celle
     public void createCellRenderer() {

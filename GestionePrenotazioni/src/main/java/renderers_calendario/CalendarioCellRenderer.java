@@ -21,28 +21,32 @@ public class CalendarioCellRenderer extends DefaultTableCellRenderer {
         setVerticalAlignment(CENTER);
 
         // Imposta il colore e il bordo per le piazzole e per le celle
-        setColorCells(table, value, column, c);
+        setColorCells(table, value, column, row, c);
 
         return c;
     }
 
     // Imposta il colore e il bordo per le piazzole
-    private void setColorCells(JTable table, Object value, int column, Component c) {
+    private void setColorCells(JTable table, Object value, int column, int row, Component c) {
 
-//        boolean isPrenotazioneCell = Objects.equals(value.toString(), "1");
-//        boolean isFirstCellOfPrenotazione = isPrenotazioneCell && column != 0 &&
-//                (column == 1 ||
-//                        (table.getValueAt(row, column - 1) != null &&
-//                                !table.getValueAt(row, column - 1).toString().equals("1")));
+        if(column != 0) {
+            ((JLabel) c).setText("");
+        }
 
         // Imposta il colore delle celle prenotate
-        if(Objects.equals(value.toString(), "1")){
+        if(column != 0 && !Objects.equals(value.toString(), "0")){
             c.setBackground(TableConstants.CALENDARIO_PRENOTAZIONE_COLOR);
-            ((JLabel) c).setText("");
+
+            // Imposta il bordo
+            boolean borderCondition = (Objects.equals(table.getValueAt(row, column + 1).toString(), table.getValueAt(row, column).toString())) &&
+                                      (!Objects.equals(table.getValueAt(row, column - 1).toString(), table.getValueAt(row, column).toString()));
+            if(borderCondition)
+                ((JLabel) c).setBorder(BorderFactory.createMatteBorder(2, 2, 2, 2, Color.WHITE));
+
             return;
-        } else if(Objects.equals(value.toString(), "0")){
+        } else {
             c.setBackground(table.getBackground());
-            ((JLabel) c).setText("");
+
         }
 
         if (column == 0) {
