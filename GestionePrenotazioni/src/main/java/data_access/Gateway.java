@@ -117,8 +117,8 @@ public class Gateway {
         String queryValue = "";
         String updateSaldoAcconti = "";
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        LocalDate dataArrivo;
-        LocalDate dataPartenza;
+        String dataArrivo;
+        String dataPartenza;
         String nomeAcconto = "";
         String acconto = "";
 
@@ -127,11 +127,11 @@ public class Gateway {
                 queryValue = "Piazzola = ?";
 
                 // Verifica se è già presente una prenotazione la piazzola modificata
-                dataArrivo = LocalDate.parse(table.getValueAt(row, 1).toString().toString(), dtf);
-                dataPartenza = LocalDate.parse(table.getValueAt(row, 2).toString(), dtf);
+                dataArrivo = table.getValueAt(row, 1).toString();
+                dataPartenza = table.getValueAt(row, 2).toString();
 
                 try {
-                    if(ControllerDatePrenotazioni.isAlreadyBooked(dataArrivo.toString(), dataPartenza.toString(), newValue.toString())){
+                    if(ControllerDatePrenotazioni.isAlreadyBooked(dataArrivo, dataPartenza, newValue.toString(), null)){
                         MessageController.getErrorMessage(HomePage.getFrames()[0], String.format("La piazzola %s è già prenotata per le date selezionate", newValue.toString()));
 
                         return -1;
@@ -146,10 +146,10 @@ public class Gateway {
                 queryValue = "Arrivo = ?";
 
                 // Controlla che la data sia corretta e che non ci siano già prenotazioni (considera piazzola)
-                dataArrivo = LocalDate.parse(newValue.toString(), dtf);
-                dataPartenza = LocalDate.parse(table.getValueAt(row, 2).toString(), dtf);
+                dataArrivo = newValue.toString();
+                dataPartenza = table.getValueAt(row, 2).toString();
 
-                if (dataArrivo != null && dataPartenza.isBefore(dataArrivo)) {
+                if (dataArrivo != null && !ControllerDatePrenotazioni.isArrivalBeforeDeparture(dataArrivo, dataPartenza)) {
                     MessageController.getErrorMessage(HomePage.getFrames()[0], "La data di partenza deve essere successiva alla data di arrivo");
 
                     return -1;
@@ -157,8 +157,9 @@ public class Gateway {
 
                 // Verifica se è già presente una prenotazione
                 String piazzolaScelta = table.getValueAt(row, 0).toString();
+                String idPrenotazione = table.getModel().getValueAt(row, 0).toString();
                 try {
-                    if(ControllerDatePrenotazioni.isAlreadyBooked(dataArrivo.toString(), dataPartenza.toString(), piazzolaScelta)){
+                    if(ControllerDatePrenotazioni.isAlreadyBooked(dataArrivo.toString(), dataPartenza.toString(), piazzolaScelta, idPrenotazione)){
                         MessageController.getErrorMessage(HomePage.getFrames()[0], String.format("La piazzola %s è già prenotata per le date selezionate", piazzolaScelta));
 
                         return -1;
@@ -186,10 +187,10 @@ public class Gateway {
                 queryValue = "Partenza = ?";
 
                 // Controlla che la data sia corretta e che non ci siano già prenotazioni (considera piazzola)
-                dataPartenza = LocalDate.parse(newValue.toString(), dtf);
-                dataArrivo = LocalDate.parse(table.getValueAt(row, 1).toString(), dtf);
+                dataPartenza = newValue.toString();
+                dataArrivo = table.getValueAt(row, 1).toString();
 
-                if (dataPartenza != null && dataPartenza.isBefore(dataArrivo)) {
+                if (dataPartenza != null && !ControllerDatePrenotazioni.isArrivalBeforeDeparture(dataArrivo, dataPartenza)) {
                     MessageController.getErrorMessage(HomePage.getFrames()[0], "La data di partenza deve essere successiva alla data di arrivo");
 
                     return -1;
@@ -197,8 +198,9 @@ public class Gateway {
 
                 // Verifica se è già presente una prenotazione
                 piazzolaScelta = table.getValueAt(row, 0).toString();
+                idPrenotazione = table.getModel().getValueAt(row, 0).toString();
                 try {
-                    if(ControllerDatePrenotazioni.isAlreadyBooked(dataArrivo.toString(), dataPartenza.toString(), piazzolaScelta)){
+                    if(ControllerDatePrenotazioni.isAlreadyBooked(dataArrivo.toString(), dataPartenza.toString(), piazzolaScelta, idPrenotazione)){
                         MessageController.getErrorMessage(HomePage.getFrames()[0], String.format("La piazzola %s è già prenotata per le date selezionate", piazzolaScelta));
 
                         return -1;

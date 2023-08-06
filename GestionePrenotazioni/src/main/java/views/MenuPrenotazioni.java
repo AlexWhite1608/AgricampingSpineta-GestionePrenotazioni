@@ -746,7 +746,7 @@ public class MenuPrenotazioni extends JPanel implements StopTableEditObservers {
 
                 // Controllo che non ci siano già altre prenotazioni nelle date scelte per quella piazzola!
                 try {
-                    if(ControllerDatePrenotazioni.isAlreadyBooked(dataArrivo, dataPartenza, piazzolaScelta)){
+                    if(ControllerDatePrenotazioni.isAlreadyBooked(dataArrivo, dataPartenza, piazzolaScelta, null)){
                         MessageController.getErrorMessage(dialogNuovaPrenotazione, String.format("La piazzola %s è già prenotata per le date selezionate", piazzolaScelta));
                         datePickerArrivo.setText("");
                         datePickerPartenza.setText("");

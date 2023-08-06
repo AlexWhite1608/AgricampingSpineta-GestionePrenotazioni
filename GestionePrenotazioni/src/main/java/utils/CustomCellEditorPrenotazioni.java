@@ -9,6 +9,9 @@ import observer.StopTableEditObservers;
 import javax.swing.*;
 import javax.swing.table.TableCellEditor;
 import java.awt.*;
+import java.awt.event.ActionListener;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 import java.awt.event.MouseEvent;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -30,11 +33,17 @@ public class CustomCellEditorPrenotazioni extends AbstractCellEditor implements 
         this.tablePrenotazioniController = tablePrenotazioniController;
 
         comboBox = new JComboBox<>();
-        comboBox.addActionListener(e -> stopCellEditing());
+        comboBox.addActionListener(e -> {
+            if (comboBox.getSelectedItem() != null) {
+                stopCellEditing(); // Interrompi l'editing solo se è stato selezionato un elemento
+            }
+        });
 
         textField = new JTextField();
         textField.addActionListener(e -> stopCellEditing());
     }
+
+
 
     @Override
     public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
@@ -44,8 +53,13 @@ public class CustomCellEditorPrenotazioni extends AbstractCellEditor implements 
         tabellaPrenotazioni = table;
 
         if (column == 0) {
-            comboBox.removeAllItems();
+            // Rimuovi temporaneamente l'ActionListener per evitare la selezione automatica
+            ActionListener[] listeners = comboBox.getActionListeners();
+            for (ActionListener listener : listeners) {
+                comboBox.removeActionListener(listener);
+            }
 
+            comboBox.removeAllItems();
             // Aggiunge tutti i valori delle piazzole
             try {
                 ControllerPiazzole.setListaPiazzole();
@@ -78,9 +92,13 @@ public class CustomCellEditorPrenotazioni extends AbstractCellEditor implements 
     @Override
     public boolean stopCellEditing() {
         if (editingColumn == 0) {
+            // Riaggiungi l'ActionListener
+            for (ActionListener listener : comboBox.getActionListeners()) {
+                comboBox.addActionListener(listener);
+            }
+
             Object selectedValue = comboBox.getSelectedItem();
             if (selectedValue != null) {
-
                 // Salva le modifiche nel database nel caso della piazzola (comboBox)
                 try {
                     int result = 0;
@@ -132,6 +150,7 @@ public class CustomCellEditorPrenotazioni extends AbstractCellEditor implements 
 
         return true;
     }
+
 
     @Override
     public void cancelCellEditing() {

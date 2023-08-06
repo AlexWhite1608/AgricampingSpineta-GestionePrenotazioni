@@ -36,7 +36,7 @@ public class ControllerDatePrenotazioni {
     }
 
     // Controlla se è già presente una prenotazione in quelle date per quella piazzola
-    public static boolean isAlreadyBooked(String arrivo, String partenza, String piazzola) throws SQLException {
+    public static boolean isAlreadyBooked(String arrivo, String partenza, String piazzola, String idPrenotazione) throws SQLException {
 
         boolean isAlreadyBooked = false;
 
@@ -59,18 +59,40 @@ public class ControllerDatePrenotazioni {
         }
 
         // Cerco nel db una prenotazione con le date e la piazzola fornite, se non c'è allora ritorna false, altrimenti true
-        String checkPrenotazione = "SELECT COUNT(*) FROM Prenotazioni WHERE Piazzola = ? AND " +
-                "((Arrivo BETWEEN ? AND ?) OR (Partenza BETWEEN ? AND ?) OR " +
-                "(? BETWEEN Arrivo AND Partenza) OR (? BETWEEN Arrivo AND Partenza))";
-        try {
-            ResultSet rs = new Gateway().execSelectQuery(checkPrenotazione, piazzola, arrivo, partenza, arrivo, partenza, arrivo, partenza);
-            if (rs.next()) {
-                isAlreadyBooked = rs.getInt(1) != 0;
+
+        if(idPrenotazione == null) {
+            String checkPrenotazione = "SELECT COUNT(*) FROM Prenotazioni WHERE Piazzola = ? AND " +
+                    "((Arrivo BETWEEN ? AND ?) OR (Partenza BETWEEN ? AND ?) OR " +
+                    "(? BETWEEN Arrivo AND Partenza) OR (? BETWEEN Arrivo AND Partenza))";
+
+            try {
+                ResultSet rs = new Gateway().execSelectQuery(checkPrenotazione, piazzola, arrivo, partenza, arrivo, partenza, arrivo, partenza);
+                if (rs.next()) {
+                    isAlreadyBooked = rs.getInt(1) != 0;
+                }
+                rs.close();
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
             }
-            rs.close();
-        } catch (SQLException ex) {
-            throw new RuntimeException(ex);
+
+        } else {
+            String checkPrenotazione = "SELECT COUNT(*) FROM Prenotazioni WHERE Piazzola = ? AND " +
+                    "((Arrivo BETWEEN ? AND ?) OR (Partenza BETWEEN ? AND ?) OR " +
+                    "(? BETWEEN Arrivo AND Partenza) OR (? BETWEEN Arrivo AND Partenza)) " +
+                    "AND Id != ?";
+
+            try {
+                ResultSet rs = new Gateway().execSelectQuery(checkPrenotazione, piazzola, arrivo, partenza, arrivo, partenza, arrivo, partenza, idPrenotazione);
+                if (rs.next()) {
+                    isAlreadyBooked = rs.getInt(1) != 0;
+                }
+                rs.close();
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            }
         }
+
+
 
         return isAlreadyBooked;
     }
@@ -85,4 +107,12 @@ public class ControllerDatePrenotazioni {
         }
     }
 
+    // Controlla l'ordine cronologico delle date (fornite come stringhe)
+    public static boolean isArrivalBeforeDeparture(String arrivalDateString, String departureDateString) {
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        LocalDate arrivalDate = LocalDate.parse(arrivalDateString, dtf);
+        LocalDate departureDate = LocalDate.parse(departureDateString, dtf);
+
+        return arrivalDate.isBefore(departureDate);
+    }
 }
