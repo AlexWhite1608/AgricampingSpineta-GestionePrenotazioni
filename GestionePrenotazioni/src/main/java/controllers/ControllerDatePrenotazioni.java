@@ -115,4 +115,12 @@ public class ControllerDatePrenotazioni {
 
         return arrivalDate.isBefore(departureDate);
     }
+
+    public static LocalDate getCurrentDate() {
+        return CURRENT_DATE;
+    }
+
+    public static void setCurrentDate(LocalDate currentDate) {
+        CURRENT_DATE = currentDate;
+    }
 }
