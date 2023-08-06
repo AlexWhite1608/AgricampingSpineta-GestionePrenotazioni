@@ -13,7 +13,7 @@ public class TableConstants {
     public static final Color ACCONTO_SALDATO_COLOR = new Color(14, 129, 60);
     public static final Color CALENDARIO_FIRST_DAY_COLOR = new Color(166, 197, 245);
     public static final Color CALENDARIO_WEEKEND_COLOR = new Color(208, 208, 208);
-    public static final Color CALENDARIO_STARSBOX_COLOR = new Color(245, 235, 169);
+    public static final Color CALENDARIO_STARSBOX_COLOR = new Color(2245, 237, 86);
     public static final Color CALENDARIO_G_COLOR = new Color(189, 255, 199);
     public static final Color CALENDARIO_MARGHERITA_COLOR = new Color(222, 204, 252);
     public static final Color CALENDARIO_BBQ_COLOR = new Color(252, 157, 157);
