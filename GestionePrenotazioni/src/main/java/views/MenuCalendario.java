@@ -96,7 +96,7 @@ public class MenuCalendario extends JPanel {
         // Imposta il giorno corrente (di default) alla label
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         String formattedTodayDate = ControllerDatePrenotazioni.getCurrentDate().format(formatter);
-        lblGiornoSelezionato.setText("Giorno selezionato: " + formattedTodayDate);
+        lblGiornoSelezionato.setText("Mostra prenotazioni dal: " + formattedTodayDate);
 
         // Aggiunta degli elementi
         pnlButtonsToolbar.add(btnScegliGiorno);
@@ -168,7 +168,7 @@ public class MenuCalendario extends JPanel {
                             lblGiornoSelezionato.setForeground(Color.red);
                             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
                             String formattedTodayDate = selectedDate.format(formatter);
-                            lblGiornoSelezionato.setText("Giorno selezionato: " + formattedTodayDate);
+                            lblGiornoSelezionato.setText("Mostra prenotazioni dal: " + formattedTodayDate);
 
                             newDateDialog.dispose();
                         } catch (SQLException ex) {
@@ -198,7 +198,7 @@ public class MenuCalendario extends JPanel {
                     lblGiornoSelezionato.setForeground(Color.black);
                     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
                     String formattedTodayDate = LocalDate.now().format(formatter);
-                    lblGiornoSelezionato.setText("Giorno selezionato: " + formattedTodayDate);
+                    lblGiornoSelezionato.setText("Mostra prenotazioni dal: " + formattedTodayDate);
 
                 } catch (SQLException ex) {
                     MessageController.getErrorMessage(null, "Impossibile resettare la data");
