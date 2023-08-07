@@ -38,61 +38,43 @@ public class ControllerDatePrenotazioni {
     // Controlla se è già presente una prenotazione in quelle date per quella piazzola
     public static boolean isAlreadyBooked(String arrivo, String partenza, String piazzola, String idPrenotazione) throws SQLException {
 
+        JTable tabellaCalendario = TableCalendarioController.getTabellaCalendario();
         boolean isAlreadyBooked = false;
 
-        // Se un cliente va via ne può arrivare uno nuovo lo stesso giorno nella stessa piazzola
-        String overlapPrenotazione = "SELECT COUNT(*) " +
-                "FROM Prenotazioni " +
-                "WHERE Piazzola = ? AND (Partenza = ? OR Arrivo = ?)";
-
-        try {
-            ResultSet rs = new Gateway().execSelectQuery(overlapPrenotazione, piazzola, arrivo, partenza);
-            if (rs.next()) {
-                if (rs.getInt(1) != 0) {
-                    rs.close();
-                    return false;
-                }
-            }
-            rs.close();
-        } catch (SQLException ex) {
-            throw new RuntimeException(ex);
-        }
-
-        // Cerco nel db una prenotazione con le date e la piazzola fornite, se non c'è allora ritorna false, altrimenti true
-
-        if(idPrenotazione == null) {
-            String checkPrenotazione = "SELECT COUNT(*) FROM Prenotazioni WHERE Piazzola = ? AND " +
-                    "((Arrivo BETWEEN ? AND ?) OR (Partenza BETWEEN ? AND ?) OR " +
-                    "(? BETWEEN Arrivo AND Partenza) OR (? BETWEEN Arrivo AND Partenza))";
-
-            try {
-                ResultSet rs = new Gateway().execSelectQuery(checkPrenotazione, piazzola, arrivo, partenza, arrivo, partenza, arrivo, partenza);
-                if (rs.next()) {
-                    isAlreadyBooked = rs.getInt(1) != 0;
-                }
-                rs.close();
-            } catch (SQLException ex) {
-                throw new RuntimeException(ex);
-            }
-
-        } else {
-            String checkPrenotazione = "SELECT COUNT(*) FROM Prenotazioni WHERE Piazzola = ? AND " +
-                    "((Arrivo BETWEEN ? AND ?) OR (Partenza BETWEEN ? AND ?) OR " +
-                    "(? BETWEEN Arrivo AND Partenza) OR (? BETWEEN Arrivo AND Partenza)) " +
-                    "AND Id != ?";
-
-            try {
-                ResultSet rs = new Gateway().execSelectQuery(checkPrenotazione, piazzola, arrivo, partenza, arrivo, partenza, arrivo, partenza, idPrenotazione);
-                if (rs.next()) {
-                    isAlreadyBooked = rs.getInt(1) != 0;
-                }
-                rs.close();
-            } catch (SQLException ex) {
-                throw new RuntimeException(ex);
+        // Calcola indice della riga della piazzola corrispondente
+        int rowIndex = -1;
+        for (int row = 0; row < tabellaCalendario.getRowCount(); row++) {
+            if (piazzola.equals(tabellaCalendario.getValueAt(row, 0))) {
+                rowIndex = row;
+                break;
             }
         }
 
+        if (rowIndex != -1) {
 
+            // Ricava gli indici delle colonne in base alle date di arrivo e partenza
+            int colonnaDataArrivo = -1;
+            int colonnaDataPartenza = -1;
+            for (int col = 1; col < tabellaCalendario.getColumnCount(); col++) {
+                if (tabellaCalendario.getColumnName(col).contains(arrivo)) {
+                    colonnaDataArrivo = col;
+                }
+                if (tabellaCalendario.getColumnName(col).contains(partenza)) {
+                    colonnaDataPartenza = col;
+                }
+                if (colonnaDataArrivo != -1 && colonnaDataPartenza != -1) {
+                    break;
+                }
+            }
+
+            // Controlla se le date sono già prenotate
+            for (int col = colonnaDataArrivo; col <= colonnaDataPartenza - 1; col++) {
+                if (!tabellaCalendario.getValueAt(rowIndex, col).equals(0)) {
+                    isAlreadyBooked = true;
+                    break;
+                }
+            }
+        }
 
         return isAlreadyBooked;
     }

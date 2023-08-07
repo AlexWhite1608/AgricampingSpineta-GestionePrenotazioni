@@ -267,4 +267,7 @@ public class TableCalendarioController implements PrenotazioniObservers {
         };
     }
 
+    public static JTable getTabellaCalendario() {
+        return tabellaCalendario;
+    }
 }

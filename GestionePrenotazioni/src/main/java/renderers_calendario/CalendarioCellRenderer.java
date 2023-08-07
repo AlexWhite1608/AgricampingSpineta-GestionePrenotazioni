@@ -38,6 +38,7 @@ public class CalendarioCellRenderer extends DefaultTableCellRenderer {
             c.setBackground(TableConstants.CALENDARIO_PRENOTAZIONE_COLOR);
 
             // Imposta il bordo
+            //TODO: IL BORDO DEVE ESSERE IMPOSTATO SAPENDO CON CERTEZZA IL PRIMO GIORNO DELLA PRENOTAZIONE
             boolean borderCondition = (Objects.equals(table.getValueAt(row, column + 1).toString(), table.getValueAt(row, column).toString())) &&
                                       (!Objects.equals(table.getValueAt(row, column - 1).toString(), table.getValueAt(row, column).toString())) ||
                                       (Objects.equals(table.getValueAt(row, column - 1).toString(), "0") && (Objects.equals(table.getValueAt(row, column + 1).toString(), "0"))) ||
