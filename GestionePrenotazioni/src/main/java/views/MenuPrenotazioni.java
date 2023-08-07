@@ -280,6 +280,11 @@ public class MenuPrenotazioni extends JPanel implements StopTableEditObservers {
 
                     setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
                     MessageController.getInfoMessage(MenuPrenotazioni.this, "Backup importato correttamente!");
+                    try {
+                        notifyPrenotazioneChanged();
+                    } catch (SQLException ex) {
+                        throw new RuntimeException(ex);
+                    }
                 }
             }
         });
