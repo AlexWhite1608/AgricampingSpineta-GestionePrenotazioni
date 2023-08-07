@@ -92,6 +92,8 @@ public class MenuCalendario extends JPanel {
         // Impostazioni
         btnScegliGiorno.setFocusPainted(false);
         btnResetGiorno.setFocusPainted(false);
+        btnScegliGiorno.setToolTipText("Scegli il giorno iniziale");
+        btnResetGiorno.setToolTipText("Reimposta la data odierna");
 
         // Imposta il giorno corrente (di default) alla label
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
