@@ -119,9 +119,13 @@ public class CalendarioCellRenderer extends DefaultTableCellRenderer {
 
     // Calcola l'altezza delle righe
     private void setTableRowHeight(JTable table) {
+
         int totalRows = table.getRowCount();
-        int availableHeight = table.getParent().getHeight();
-        int rowHeight = Math.max(1, availableHeight / totalRows);
+        int rowHeight = 30;
+        if(totalRows <= 40) {
+            int availableHeight = table.getParent().getHeight();
+            rowHeight = Math.max(1, availableHeight / totalRows);
+        }
 
         table.setRowHeight(rowHeight);
     }
