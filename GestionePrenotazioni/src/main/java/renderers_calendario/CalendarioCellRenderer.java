@@ -56,6 +56,7 @@ public class CalendarioCellRenderer extends DefaultTableCellRenderer {
 
         }
 
+        // Imposta il colore delle piazzole
         if (column == 0) {
             if (value.toString().contains("StarBox")) {
                 c.setBackground(TableConstants.CALENDARIO_STARSBOX_COLOR);
