@@ -13,8 +13,6 @@ import javax.swing.table.*;
 import java.awt.*;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.List;
 
@@ -56,7 +54,7 @@ public class TableCalendarioController implements PrenotazioniObservers {
         ArrayList<String[]> infoPrenotazioni = getInfoPrenotazioni();
 
         // Ottengo le date comprese tra Arrivo e Partenza
-        ArrayList<ArrayList<String>> daysFromDates = getDaysFromDates(infoPrenotazioni);
+        ArrayList<ArrayList<String>> daysFromDates = ControllerDatePrenotazioni.getDaysFromDates(infoPrenotazioni);
 
         // Imposta i dati del modello (0 --> nessuna prenotazione, 1 --> prenotazione)
         Vector<Vector<Object>> data = new Vector<>();
@@ -130,33 +128,6 @@ public class TableCalendarioController implements PrenotazioniObservers {
         result.close();
 
         return infoPrenotazioni;
-    }
-
-    // Ricava i giorni tra le date di arrivo e di partenza fornite (il primo elemento è sempre il nome della piazzola)
-    private static ArrayList<ArrayList<String>> getDaysFromDates(ArrayList<String[]> prenotazioni) {
-        ArrayList<ArrayList<String>> listaGiorni = new ArrayList<>();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-
-        for (String[] info : prenotazioni) {
-            String id = info[0];
-            String piazzola = info[1];
-            LocalDate arrivo = LocalDate.parse(info[2], formatter);
-            LocalDate partenza = LocalDate.parse(info[3], formatter);
-
-            LocalDate currentDate = arrivo;
-            ArrayList<String> days = new ArrayList<>();
-
-            days.add(id);
-            days.add(piazzola);
-            while (!currentDate.isAfter(partenza.minusDays(1))) {  // Modificato qui
-                days.add(currentDate.format(formatter));
-                currentDate = currentDate.plusDays(1);
-            }
-
-            listaGiorni.add(days);
-        }
-
-        return listaGiorni;
     }
 
     // Ricarica la tabella a seguito di modifiche delle prenotazioni
