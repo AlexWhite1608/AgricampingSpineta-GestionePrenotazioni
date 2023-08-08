@@ -34,17 +34,18 @@ public class CalendarioCellRenderer extends DefaultTableCellRenderer {
         }
 
         // Imposta il colore delle celle prenotate
+        String rowPiazzolaValue = table.getValueAt(row, 0).toString();
         if(column != 0 && !Objects.equals(value.toString(), "0")){
             c.setBackground(TableConstants.CALENDARIO_PRENOTAZIONE_COLOR);
 
             // Imposta il bordo (con il colore del bordo che dipende dal tipo di piazzola
-            if (table.getValueAt(row, 0).toString().contains("StarBox")) {
+            if (rowPiazzolaValue.contains("StarBox")) {
                 setCellBorder(table, column, row, (JLabel) c, TableConstants.CALENDARIO_STARSBOX_COLOR);
-            } else if (table.getValueAt(row, 0).toString().contains("Margherita")) {
+            } else if (rowPiazzolaValue.contains("Margherita")) {
                 setCellBorder(table, column, row, (JLabel) c, TableConstants.CALENDARIO_MARGHERITA_COLOR);
-            } else if (table.getValueAt(row, 0).toString().contains("G")) {
+            } else if (rowPiazzolaValue.contains("G")) {
                 setCellBorder(table, column, row, (JLabel) c, TableConstants.CALENDARIO_G_COLOR);
-            } else if (table.getValueAt(row, 0).toString().contains("BBQ")) {
+            } else if (rowPiazzolaValue.contains("BBQ")) {
                 setCellBorder(table, column, row, (JLabel) c, TableConstants.CALENDARIO_BBQ_COLOR);
             } else {
                 setCellBorder(table, column, row, (JLabel) c, Color.WHITE);
@@ -53,7 +54,6 @@ public class CalendarioCellRenderer extends DefaultTableCellRenderer {
             return;
         } else {
             c.setBackground(table.getBackground());
-
         }
 
         // Imposta il colore delle piazzole
@@ -122,11 +122,13 @@ public class CalendarioCellRenderer extends DefaultTableCellRenderer {
 
         int totalRows = table.getRowCount();
         int rowHeight = 30;
-        if(totalRows <= 40) {
+        if (totalRows <= 40) {
             int availableHeight = table.getParent().getHeight();
             rowHeight = Math.max(1, availableHeight / totalRows);
         }
 
-        table.setRowHeight(rowHeight);
+        if (table.getRowHeight() != rowHeight) {
+            table.setRowHeight(rowHeight);
+        }
     }
 }
