@@ -2,9 +2,13 @@ package controllers;
 
 import data_access.Gateway;
 import observer.PrenotazioniObservers;
+import renderers.ArriviPartenzeRenderer;
+import utils.TableConstants;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import java.awt.*;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -63,6 +67,37 @@ public class TableArriviController implements PrenotazioniObservers {
         tabellaArrivi.setModel(model);
         tabellaArrivi.removeColumn(tabellaArrivi.getColumnModel().getColumn(0));
         resultSet.close();
+    }
+
+    // Renderizza le celle
+    public static void createCellRenderer() {
+        DefaultTableCellRenderer cellRenderer = new ArriviPartenzeRenderer();
+        for(int columnIndex = 0; columnIndex < tabellaArrivi.getColumnCount(); columnIndex++) {
+            tabellaArrivi.getColumnModel().getColumn(columnIndex).setCellRenderer(cellRenderer);
+        }
+    }
+
+    // Renderizza l'header
+    public static void createHeaderRenderer() {
+        DefaultTableCellRenderer headerRenderer = getHeader();
+        tabellaArrivi.getTableHeader().setDefaultRenderer(headerRenderer);
+    }
+
+    // Inizializza l'header renderer
+    private static DefaultTableCellRenderer getHeader() {
+        return new DefaultTableCellRenderer() {
+            @Override
+            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+                Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+
+                setHorizontalAlignment(SwingConstants.CENTER);
+                setFont(TableConstants.HEADER_FONT_CALENDARIO);
+                setBorder(UIManager.getBorder("TableHeader.cellBorder"));
+                setOpaque(false);
+
+                return c;
+            }
+        };
     }
 
     @Override

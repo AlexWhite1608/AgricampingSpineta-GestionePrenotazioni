@@ -2,9 +2,15 @@ package controllers;
 
 import data_access.Gateway;
 import observer.PrenotazioniObservers;
+import renderers.ArriviPartenzeRenderer;
+import renderers.DefaultTableHeaderCellRenderer;
+import utils.TableConstants;
 
 import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import java.awt.*;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -72,6 +78,37 @@ public class TablePartenzeController implements PrenotazioniObservers{
         tabellaPartenze.setModel(model);
         tabellaPartenze.removeColumn(tabellaPartenze.getColumnModel().getColumn(0));
         resultSet.close();
+    }
+
+    // Renderizza le celle
+    public static void createCellRenderer() {
+        DefaultTableCellRenderer cellRenderer = new ArriviPartenzeRenderer();
+        for(int columnIndex = 0; columnIndex < tabellaPartenze.getColumnCount(); columnIndex++) {
+            tabellaPartenze.getColumnModel().getColumn(columnIndex).setCellRenderer(cellRenderer);
+        }
+    }
+
+    // Renderizza l'header
+    public static void createHeaderRenderer() {
+        DefaultTableCellRenderer headerRenderer = getHeader();
+        tabellaPartenze.getTableHeader().setDefaultRenderer(headerRenderer);
+    }
+
+    // Inizializza l'header renderer
+    private static DefaultTableCellRenderer getHeader() {
+        return new DefaultTableCellRenderer() {
+            @Override
+            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+                Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+
+                setHorizontalAlignment(SwingConstants.CENTER);
+                setFont(TableConstants.HEADER_FONT_CALENDARIO);
+                setBorder(UIManager.getBorder("TableHeader.cellBorder"));
+                setOpaque(false);
+
+                return c;
+            }
+        };
     }
 
     @Override

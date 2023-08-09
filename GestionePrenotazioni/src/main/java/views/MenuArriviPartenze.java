@@ -62,9 +62,12 @@ public class MenuArriviPartenze extends JPanel {
         tabellaArrivi.setColumnSelectionAllowed(false);
         tabellaArrivi.setDefaultEditor(Object.class, null);
         tabellaArrivi.setGridColor(Color.BLACK);
+        tabellaArrivi.setRowHeight(40);
 
-        // Impostazione del tableModel
+        // Impostazione del tableModel e dei renderer
         tableArriviController.setTableModel();
+        tableArriviController.createCellRenderer();
+        tableArriviController.createHeaderRenderer();
 
         // Panel per tabellaArrivi
         JPanel pnlTabellaArrivi = new JPanel(new BorderLayout());
@@ -87,13 +90,16 @@ public class MenuArriviPartenze extends JPanel {
         // Impostazioni di base della tabella
         tabellaPartenze.getTableHeader().setReorderingAllowed(false);
         tabellaPartenze.setCellSelectionEnabled(true);
-        tabellaPartenze.setRowSelectionAllowed(false);
-        tabellaPartenze.setColumnSelectionAllowed(false);
+        tabellaPartenze.setRowSelectionAllowed(true);
+        tabellaPartenze.setColumnSelectionAllowed(true);
         tabellaPartenze.setDefaultEditor(Object.class, null);
         tabellaPartenze.setGridColor(Color.BLACK);
+        tabellaPartenze.setRowHeight(40);
 
-        // Impostazione del tableModel
+        // Impostazione del tableModel e dei renderer
         tablePartenzeController.setTableModel();
+        tablePartenzeController.createCellRenderer();
+        tablePartenzeController.createHeaderRenderer();
 
         // Panel per tabellaPartenze
         JPanel pnlTabellaPartenze = new JPanel(new BorderLayout());
