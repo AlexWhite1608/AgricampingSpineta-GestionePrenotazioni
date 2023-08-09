@@ -45,6 +45,7 @@ public class TablePartenzeController implements PrenotazioniObservers{
         for (int column = 1; column <= columnCount; column++) {
             columnNames.add(metaData.getColumnName(column));
         }
+        columnNames.add("N° Notti");
 
         // Data
         Vector<Vector<Object>> data = new Vector<>();
@@ -53,6 +54,7 @@ public class TablePartenzeController implements PrenotazioniObservers{
             for (int columnIndex = 1; columnIndex <= columnCount; columnIndex++) {
                 vector.add(resultSet.getObject(columnIndex));
             }
+
             // Calcola la differenza tra le date di arrivo e partenza
             LocalDate arrivo = LocalDate.parse(resultSet.getString("Arrivo"), formatter);
             LocalDate partenza = LocalDate.parse(resultSet.getString("Partenza"), formatter);
@@ -78,9 +80,7 @@ public class TablePartenzeController implements PrenotazioniObservers{
     private void createPartenzeView() throws SQLException {
         String dropQuery = "DROP VIEW IF EXISTS Partenze;";
         String viewQueryPartenze = "CREATE VIEW Partenze AS " +
-                "SELECT *, " +
-                "(julianday(Partenza, 'day') - julianday(Arrivo, 'day')) AS `N° Notti` " +
-                "FROM Prenotazioni;";
+                "SELECT * FROM Prenotazioni;";
 
         // Crea la vista nel database
         gateway.execUpdateQuery(dropQuery);
