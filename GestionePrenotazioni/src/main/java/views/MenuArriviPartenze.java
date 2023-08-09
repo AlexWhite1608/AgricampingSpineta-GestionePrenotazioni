@@ -6,6 +6,7 @@ import controllers.TablePartenzeController;
 
 import javax.swing.*;
 import javax.swing.border.Border;
+import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.sql.SQLException;
 
@@ -68,8 +69,12 @@ public class MenuArriviPartenze extends JPanel {
         // Panel per tabellaArrivi
         JPanel pnlTabellaArrivi = new JPanel(new BorderLayout());
         pnlTabellaArrivi.add(new JScrollPane(tabellaArrivi), BorderLayout.CENTER);
-        Border blackline = BorderFactory.createTitledBorder("ARRIVI");
-        pnlTabellaArrivi.setBorder(blackline);
+
+        // Imposta il bordo del panel
+        Border blackline = BorderFactory.createLineBorder(Color.BLACK);
+        TitledBorder titledBorder = BorderFactory.createTitledBorder(blackline, "ARRIVI", TitledBorder.CENTER, TitledBorder.TOP);
+        titledBorder.setTitleFont(titledBorder.getTitleFont().deriveFont(Font.BOLD, 16));
+        pnlTabellaArrivi.setBorder(titledBorder);
 
         JScrollPane scrollPane = new JScrollPane(tabellaArrivi);
         pnlTabellaArrivi.add(scrollPane);
@@ -93,8 +98,12 @@ public class MenuArriviPartenze extends JPanel {
         // Panel per tabellaPartenze
         JPanel pnlTabellaPartenze = new JPanel(new BorderLayout());
         pnlTabellaPartenze.add(new JScrollPane(tabellaPartenze), BorderLayout.CENTER);
-        Border blackline = BorderFactory.createTitledBorder("PARTENZE");
-        pnlTabellaPartenze.setBorder(blackline);
+
+        // Imposta il bordo del panel
+        Border blackline = BorderFactory.createLineBorder(Color.BLACK);
+        TitledBorder titledBorder = BorderFactory.createTitledBorder(blackline, "PARTENZE", TitledBorder.CENTER, TitledBorder.TOP);
+        titledBorder.setTitleFont(titledBorder.getTitleFont().deriveFont(Font.BOLD, 16));
+        pnlTabellaPartenze.setBorder(titledBorder);
 
         JScrollPane scrollPane = new JScrollPane(tabellaPartenze);
         pnlTabellaPartenze.add(scrollPane);
