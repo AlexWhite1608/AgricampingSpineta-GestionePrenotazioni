@@ -6,6 +6,7 @@ import controllers.TablePartenzeController;
 
 import javax.swing.*;
 import java.awt.*;
+import java.sql.SQLException;
 
 public class MenuArriviPartenze extends JPanel {
 
@@ -19,7 +20,7 @@ public class MenuArriviPartenze extends JPanel {
     private JPanel pnlToolbar;
     private JToolBar toolBar;
 
-    public MenuArriviPartenze() {
+    public MenuArriviPartenze() throws SQLException {
 
         createUIComponents();
         setupToolbar();
@@ -50,7 +51,7 @@ public class MenuArriviPartenze extends JPanel {
     }
 
     // Setup tabella arrivi
-    private void setupTableArrivi() {
+    private void setupTableArrivi() throws SQLException {
 
         // Impostazioni di base della tabella
         tabellaArrivi.getTableHeader().setReorderingAllowed(false);
@@ -60,11 +61,15 @@ public class MenuArriviPartenze extends JPanel {
         tabellaArrivi.setDefaultEditor(Object.class, null);
         tabellaArrivi.setGridColor(Color.BLACK);
 
+        // Impostazione del tableModel
+        tableArriviController.setTableModel();
+
         // Panel per tabellaArrivi
         JPanel pnlTabellaArrivi = new JPanel(new BorderLayout());
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.fill = GridBagConstraints.HORIZONTAL;
         constraints.gridx = 0;
+
 
         JScrollPane scrollPane = new JScrollPane(tabellaArrivi);
         pnlTabellaArrivi.add(scrollPane);
