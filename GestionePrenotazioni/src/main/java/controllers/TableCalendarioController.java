@@ -28,8 +28,8 @@ public class TableCalendarioController implements PrenotazioniObservers {
     private static Gateway gateway;
 
     public TableCalendarioController(JTable tabellaCalendario) throws SQLException {
-        this.tabellaCalendario = tabellaCalendario;
-        this.gateway = new Gateway();
+        TableCalendarioController.tabellaCalendario = tabellaCalendario;
+        gateway = new Gateway();
 
         // Inizializzo la lista delle date per l'header dal giorno corrente
         listaDate = ControllerDatePrenotazioni.getDatesFromCurrentDate();
@@ -236,9 +236,5 @@ public class TableCalendarioController implements PrenotazioniObservers {
                 return c;
             }
         };
-    }
-
-    public static JTable getTabellaCalendario() {
-        return tabellaCalendario;
     }
 }
