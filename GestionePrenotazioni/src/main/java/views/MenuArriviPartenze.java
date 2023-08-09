@@ -36,7 +36,7 @@ public class MenuArriviPartenze extends JPanel {
 
         // Main panel
         mainPanelArriviPartenze = new JPanel();
-        mainPanelArriviPartenze.setLayout(new BorderLayout());
+        mainPanelArriviPartenze.setLayout(new GridBagLayout());
 
         // Inizializzazione delle tabelle e relativi controllers
         tabellaArrivi = new JTable();
@@ -51,10 +51,47 @@ public class MenuArriviPartenze extends JPanel {
 
     // Setup tabella arrivi
     private void setupTableArrivi() {
+
+        // Impostazioni di base della tabella
+        tabellaArrivi.getTableHeader().setReorderingAllowed(false);
+        tabellaArrivi.setCellSelectionEnabled(true);
+        tabellaArrivi.setRowSelectionAllowed(false);
+        tabellaArrivi.setColumnSelectionAllowed(false);
+        tabellaArrivi.setDefaultEditor(Object.class, null);
+        tabellaArrivi.setGridColor(Color.BLACK);
+
+        // Panel per tabellaArrivi
+        JPanel pnlTabellaArrivi = new JPanel(new BorderLayout());
+        GridBagConstraints constraints = new GridBagConstraints();
+        constraints.fill = GridBagConstraints.HORIZONTAL;
+        constraints.gridx = 0;
+
+        JScrollPane scrollPane = new JScrollPane(tabellaArrivi);
+        pnlTabellaArrivi.add(scrollPane);
+        mainPanelArriviPartenze.add(pnlTabellaArrivi, constraints);
     }
 
     // Setup tabella arrivi
     private void setupTablePartenze() {
+
+        // Impostazioni di base della tabella
+        tabellaPartenze.getTableHeader().setReorderingAllowed(false);
+        tabellaPartenze.setCellSelectionEnabled(true);
+        tabellaPartenze.setRowSelectionAllowed(false);
+        tabellaPartenze.setColumnSelectionAllowed(false);
+        tabellaPartenze.setDefaultEditor(Object.class, null);
+        tabellaPartenze.setGridColor(Color.BLACK);
+
+        // Panel per tabellaPartenze
+        JPanel pnlTabellaPartenze = new JPanel(new BorderLayout());
+        GridBagConstraints constraints = new GridBagConstraints();
+        constraints.fill = GridBagConstraints.HORIZONTAL;
+        constraints.gridx = 1;
+
+
+        JScrollPane scrollPane = new JScrollPane(tabellaPartenze);
+        pnlTabellaPartenze.add(scrollPane);
+        mainPanelArriviPartenze.add(pnlTabellaPartenze, constraints);
     }
 
     // Setup della toolbar
