@@ -5,6 +5,7 @@ import observer.PrenotazioniObservers;
 import renderers.ArriviPartenzeRenderer;
 import renderers.DefaultTableHeaderCellRenderer;
 import utils.TableConstants;
+import views.MenuPrenotazioni;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -29,6 +30,9 @@ public class TablePartenzeController implements PrenotazioniObservers{
 
         TablePartenzeController.tabellaPartenze = tabellaPartenze;
         TablePartenzeController.gateway = new Gateway();
+
+        // Si iscrive alle notifiche del MenuPrenotazioni
+        MenuPrenotazioni.getPrenotazioniObserversList().add(this);
     }
 
     // Imposta il tableModel sulla base della query
@@ -113,7 +117,8 @@ public class TablePartenzeController implements PrenotazioniObservers{
 
     @Override
     public void refreshView() throws SQLException {
-        //TODO: implementa refresh!
+        setTableModel();
+        createCellRenderer();
     }
 
     @Override
