@@ -2,8 +2,8 @@ package controllers;
 
 import data_access.Gateway;
 import observer.PrenotazioniObservers;
-import renderers_calendario.CalendarioCellRenderer;
-import renderers_calendario.VerticalTableHeaderCellRenderer;
+import renderers.CalendarioCellRenderer;
+import renderers.VerticalTableHeaderCellRenderer;
 import utils.TableConstants;
 import views.MenuPrenotazioni;
 

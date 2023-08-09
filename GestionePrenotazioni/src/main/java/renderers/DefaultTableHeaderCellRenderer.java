@@ -1,7 +1,7 @@
 /**
  * @(#)DefaultTableHeaderCellRenderer.java	1.0 02/24/09
  */
-package renderers_calendario;
+package renderers;
 
 import utils.TableConstants;
 
@@ -9,7 +9,6 @@ import java.awt.*;
 import java.util.List;
 import javax.swing.*;
 import javax.swing.RowSorter.SortKey;
-import javax.swing.border.Border;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.JTableHeader;
 
