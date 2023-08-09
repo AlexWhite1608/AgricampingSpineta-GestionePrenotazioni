@@ -271,7 +271,7 @@ public class MenuPrenotazioni extends JPanel implements StopTableEditObservers {
                     try {
                         CloudUploader.importFileFromDrive("database.db");
                     } catch (IOException | GeneralSecurityException ex) {
-                        throw new RuntimeException(ex);
+                        MessageController.getErrorMessage(null, "Errore: " + ex.getMessage());
                     }
 
                     // Ricarica la vista della tabella
