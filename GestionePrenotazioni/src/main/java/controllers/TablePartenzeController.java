@@ -30,8 +30,7 @@ public class TablePartenzeController implements PrenotazioniObservers{
     public void setTableModel() throws SQLException {
 
         // Imposto la query che mi seleziona la vista
-        createPartenzeView();
-        String query = "SELECT * FROM Partenze WHERE Partenza = ?";
+        String query = "SELECT * FROM Prenotazioni WHERE Partenza = ?";
 
         // Costruisco il table model
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
@@ -74,17 +73,6 @@ public class TablePartenzeController implements PrenotazioniObservers{
         tabellaPartenze.setModel(model);
         tabellaPartenze.removeColumn(tabellaPartenze.getColumnModel().getColumn(0));
         resultSet.close();
-    }
-
-    // Metodo che crea la vista per la tabella Partenze
-    private void createPartenzeView() throws SQLException {
-        String dropQuery = "DROP VIEW IF EXISTS Partenze;";
-        String viewQueryPartenze = "CREATE VIEW Partenze AS " +
-                "SELECT * FROM Prenotazioni;";
-
-        // Crea la vista nel database
-        gateway.execUpdateQuery(dropQuery);
-        gateway.execUpdateQuery(viewQueryPartenze);
     }
 
     @Override
