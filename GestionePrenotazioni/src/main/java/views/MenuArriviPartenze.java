@@ -5,6 +5,7 @@ import controllers.TableCalendarioController;
 import controllers.TablePartenzeController;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
 import java.sql.SQLException;
 
@@ -37,7 +38,7 @@ public class MenuArriviPartenze extends JPanel {
 
         // Main panel
         mainPanelArriviPartenze = new JPanel();
-        mainPanelArriviPartenze.setLayout(new GridBagLayout());
+        mainPanelArriviPartenze.setLayout(new BorderLayout());
 
         // Inizializzazione delle tabelle e relativi controllers
         tabellaArrivi = new JTable();
@@ -66,14 +67,13 @@ public class MenuArriviPartenze extends JPanel {
 
         // Panel per tabellaArrivi
         JPanel pnlTabellaArrivi = new JPanel(new BorderLayout());
-        GridBagConstraints constraints = new GridBagConstraints();
-        constraints.fill = GridBagConstraints.HORIZONTAL;
-        constraints.gridx = 0;
-
+        pnlTabellaArrivi.add(new JScrollPane(tabellaArrivi), BorderLayout.CENTER);
+        Border blackline = BorderFactory.createTitledBorder("ARRIVI");
+        pnlTabellaArrivi.setBorder(blackline);
 
         JScrollPane scrollPane = new JScrollPane(tabellaArrivi);
         pnlTabellaArrivi.add(scrollPane);
-        mainPanelArriviPartenze.add(pnlTabellaArrivi, constraints);
+        mainPanelArriviPartenze.add(pnlTabellaArrivi, BorderLayout.WEST);
     }
 
     // Setup tabella arrivi
@@ -92,14 +92,13 @@ public class MenuArriviPartenze extends JPanel {
 
         // Panel per tabellaPartenze
         JPanel pnlTabellaPartenze = new JPanel(new BorderLayout());
-        GridBagConstraints constraints = new GridBagConstraints();
-        constraints.fill = GridBagConstraints.HORIZONTAL;
-        constraints.gridx = 1;
-
+        pnlTabellaPartenze.add(new JScrollPane(tabellaPartenze), BorderLayout.CENTER);
+        Border blackline = BorderFactory.createTitledBorder("PARTENZE");
+        pnlTabellaPartenze.setBorder(blackline);
 
         JScrollPane scrollPane = new JScrollPane(tabellaPartenze);
         pnlTabellaPartenze.add(scrollPane);
-        mainPanelArriviPartenze.add(pnlTabellaPartenze, constraints);
+        mainPanelArriviPartenze.add(pnlTabellaPartenze, BorderLayout.EAST);
     }
 
     // Setup della toolbar

@@ -19,7 +19,6 @@ public class TablePartenzeController implements PrenotazioniObservers{
     private static Gateway gateway;
     private static LocalDate TODAY = LocalDate.now();
 
-
     public TablePartenzeController(JTable tabellaPartenze) {
 
         TablePartenzeController.tabellaPartenze = tabellaPartenze;
