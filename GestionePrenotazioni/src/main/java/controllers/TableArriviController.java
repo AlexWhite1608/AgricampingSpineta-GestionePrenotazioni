@@ -23,6 +23,7 @@ public class TableArriviController implements PrenotazioniObservers {
         TableArriviController.gateway = new Gateway();
     }
 
+    // Imposta il tableModel sulla base della query
     public void setTableModel() throws SQLException {
 
         // Imposto la query che mi seleziona la vista

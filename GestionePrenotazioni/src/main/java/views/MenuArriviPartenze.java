@@ -77,7 +77,7 @@ public class MenuArriviPartenze extends JPanel {
     }
 
     // Setup tabella arrivi
-    private void setupTablePartenze() {
+    private void setupTablePartenze() throws SQLException {
 
         // Impostazioni di base della tabella
         tabellaPartenze.getTableHeader().setReorderingAllowed(false);
@@ -86,6 +86,9 @@ public class MenuArriviPartenze extends JPanel {
         tabellaPartenze.setColumnSelectionAllowed(false);
         tabellaPartenze.setDefaultEditor(Object.class, null);
         tabellaPartenze.setGridColor(Color.BLACK);
+
+        // Impostazione del tableModel
+        tablePartenzeController.setTableModel();
 
         // Panel per tabellaPartenze
         JPanel pnlTabellaPartenze = new JPanel(new BorderLayout());
