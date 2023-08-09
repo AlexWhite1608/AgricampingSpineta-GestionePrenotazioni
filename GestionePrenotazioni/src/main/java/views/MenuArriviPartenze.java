@@ -38,7 +38,7 @@ public class MenuArriviPartenze extends JPanel {
 
         // Main panel
         mainPanelArriviPartenze = new JPanel();
-        mainPanelArriviPartenze.setLayout(new BorderLayout());
+        mainPanelArriviPartenze.setLayout(new GridLayout(1, 2));
 
         // Inizializzazione delle tabelle e relativi controllers
         tabellaArrivi = new JTable();
@@ -70,6 +70,7 @@ public class MenuArriviPartenze extends JPanel {
         pnlTabellaArrivi.add(new JScrollPane(tabellaArrivi), BorderLayout.CENTER);
         Border blackline = BorderFactory.createTitledBorder("ARRIVI");
         pnlTabellaArrivi.setBorder(blackline);
+        pnlTabellaArrivi.setPreferredSize(new Dimension(mainPanelArriviPartenze.getWidth() / 2, pnlTabellaArrivi.getPreferredSize().height));
 
         JScrollPane scrollPane = new JScrollPane(tabellaArrivi);
         pnlTabellaArrivi.add(scrollPane);
@@ -95,6 +96,7 @@ public class MenuArriviPartenze extends JPanel {
         pnlTabellaPartenze.add(new JScrollPane(tabellaPartenze), BorderLayout.CENTER);
         Border blackline = BorderFactory.createTitledBorder("PARTENZE");
         pnlTabellaPartenze.setBorder(blackline);
+        pnlTabellaPartenze.setPreferredSize(new Dimension(mainPanelArriviPartenze.getWidth() / 2, pnlTabellaPartenze.getPreferredSize().height));
 
         JScrollPane scrollPane = new JScrollPane(tabellaPartenze);
         pnlTabellaPartenze.add(scrollPane);
