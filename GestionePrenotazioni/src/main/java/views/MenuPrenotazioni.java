@@ -775,6 +775,7 @@ public class MenuPrenotazioni extends JPanel implements StopTableEditObservers {
                         String insertSaldoQuery = "INSERT INTO SaldoAcconti (Nome, Arrivo, Partenza, Acconto, Saldato) VALUES (?, ?, ?, ?, 'non saldato')";
                         new Gateway().execUpdateQuery(insertSaldoQuery, nomePrenotazione, dataArrivo, dataPartenza, "€ " + acconto);
                     }
+
                 } catch (SQLException ex) {
                     throw new RuntimeException(ex);
                 }
@@ -794,6 +795,21 @@ public class MenuPrenotazioni extends JPanel implements StopTableEditObservers {
                     if(new Gateway().execSelectQuery(checkQuery) != null) {
                         dialogNuovaPrenotazione.dispose();
                         MessageController.getInfoMessage(MenuPrenotazioni.this, "Prenotazione aggiunta");
+
+                        //TODO: Inserisce la prenotazione nella tabella ArriviPartenze
+                        String insertArriviPartenze = "INSERT INTO ArriviPartenze (Id, Arrivo, Partenza, Nome, Arrivato, Partito) VALUES (?, ?, ?, ?, ?, ?);";
+
+                        // Ricavo l'id della prenotazione appena inserita
+                        String id = "";
+                        if (tabellaPrenotazioni.getRowCount() > 0) {
+                            int lastRowIndex = tabellaPrenotazioni.getRowCount() - 1;
+                            Object idValue = tabellaPrenotazioni.getModel().getValueAt(lastRowIndex, 0);
+                            if (idValue != null) {
+                                id = idValue.toString();
+                            }
+                        }
+                        new Gateway().execUpdateQuery(insertArriviPartenze, id, dataArrivo, dataPartenza, nomePrenotazione, "no", "no");
+
                     } else {
                         dialogNuovaPrenotazione.dispose();
                         MessageController.getErrorMessage(MenuPrenotazioni.this, "Impossibile inserire la nuova prenotazione");
@@ -1151,8 +1167,13 @@ public class MenuPrenotazioni extends JPanel implements StopTableEditObservers {
                         tablePrenotazioniController.getListaNomi().remove(nome);
 
                         // Elimino anche dalla tabella SaldoAcconti
-                        String deleteSaldoAccontiQuery = "DELETE FROM SaldoAcconti WHERE Nome = ? AND Arrivo = ? AND Partenza = ? AND Acconto = ?";
-                        new Gateway().execUpdateQuery(deleteSaldoAccontiQuery, nome, arrivo, partenza, acconto);
+                        String idEliminazione = tabellaPrenotazioni.getModel().getValueAt(selectedRow, 0).toString();
+                        String deleteSaldoAccontiQuery = "DELETE FROM SaldoAcconti WHERE Id = ?";
+                        new Gateway().execUpdateQuery(deleteSaldoAccontiQuery, idEliminazione);
+
+                        //TODO: Elimino anche dalla tabella ArriviPartenze
+                        String deleteArriviPartenzequery = "DELETE FROM ArriviPartenze WHERE Id = ?";
+                        new Gateway().execUpdateQuery(deleteArriviPartenzequery, idEliminazione);
 
                         // Aggiorno la tabella dopo l'eliminazione e notifico gli observers
                         tablePrenotazioniController.refreshTable(tabellaPrenotazioni);
