@@ -796,7 +796,7 @@ public class MenuPrenotazioni extends JPanel implements StopTableEditObservers {
                         dialogNuovaPrenotazione.dispose();
                         MessageController.getInfoMessage(MenuPrenotazioni.this, "Prenotazione aggiunta");
 
-                        //TODO: Inserisce la prenotazione nella tabella ArriviPartenze
+                        // Inserisce la prenotazione nella tabella ArriviPartenze
                         String insertArriviPartenze = "INSERT INTO ArriviPartenze (Id, Arrivo, Partenza, Nome, Arrivato, Partito) VALUES (?, ?, ?, ?, ?, ?);";
 
                         // Ricavo l'id della prenotazione appena inserita
@@ -1171,7 +1171,7 @@ public class MenuPrenotazioni extends JPanel implements StopTableEditObservers {
                         String deleteSaldoAccontiQuery = "DELETE FROM SaldoAcconti WHERE Id = ?";
                         new Gateway().execUpdateQuery(deleteSaldoAccontiQuery, idEliminazione);
 
-                        //TODO: Elimino anche dalla tabella ArriviPartenze
+                        // Elimino anche dalla tabella ArriviPartenze
                         String deleteArriviPartenzequery = "DELETE FROM ArriviPartenze WHERE Id = ?";
                         new Gateway().execUpdateQuery(deleteArriviPartenzequery, idEliminazione);
 

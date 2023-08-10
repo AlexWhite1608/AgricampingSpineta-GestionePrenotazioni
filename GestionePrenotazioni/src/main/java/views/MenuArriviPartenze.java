@@ -1,14 +1,22 @@
 package views;
 
+import controllers.MessageController;
 import controllers.TableArriviController;
 import controllers.TableCalendarioController;
 import controllers.TablePartenzeController;
+import data_access.Gateway;
 
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
+import javax.swing.table.TableCellRenderer;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class MenuArriviPartenze extends JPanel {
 
@@ -21,6 +29,8 @@ public class MenuArriviPartenze extends JPanel {
     private JTable tabellaPartenze;
     private JPanel pnlToolbar;
     private JToolBar toolBar;
+    private JPopupMenu popupMenuArrivi;
+    private JPopupMenu popupMenuPartenze;
 
     public MenuArriviPartenze() throws SQLException {
 
@@ -79,6 +89,63 @@ public class MenuArriviPartenze extends JPanel {
         titledBorder.setTitleFont(titledBorder.getTitleFont().deriveFont(Font.BOLD, 16));
         pnlTabellaArrivi.setBorder(titledBorder);
 
+        // Genera il popup con il tasto destro
+        tabellaArrivi.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                handleRowClick(e);
+                if (e.isPopupTrigger()) {
+                    doPop(e);
+                } else {
+                    hidePop();
+                }
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                if (e.isPopupTrigger()) {
+                    doPop(e);
+                }
+            }
+
+            private void handleRowClick(MouseEvent e) {
+                ListSelectionModel selectionModel = tabellaArrivi.getSelectionModel();
+                Point contextMenuOpenedAt = e.getPoint();
+                int clickedRow = tabellaArrivi.rowAtPoint(contextMenuOpenedAt);
+                int clickedColumn = tabellaArrivi.columnAtPoint(contextMenuOpenedAt);
+
+                if (clickedRow < 0 || clickedColumn < 0) {
+                    // Nessuna cella selezionata
+                    selectionModel.clearSelection();
+                } else {
+                    // Cella selezionata
+                    if (SwingUtilities.isRightMouseButton(e)) {
+                        // Click destro
+                        selectionModel.setSelectionInterval(clickedRow, clickedRow);
+                        tabellaArrivi.setColumnSelectionInterval(clickedColumn, clickedColumn);
+                    } else if (SwingUtilities.isLeftMouseButton(e)) {
+                        // Click sinistro
+                        selectionModel.setSelectionInterval(clickedRow, clickedRow);
+                    }
+                }
+            }
+
+            private void doPop(MouseEvent e) {
+                if (tabellaArrivi.getSelectedRowCount() == 0) {
+                    return;
+                }
+
+                // Mostra il popupMenu
+                popupMenuArrivi = new JPopupMenu();
+                setupPopUpMenuArrivi();
+                popupMenuArrivi.show(e.getComponent(), e.getX(), e.getY());
+            }
+
+            private void hidePop() {
+                popupMenuArrivi.setVisible(false);
+            }
+        });
+
         JScrollPane scrollPane = new JScrollPane(tabellaArrivi);
         pnlTabellaArrivi.add(scrollPane);
         mainPanelArriviPartenze.add(pnlTabellaArrivi, BorderLayout.WEST);
@@ -111,9 +178,184 @@ public class MenuArriviPartenze extends JPanel {
         titledBorder.setTitleFont(titledBorder.getTitleFont().deriveFont(Font.BOLD, 16));
         pnlTabellaPartenze.setBorder(titledBorder);
 
+        // Genera il popup con il tasto destro
+        tabellaPartenze.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                handleRowClick(e);
+                if (e.isPopupTrigger()) {
+                    doPop(e);
+                } else {
+                    hidePop();
+                }
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                if (e.isPopupTrigger()) {
+                    doPop(e);
+                }
+            }
+
+            private void handleRowClick(MouseEvent e) {
+                ListSelectionModel selectionModel = tabellaPartenze.getSelectionModel();
+                Point contextMenuOpenedAt = e.getPoint();
+                int clickedRow = tabellaPartenze.rowAtPoint(contextMenuOpenedAt);
+                int clickedColumn = tabellaPartenze.columnAtPoint(contextMenuOpenedAt);
+
+                if (clickedRow < 0 || clickedColumn < 0) {
+                    // Nessuna cella selezionata
+                    selectionModel.clearSelection();
+                } else {
+                    // Cella selezionata
+                    if (SwingUtilities.isRightMouseButton(e)) {
+                        // Click destro
+                        selectionModel.setSelectionInterval(clickedRow, clickedRow);
+                        tabellaPartenze.setColumnSelectionInterval(clickedColumn, clickedColumn);
+                    } else if (SwingUtilities.isLeftMouseButton(e)) {
+                        // Click sinistro
+                        selectionModel.setSelectionInterval(clickedRow, clickedRow);
+                    }
+                }
+            }
+
+            private void doPop(MouseEvent e) {
+                if (tabellaPartenze.getSelectedRowCount() == 0) {
+                    return;
+                }
+
+                // Mostra il popupMenu
+                popupMenuPartenze = new JPopupMenu();
+                setupPopUpMenuPartenze();
+                popupMenuPartenze.show(e.getComponent(), e.getX(), e.getY());
+            }
+
+            private void hidePop() {
+                popupMenuPartenze.setVisible(false);
+            }
+        });
+
         JScrollPane scrollPane = new JScrollPane(tabellaPartenze);
         pnlTabellaPartenze.add(scrollPane);
         mainPanelArriviPartenze.add(pnlTabellaPartenze, BorderLayout.EAST);
+    }
+
+    // Impostazioni popup menu Arrivi
+    private void setupPopUpMenuArrivi() {
+        JMenuItem annullaArrivo = new JMenuItem("Annulla Arrivo");
+        JMenuItem confermaArrivo = new JMenuItem("Conferma Arrivo");
+
+        popupMenuArrivi.add(confermaArrivo);
+        popupMenuArrivi.add(annullaArrivo);
+
+        int selectedRow = tabellaArrivi.getSelectedRow();
+        String idPrenotazione = tabellaArrivi.getModel().getValueAt(selectedRow, 0).toString();
+
+        // Azione: annulla l'arrivo -> imposta a "no" il valore di Arrivato in ArriviPartenze
+        annullaArrivo.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String setArriviValue = "UPDATE ArriviPartenze SET Arrivato = ? WHERE Id = ?";
+                try {
+                    System.out.println(new Gateway().execUpdateQuery(setArriviValue, "no", idPrenotazione));
+                } catch (SQLException ex) {
+                    System.err.println("Impossibile impostare il valore Arrivato");;
+                }
+
+                // Aggiorna il colore della riga
+                for(int i = 0; i < tabellaArrivi.getColumnCount(); i++) {
+                    TableCellRenderer renderer = tabellaArrivi.getCellRenderer(selectedRow, i);
+                    Component component = tabellaArrivi.prepareRenderer(renderer, selectedRow, i);
+                    component.setBackground(Color.red);
+                }
+
+                // Ricarico la visualizzazione
+                tabellaArrivi.repaint(selectedRow);
+            }
+        });
+
+        // Azione: conferma l'arrivo -> imposta a "si" il valore di Arrivato in ArriviPartenze
+        confermaArrivo.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                String setArriviValue = "UPDATE ArriviPartenze SET Arrivato = ? WHERE Id = ?";
+                try {
+                    System.out.println(new Gateway().execUpdateQuery(setArriviValue, "si", idPrenotazione));
+                } catch (SQLException ex) {
+                    System.err.println("Impossibile impostare il valore Arrivato");;
+                }
+
+                // Aggiorna il colore della riga
+                for(int i = 0; i < tabellaArrivi.getColumnCount(); i++) {
+                    TableCellRenderer renderer = tabellaArrivi.getCellRenderer(selectedRow, i);
+                    Component component = tabellaArrivi.prepareRenderer(renderer, selectedRow, i);
+                    component.setBackground(Color.green);
+                }
+
+                // Ricarico la visualizzazione
+                tabellaArrivi.repaint(selectedRow);
+            }
+        });
+    }
+
+    // Impostazioni popup menu Partenze
+    private void setupPopUpMenuPartenze() {
+        JMenuItem annullaPartenza = new JMenuItem("Annulla Partenza");
+        JMenuItem confermaPartenza = new JMenuItem("Conferma Partenza");
+
+        popupMenuPartenze.add(confermaPartenza);
+        popupMenuPartenze.add(annullaPartenza);
+
+        int selectedRow = tabellaPartenze.getSelectedRow();
+        String idPrenotazione = tabellaPartenze.getModel().getValueAt(selectedRow, 0).toString();
+
+        // Azione: annulla la partenza -> imposta a "no" il valore di Partito in ArriviPartenze
+        annullaPartenza.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String setPartitoValue = "UPDATE ArriviPartenze SET Partito = ? WHERE Id = ?";
+                try {
+                    System.out.println(new Gateway().execUpdateQuery(setPartitoValue, "no", idPrenotazione));
+                } catch (SQLException ex) {
+                    System.err.println("Impossibile impostare il valore Partito");;
+                }
+
+                // Aggiorna il colore della riga
+                for(int i = 0; i < tabellaPartenze.getColumnCount(); i++) {
+                    TableCellRenderer renderer = tabellaPartenze.getCellRenderer(selectedRow, i);
+                    Component component = tabellaPartenze.prepareRenderer(renderer, selectedRow, i);
+                    component.setBackground(Color.red);
+                }
+
+                // Ricarico la visualizzazione
+                tabellaPartenze.repaint(selectedRow);
+            }
+        });
+
+        // Azione: conferma la partenza -> imposta a "si" il valore di Partito in ArriviPartenze
+        confermaPartenza.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                String setPartitoValue = "UPDATE ArriviPartenze SET Partito = ? WHERE Id = ?";
+                try {
+                    System.out.println(new Gateway().execUpdateQuery(setPartitoValue, "si", idPrenotazione));
+                } catch (SQLException ex) {
+                    System.err.println("Impossibile impostare il valore Arrivato");;
+                }
+
+                // Aggiorna il colore della riga
+                for(int i = 0; i < tabellaPartenze.getColumnCount(); i++) {
+                    TableCellRenderer renderer = tabellaPartenze.getCellRenderer(selectedRow, i);
+                    Component component = tabellaPartenze.prepareRenderer(renderer, selectedRow, i);
+                    component.setBackground(Color.green);
+                }
+
+                // Ricarico la visualizzazione
+                tabellaPartenze.repaint(selectedRow);
+            }
+        });
     }
 
     // Setup della toolbar
