@@ -4,6 +4,7 @@ import com.github.lgooddatepicker.components.DatePicker;
 import com.github.lgooddatepicker.components.DatePickerSettings;
 import controllers.*;
 import data_access.Gateway;
+import utils.TableConstants;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -85,10 +86,10 @@ public class MenuArriviPartenze extends JPanel {
         pnlTabellaArrivi.add(new JScrollPane(tabellaArrivi), BorderLayout.CENTER);
 
         // Imposta il bordo del panel
-        Border blackline = BorderFactory.createLineBorder(Color.GREEN);
+        Border blackline = BorderFactory.createLineBorder(TableConstants.ACCONTO_SALDATO_COLOR);
         TitledBorder titledBorder = BorderFactory.createTitledBorder(blackline, "ARRIVI", TitledBorder.CENTER, TitledBorder.TOP);
         titledBorder.setTitleFont(titledBorder.getTitleFont().deriveFont(Font.BOLD, 16));
-        titledBorder.setTitleColor(Color.GREEN);
+        titledBorder.setTitleColor(TableConstants.ACCONTO_SALDATO_COLOR);
         pnlTabellaArrivi.setBorder(titledBorder);
 
         // Genera il popup con il tasto destro
@@ -265,13 +266,6 @@ public class MenuArriviPartenze extends JPanel {
                     System.err.println("Impossibile impostare il valore Arrivato");;
                 }
 
-                // Aggiorna il colore della riga
-                for(int i = 0; i < tabellaArrivi.getColumnCount(); i++) {
-                    TableCellRenderer renderer = tabellaArrivi.getCellRenderer(selectedRow, i);
-                    Component component = tabellaArrivi.prepareRenderer(renderer, selectedRow, i);
-                    component.setBackground(Color.red);
-                }
-
                 // Ricarico la visualizzazione
                 tabellaArrivi.repaint(selectedRow);
             }
@@ -346,13 +340,6 @@ public class MenuArriviPartenze extends JPanel {
                     System.out.println(new Gateway().execUpdateQuery(setPartitoValue, "si", idPrenotazione));
                 } catch (SQLException ex) {
                     System.err.println("Impossibile impostare il valore Arrivato");;
-                }
-
-                // Aggiorna il colore della riga
-                for(int i = 0; i < tabellaPartenze.getColumnCount(); i++) {
-                    TableCellRenderer renderer = tabellaPartenze.getCellRenderer(selectedRow, i);
-                    Component component = tabellaPartenze.prepareRenderer(renderer, selectedRow, i);
-                    component.setBackground(Color.green);
                 }
 
                 // Ricarico la visualizzazione
