@@ -20,6 +20,7 @@ public class TableConstants {
     public static final Color BORDER_CELL_SELECTED = Color.blue;
     public static final Color CALENDARIO_PRENOTAZIONE_COLOR =  new Color(54, 70, 225, 255);
     public static final Color ARRIVI_PARTENZE_CONFERMA_COLOR = new Color(208, 247, 208);
+    public static final Color ARRIVI_CONTORNO_COLOR = new Color(63, 227, 48);
 
     public static final int COLUMNS_WIDTH_CALENDARIO = 45;
     public static final int SEPARATOR_BORDER_WIDTH = 3;

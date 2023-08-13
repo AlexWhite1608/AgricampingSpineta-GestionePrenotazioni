@@ -90,10 +90,10 @@ public class MenuArriviPartenze extends JPanel {
         pnlTabellaArrivi.add(new JScrollPane(tabellaArrivi), BorderLayout.CENTER);
 
         // Imposta il bordo del panel
-        Border blackline = BorderFactory.createLineBorder(TableConstants.ACCONTO_SALDATO_COLOR);
+        Border blackline = BorderFactory.createLineBorder(TableConstants.ARRIVI_CONTORNO_COLOR);
         TitledBorder titledBorder = BorderFactory.createTitledBorder(blackline, "ARRIVI", TitledBorder.CENTER, TitledBorder.TOP);
         titledBorder.setTitleFont(titledBorder.getTitleFont().deriveFont(Font.BOLD, 16));
-        titledBorder.setTitleColor(TableConstants.ACCONTO_SALDATO_COLOR);
+        titledBorder.setTitleColor(TableConstants.ARRIVI_CONTORNO_COLOR);
         pnlTabellaArrivi.setBorder(titledBorder);
 
         // Genera il popup con il tasto destro
@@ -361,34 +361,38 @@ public class MenuArriviPartenze extends JPanel {
         JPanel pnlButtonsToolbar = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 
         // Creazione degli elementi della toolbar
-        JButton btnPartenzeDomani = new JButton("Partenze domani");
+        JButton btnDomani = new JButton("Domani");
         JButton btnResetGiorno = new JButton("Reset");
         JLabel lblGiornoSelezionato = new JLabel();
 
         // Impostazioni
-        btnPartenzeDomani.setFocusPainted(false);
+        btnDomani.setFocusPainted(false);
         btnResetGiorno.setFocusPainted(false);
-        btnPartenzeDomani.setToolTipText("Visualizza le partenze di domani");
+        btnDomani.setToolTipText("Visualizza arrivi/partenze di domani");
         btnResetGiorno.setToolTipText("Reimposta la data odierna");
 
         // Imposta il giorno corrente (di default) alla label
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         String formattedTodayDate = ControllerDatePrenotazioni.getCurrentDate().format(formatter);
-        lblGiornoSelezionato.setText("Mostra partenze del: " + formattedTodayDate);
+        lblGiornoSelezionato.setText("Mostra arrivi/partenze del: " + formattedTodayDate);
 
         // Aggiunta degli elementi
-        pnlButtonsToolbar.add(btnPartenzeDomani);
+        pnlButtonsToolbar.add(btnDomani);
         pnlButtonsToolbar.add(btnResetGiorno);
         pnlButtonsToolbar.add(Box.createHorizontalStrut(10));
         pnlButtonsToolbar.add(lblGiornoSelezionato);
         pnlButtonsToolbar.add(Box.createHorizontalStrut(10));
 
-        btnPartenzeDomani.addActionListener(new ActionListener() {
+        btnDomani.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 TablePartenzeController.setTODAY(LocalDate.now().plusDays(1));
+                TableArriviController.setTODAY(LocalDate.now().plusDays(1));
+
                 try {
                     tablePartenzeController.setTableModel();
+                    tableArriviController.setTableModel();
+
                 } catch (SQLException ex) {
                     throw new RuntimeException(ex);
                 }
@@ -396,12 +400,13 @@ public class MenuArriviPartenze extends JPanel {
                 try {
                     // Ricarica la visualizzazione dell'intera tabella
                     tablePartenzeController.refreshView();
+                    tableArriviController.refreshView();
 
                     // Modifica la label con il nuovo giorno selezionato (oggi)
                     lblGiornoSelezionato.setForeground(Color.red);
                     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
                     String formattedTodayDate = TablePartenzeController.getTODAY().format(formatter);
-                    lblGiornoSelezionato.setText("Mostra partenze del: " + formattedTodayDate);
+                    lblGiornoSelezionato.setText("Mostra arrivi/partenze del: " + formattedTodayDate);
 
                 } catch (SQLException ex) {
                     MessageController.getErrorMessage(null, "Impossibile resettare la data");
@@ -413,8 +418,12 @@ public class MenuArriviPartenze extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 TablePartenzeController.setTODAY(LocalDate.now());
+                TableArriviController.setTODAY(LocalDate.now());
+
                 try {
                     tablePartenzeController.setTableModel();
+                    tableArriviController.setTableModel();
+
                 } catch (SQLException ex) {
                     throw new RuntimeException(ex);
                 }
@@ -422,12 +431,13 @@ public class MenuArriviPartenze extends JPanel {
                 try {
                     // Ricarica la visualizzazione dell'intera tabella
                     tablePartenzeController.refreshView();
+                    tableArriviController.refreshView();
 
                     // Modifica la label con il nuovo giorno selezionato (oggi)
                     lblGiornoSelezionato.setForeground(Color.black);
                     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
                     String formattedTodayDate = TablePartenzeController.getTODAY().format(formatter);
-                    lblGiornoSelezionato.setText("Mostra partenze del: " + formattedTodayDate);
+                    lblGiornoSelezionato.setText("Mostra arrivi/partenze del: " + formattedTodayDate);
 
                 } catch (SQLException ex) {
                     MessageController.getErrorMessage(null, "Impossibile resettare la data");
