@@ -268,8 +268,9 @@ public class MenuPrenotazioni extends JPanel implements StopTableEditObservers {
                     setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 
                     // Si connette all'ultima versione del database importato dal drive
+                    boolean result = false;
                     try {
-                        CloudUploader.importFileFromDrive("database.db");
+                        result = CloudUploader.importFileFromDrive("database.db");
                     } catch (IOException | GeneralSecurityException ex) {
                         MessageController.getErrorMessage(null, "Errore: " + ex.getMessage());
                     }
@@ -279,7 +280,10 @@ public class MenuPrenotazioni extends JPanel implements StopTableEditObservers {
                     tablePrenotazioniController.refreshTable(tabellaPrenotazioni);
 
                     setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-                    MessageController.getInfoMessage(MenuPrenotazioni.this, "Backup importato correttamente!");
+                    if(result)
+                        MessageController.getInfoMessage(null, "Backup importato correttamente!");
+                    else
+                        MessageController.getErrorMessage(null, "Non sono presenti backup");
                     try {
                         notifyPrenotazioneChanged();
                     } catch (SQLException ex) {
