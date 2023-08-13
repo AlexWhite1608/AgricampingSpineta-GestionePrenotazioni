@@ -374,7 +374,7 @@ public class MenuArriviPartenze extends JPanel {
         // Imposta il giorno corrente (di default) alla label
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         String formattedTodayDate = ControllerDatePrenotazioni.getCurrentDate().format(formatter);
-        lblGiornoSelezionato.setText("Mostra arrivi del: " + formattedTodayDate);
+        lblGiornoSelezionato.setText("Mostra partenze del: " + formattedTodayDate);
 
         // Aggiunta degli elementi
         pnlButtonsToolbar.add(btnPartenzeDomani);
