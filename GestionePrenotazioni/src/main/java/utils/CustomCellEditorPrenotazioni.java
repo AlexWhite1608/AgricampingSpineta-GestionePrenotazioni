@@ -14,6 +14,8 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.MouseEvent;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.EventObject;
 
@@ -91,6 +93,7 @@ public class CustomCellEditorPrenotazioni extends AbstractCellEditor implements 
 
     @Override
     public boolean stopCellEditing() {
+
         if (editingColumn == 0) {
             // Riaggiungi l'ActionListener
             for (ActionListener listener : comboBox.getActionListeners()) {
@@ -120,6 +123,12 @@ public class CustomCellEditorPrenotazioni extends AbstractCellEditor implements 
         } else {
             String newValue = textField.getText();
 
+            if(editingColumn == 1 || editingColumn == 2){
+                if(newValue.length() < 10) {
+                    newValue = "0" + newValue;
+                }
+            }
+
             // Salva le modifiche nel database
             try {
                 int result = 0;
@@ -138,6 +147,8 @@ public class CustomCellEditorPrenotazioni extends AbstractCellEditor implements 
             }
         }
         fireEditingStopped();
+        tablePrenotazioniController.refreshTable(tabellaPrenotazioni);
+        tabellaPrenotazioni.repaint();
 
         // Notifica gli observers che l'editing della tabella è concluso
         for(StopTableEditObservers observer : observers) {
