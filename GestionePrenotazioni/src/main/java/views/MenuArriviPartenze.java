@@ -27,9 +27,10 @@ public class MenuArriviPartenze extends JPanel {
     TablePartenzeController tablePartenzeController;
 
     private JPanel mainPanelArriviPartenze;
+    private JPanel pnlToolbar;
+    private JPanel pnlTables;
     private JTable tabellaArrivi;
     private JTable tabellaPartenze;
-    private JPanel pnlToolbar;
     private JToolBar toolBar;
     private JPopupMenu popupMenuArrivi;
     private JPopupMenu popupMenuPartenze;
@@ -44,6 +45,8 @@ public class MenuArriviPartenze extends JPanel {
         setLayout(new BorderLayout());
         add(mainPanelArriviPartenze, BorderLayout.CENTER);
         setVisible(true);
+
+        mainPanelArriviPartenze.add(pnlTables, BorderLayout.CENTER);
     }
 
     // Inizializzazione degli elementi di UI
@@ -51,7 +54,8 @@ public class MenuArriviPartenze extends JPanel {
 
         // Main panel
         mainPanelArriviPartenze = new JPanel();
-        mainPanelArriviPartenze.setLayout(new GridLayout(1, 2));
+        mainPanelArriviPartenze.setLayout(new BorderLayout());
+        pnlTables = new JPanel(new GridLayout(1, 2));
 
         // Inizializzazione delle tabelle e relativi controllers
         tabellaArrivi = new JTable();
@@ -151,7 +155,8 @@ public class MenuArriviPartenze extends JPanel {
 
         JScrollPane scrollPane = new JScrollPane(tabellaArrivi);
         pnlTabellaArrivi.add(scrollPane);
-        mainPanelArriviPartenze.add(pnlTabellaArrivi, BorderLayout.WEST);
+
+        pnlTables.add(pnlTabellaArrivi, BorderLayout.WEST);
     }
 
     // Setup tabella arrivi
@@ -241,7 +246,8 @@ public class MenuArriviPartenze extends JPanel {
 
         JScrollPane scrollPane = new JScrollPane(tabellaPartenze);
         pnlTabellaPartenze.add(scrollPane);
-        mainPanelArriviPartenze.add(pnlTabellaPartenze, BorderLayout.EAST);
+
+        pnlTables.add(pnlTabellaPartenze, BorderLayout.EAST);
     }
 
     // Impostazioni popup menu Arrivi
