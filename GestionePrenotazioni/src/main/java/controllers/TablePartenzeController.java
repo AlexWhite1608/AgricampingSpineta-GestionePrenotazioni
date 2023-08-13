@@ -123,4 +123,12 @@ public class TablePartenzeController implements PrenotazioniObservers{
 
     @Override
     public void refreshPiazzola() throws SQLException {}
+
+    public static LocalDate getTODAY() {
+        return TODAY;
+    }
+
+    public static void setTODAY(LocalDate TODAY) {
+        TablePartenzeController.TODAY = TODAY;
+    }
 }

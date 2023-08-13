@@ -1,9 +1,8 @@
 package views;
 
-import controllers.MessageController;
-import controllers.TableArriviController;
-import controllers.TableCalendarioController;
-import controllers.TablePartenzeController;
+import com.github.lgooddatepicker.components.DatePicker;
+import com.github.lgooddatepicker.components.DatePickerSettings;
+import controllers.*;
 import data_access.Gateway;
 
 import javax.swing.*;
@@ -16,6 +15,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 public class MenuArriviPartenze extends JPanel {
@@ -84,9 +85,10 @@ public class MenuArriviPartenze extends JPanel {
         pnlTabellaArrivi.add(new JScrollPane(tabellaArrivi), BorderLayout.CENTER);
 
         // Imposta il bordo del panel
-        Border blackline = BorderFactory.createLineBorder(Color.BLACK);
+        Border blackline = BorderFactory.createLineBorder(Color.GREEN);
         TitledBorder titledBorder = BorderFactory.createTitledBorder(blackline, "ARRIVI", TitledBorder.CENTER, TitledBorder.TOP);
         titledBorder.setTitleFont(titledBorder.getTitleFont().deriveFont(Font.BOLD, 16));
+        titledBorder.setTitleColor(Color.GREEN);
         pnlTabellaArrivi.setBorder(titledBorder);
 
         // Genera il popup con il tasto destro
@@ -173,9 +175,10 @@ public class MenuArriviPartenze extends JPanel {
         pnlTabellaPartenze.add(new JScrollPane(tabellaPartenze), BorderLayout.CENTER);
 
         // Imposta il bordo del panel
-        Border blackline = BorderFactory.createLineBorder(Color.BLACK);
+        Border blackline = BorderFactory.createLineBorder(Color.RED);
         TitledBorder titledBorder = BorderFactory.createTitledBorder(blackline, "PARTENZE", TitledBorder.CENTER, TitledBorder.TOP);
         titledBorder.setTitleFont(titledBorder.getTitleFont().deriveFont(Font.BOLD, 16));
+        titledBorder.setTitleColor(Color.RED);
         pnlTabellaPartenze.setBorder(titledBorder);
 
         // Genera il popup con il tasto destro
@@ -360,6 +363,88 @@ public class MenuArriviPartenze extends JPanel {
 
     // Setup della toolbar
     private void setupToolbar() {
+        // Impostazione del layout
+        toolBar.setLayout(new BorderLayout());
+        JPanel pnlButtonsToolbar = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 
+        // Creazione degli elementi della toolbar
+        JButton btnPartenzeDomani = new JButton("Partenze domani");
+        JButton btnResetGiorno = new JButton("Reset");
+        JLabel lblGiornoSelezionato = new JLabel();
+
+        // Impostazioni
+        btnPartenzeDomani.setFocusPainted(false);
+        btnResetGiorno.setFocusPainted(false);
+        btnPartenzeDomani.setToolTipText("Visualizza le partenze di domani");
+        btnResetGiorno.setToolTipText("Reimposta la data odierna");
+
+        // Imposta il giorno corrente (di default) alla label
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        String formattedTodayDate = ControllerDatePrenotazioni.getCurrentDate().format(formatter);
+        lblGiornoSelezionato.setText("Mostra arrivi del: " + formattedTodayDate);
+
+        // Aggiunta degli elementi
+        pnlButtonsToolbar.add(btnPartenzeDomani);
+        pnlButtonsToolbar.add(btnResetGiorno);
+        pnlButtonsToolbar.add(Box.createHorizontalStrut(10));
+        pnlButtonsToolbar.add(lblGiornoSelezionato);
+        pnlButtonsToolbar.add(Box.createHorizontalStrut(10));
+
+        btnPartenzeDomani.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                TablePartenzeController.setTODAY(LocalDate.now().plusDays(1));
+                try {
+                    tablePartenzeController.setTableModel();
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
+
+                try {
+                    // Ricarica la visualizzazione dell'intera tabella
+                    tablePartenzeController.refreshView();
+
+                    // Modifica la label con il nuovo giorno selezionato (oggi)
+                    lblGiornoSelezionato.setForeground(Color.red);
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                    String formattedTodayDate = TablePartenzeController.getTODAY().format(formatter);
+                    lblGiornoSelezionato.setText("Mostra partenze del: " + formattedTodayDate);
+
+                } catch (SQLException ex) {
+                    MessageController.getErrorMessage(null, "Impossibile resettare la data");
+                }
+            }
+        });
+
+        btnResetGiorno.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                TablePartenzeController.setTODAY(LocalDate.now());
+                try {
+                    tablePartenzeController.setTableModel();
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
+
+                try {
+                    // Ricarica la visualizzazione dell'intera tabella
+                    tablePartenzeController.refreshView();
+
+                    // Modifica la label con il nuovo giorno selezionato (oggi)
+                    lblGiornoSelezionato.setForeground(Color.black);
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                    String formattedTodayDate = TablePartenzeController.getTODAY().format(formatter);
+                    lblGiornoSelezionato.setText("Mostra partenze del: " + formattedTodayDate);
+
+                } catch (SQLException ex) {
+                    MessageController.getErrorMessage(null, "Impossibile resettare la data");
+                }
+            }
+        });
+
+        toolBar.setFloatable(false);
+        toolBar.add(pnlButtonsToolbar, BorderLayout.WEST);
+        pnlToolbar.add(toolBar, BorderLayout.CENTER);
+        mainPanelArriviPartenze.add(pnlToolbar, BorderLayout.NORTH);
     }
 }
