@@ -11,7 +11,6 @@ import org.jdesktop.swingx.autocomplete.ObjectToStringConverter;
 import utils.CustomCellEditorPrenotazioni;
 import utils.DataFilter;
 import javax.swing.*;
-import javax.swing.border.Border;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
@@ -27,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import observer.PrenotazioniObservers;
+import utils.ListOfNations;
 
 public class MenuPrenotazioni extends JPanel implements StopTableEditObservers {
 
@@ -745,6 +745,9 @@ public class MenuPrenotazioni extends JPanel implements StopTableEditObservers {
         TextFieldsController.setupTextFieldsString(tfNome);
         TextFieldsController.setupTextFieldsInteger(tfNPersone);
         TextFieldsController.setupTextFieldsString(tfNazione);
+
+        // Implementa il completer per le nazioni
+        AutoCompleteDecorator.decorate(tfNazione, ListOfNations.getListaNazioni(), false, ObjectToStringConverter.DEFAULT_IMPLEMENTATION);
         /* --------------------------------------- */
 
         /* Panel dedicato ai buttons */
