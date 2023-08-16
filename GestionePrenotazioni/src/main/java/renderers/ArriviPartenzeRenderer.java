@@ -34,7 +34,7 @@ public class ArriviPartenzeRenderer extends DefaultTableCellRenderer {
 
         // Imposta il colore della riga in base al valore di Arrivato/Partito
         String idPrenotazione = table.getModel().getValueAt(row, 0).toString();
-        String statusColumn = (table.getColumnCount() == 9) ? "Partito" : "Arrivato";
+        String statusColumn = (table.getColumnCount() == 12) ? "Partito" : "Arrivato";
 
         String getStatusQuery = "SELECT " + statusColumn + " FROM ArriviPartenze WHERE Id = ?";
         try {

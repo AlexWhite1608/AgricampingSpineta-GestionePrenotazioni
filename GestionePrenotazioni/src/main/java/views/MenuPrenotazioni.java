@@ -38,7 +38,7 @@ public class MenuPrenotazioni extends JPanel implements StopTableEditObservers {
     private final ArrayList<String> YEARS = DataFilter.getYears();
 
     // Lista dei mezzi
-    private final ArrayList<String> listaMezzi = new ArrayList<>(List.of(new String[]{"Camper", "Auto", "Moto"}));
+    private static final ArrayList<String> listaMezzi = new ArrayList<>(List.of(new String[]{"Camper", "Caravan", "Auto + Tenda", "Van", "Bici + Tenda", "Moto + Tenda", "Casa Mobile"}));
 
     // Controller della tabella
     TablePrenotazioniController tablePrenotazioniController;
@@ -1352,5 +1352,9 @@ public class MenuPrenotazioni extends JPanel implements StopTableEditObservers {
 
     public static ArrayList<PrenotazioniObservers> getPrenotazioniObserversList() {
         return prenotazioniObserversList;
+    }
+
+    public static ArrayList<String> getListaMezzi() {
+        return listaMezzi;
     }
 }

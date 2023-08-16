@@ -3,24 +3,21 @@ package utils;
 import controllers.ControllerPiazzole;
 import controllers.TablePrenotazioniController;
 import data_access.Gateway;
-import observer.PrenotazioniObservers;
 import observer.StopTableEditObservers;
+import views.MenuPrenotazioni;
 
 import javax.swing.*;
 import javax.swing.table.TableCellEditor;
 import java.awt.*;
 import java.awt.event.ActionListener;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
 import java.awt.event.MouseEvent;
 import java.sql.SQLException;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.EventObject;
 
 public class CustomCellEditorPrenotazioni extends AbstractCellEditor implements TableCellEditor {
-    private JComboBox<String> comboBox;
+    private JComboBox<String> cbPiazzole;
+    private JComboBox<String> cbMezzi;
     private JTextField textField;
     private Object originalValue;
     private int editingColumn;
@@ -34,9 +31,16 @@ public class CustomCellEditorPrenotazioni extends AbstractCellEditor implements 
     public CustomCellEditorPrenotazioni(TablePrenotazioniController tablePrenotazioniController) {
         this.tablePrenotazioniController = tablePrenotazioniController;
 
-        comboBox = new JComboBox<>();
-        comboBox.addActionListener(e -> {
-            if (comboBox.getSelectedItem() != null) {
+        cbPiazzole = new JComboBox<>();
+        cbPiazzole.addActionListener(e -> {
+            if (cbPiazzole.getSelectedItem() != null) {
+                stopCellEditing(); // Interrompi l'editing solo se è stato selezionato un elemento
+            }
+        });
+
+        cbMezzi = new JComboBox<>();
+        cbMezzi.addActionListener(e -> {
+            if (cbMezzi.getSelectedItem() != null) {
                 stopCellEditing(); // Interrompi l'editing solo se è stato selezionato un elemento
             }
         });
@@ -54,14 +58,15 @@ public class CustomCellEditorPrenotazioni extends AbstractCellEditor implements 
         originalValue = value;
         tabellaPrenotazioni = table;
 
+        // Combobox piazzole
         if (column == 0) {
             // Rimuovi temporaneamente l'ActionListener per evitare la selezione automatica
-            ActionListener[] listeners = comboBox.getActionListeners();
+            ActionListener[] listeners = cbPiazzole.getActionListeners();
             for (ActionListener listener : listeners) {
-                comboBox.removeActionListener(listener);
+                cbPiazzole.removeActionListener(listener);
             }
 
-            comboBox.removeAllItems();
+            cbPiazzole.removeAllItems();
             // Aggiunge tutti i valori delle piazzole
             try {
                 ControllerPiazzole.setListaPiazzole();
@@ -69,15 +74,37 @@ public class CustomCellEditorPrenotazioni extends AbstractCellEditor implements 
                 throw new RuntimeException(e);
             }
             for(String piazzola : ControllerPiazzole.getListaPiazzole()){
-                comboBox.addItem(piazzola);
+                cbPiazzole.addItem(piazzola);
             }
 
             // Seleziona il valore della cella o imposta un valore di default
             if (value != null) {
-                comboBox.setSelectedItem(value);
+                cbPiazzole.setSelectedItem(value);
             }
 
-            return comboBox;
+            return cbPiazzole;
+
+        // Combobx mezzi
+        } else if (column == 9){
+
+            // Rimuovi temporaneamente l'ActionListener per evitare la selezione automatica
+            ActionListener[] listeners = cbMezzi.getActionListeners();
+            for (ActionListener listener : listeners) {
+                cbMezzi.removeActionListener(listener);
+            }
+
+            cbMezzi.removeAllItems();
+            // Aggiunge tutti i valori delle piazzole
+            for(String mezzo : MenuPrenotazioni.getListaMezzi())
+                cbMezzi.addItem(mezzo);
+
+            // Seleziona il valore della cella o imposta un valore di default
+            if (value != null) {
+                cbMezzi.setSelectedItem(value);
+            }
+
+            return cbMezzi;
+
         } else {
             // Imposta il valore della cella
             textField.setText(value != null ? value.toString() : "");
@@ -88,21 +115,49 @@ public class CustomCellEditorPrenotazioni extends AbstractCellEditor implements 
 
     @Override
     public Object getCellEditorValue() {
-        return editingColumn == 0 ? comboBox.getSelectedItem() : textField.getText();
+        return editingColumn == 0 ? cbPiazzole.getSelectedItem() : textField.getText();
     }
 
     @Override
     public boolean stopCellEditing() {
 
+        // Colonna piazzole
         if (editingColumn == 0) {
             // Riaggiungi l'ActionListener
-            for (ActionListener listener : comboBox.getActionListeners()) {
-                comboBox.addActionListener(listener);
+            for (ActionListener listener : cbPiazzole.getActionListeners()) {
+                cbPiazzole.addActionListener(listener);
             }
 
-            Object selectedValue = comboBox.getSelectedItem();
+            Object selectedValue = cbPiazzole.getSelectedItem();
             if (selectedValue != null) {
                 // Salva le modifiche nel database nel caso della piazzola (comboBox)
+                try {
+                    int result = 0;
+                    if(originalValue != null)
+                        result = new Gateway().updateCellData(tabellaPrenotazioni, editingRow, editingColumn, selectedValue.toString(), originalValue.toString());
+                    else
+                        result = new Gateway().updateCellData(tabellaPrenotazioni, editingRow, editingColumn, selectedValue.toString(), null);
+                    if(result == 0)
+                        System.err.println("Impossibile modificare il valore");
+                    else if (result == -1) {
+                        tablePrenotazioniController.refreshTable(tabellaPrenotazioni);
+                        tabellaPrenotazioni.repaint();
+                    }
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+
+            }
+
+        // Colonna mezzi
+        } else if (editingColumn == 9) {
+            // Riaggiungi l'ActionListener
+            for (ActionListener listener : cbMezzi.getActionListeners()) {
+                cbMezzi.addActionListener(listener);
+            }
+
+            Object selectedValue = cbMezzi.getSelectedItem();
+            if (selectedValue != null) {
                 try {
                     int result = 0;
                     if(originalValue != null)
@@ -167,7 +222,7 @@ public class CustomCellEditorPrenotazioni extends AbstractCellEditor implements 
     public void cancelCellEditing() {
         super.cancelCellEditing();
         if (editingColumn == 0) {
-            comboBox.setSelectedItem(originalValue);
+            cbPiazzole.setSelectedItem(originalValue);
         } else {
             String newValue = textField.getText();
             originalValue = newValue.isEmpty() ? null : newValue;

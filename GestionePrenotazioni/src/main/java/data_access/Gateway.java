@@ -111,7 +111,6 @@ public class Gateway {
     }
 
     // Salva il valore modificato nella tabella all'interno del database
-    //FIXME: nel caso del newObject della piazzola prende sempre Starbox!
     public int updateCellData(JTable table, int row, int column, Object newValue, Object originalValue) throws SQLException {
         String updateQuery = "UPDATE Prenotazioni SET ";
         String queryValue = "";
@@ -293,6 +292,21 @@ public class Gateway {
 
             case 7:
                 queryValue = "Email = ?";
+
+                break;
+
+            case 8:
+                queryValue = "Persone = ?";
+
+                break;
+
+            case 9:
+                queryValue = "Mezzo = ?";
+
+                break;
+
+            case 10:
+                queryValue = "Nazione = ?";
 
                 break;
 
