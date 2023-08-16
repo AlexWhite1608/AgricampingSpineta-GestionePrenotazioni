@@ -53,12 +53,12 @@ public class HomePage extends JFrame{
 
         this.setTitle("Gestione prenotazioni");
         this.setLocationRelativeTo(null);
-        this.setExtendedState(JFrame.MAXIMIZED_BOTH);
         this.setSize((int)Toolkit.getDefaultToolkit().getScreenSize().getWidth(), (int)Toolkit.getDefaultToolkit().getScreenSize().getHeight());
-        this.pack();
         this.setResizable(true);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setVisible(true);
+
+        // Imposta la finestra come schermo intero
+        this.setExtendedState(JFrame.MAXIMIZED_BOTH);
 
         if(!DEBUG_MODE) {
 
@@ -80,5 +80,7 @@ public class HomePage extends JFrame{
                 }
             });
         }
+
+        this.setVisible(true);
     }
 }
