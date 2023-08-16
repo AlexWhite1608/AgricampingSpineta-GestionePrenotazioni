@@ -24,6 +24,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import observer.PrenotazioniObservers;
 
@@ -35,6 +36,9 @@ public class MenuPrenotazioni extends JPanel implements StopTableEditObservers {
 
     // Anni contenuti nella cbFiltroAnni
     private final ArrayList<String> YEARS = DataFilter.getYears();
+
+    // Lista dei mezzi
+    private final ArrayList<String> listaMezzi = new ArrayList<>(List.of(new String[]{"Camper", "Auto", "Moto"}));
 
     // Controller della tabella
     TablePrenotazioniController tablePrenotazioniController;
@@ -687,10 +691,60 @@ public class MenuPrenotazioni extends JPanel implements StopTableEditObservers {
         gbc.anchor = GridBagConstraints.WEST;
         pnlForm.add(tfEmail, gbc);
 
+        // Label numero persone
+        JLabel lblNPersone = new JLabel("N° Persone:");
+        gbc.gridx = 0;
+        gbc.gridy = 5;
+        gbc.anchor = GridBagConstraints.WEST;
+        pnlForm.add(lblNPersone, gbc);
+
+        // TextField numero persone
+        JTextField tfNPersone = new JTextField();
+        tfNPersone.setPreferredSize(datePickerArrivo.getPreferredSize());
+        gbc.gridx = 1;
+        gbc.gridy = 5;
+        gbc.anchor = GridBagConstraints.WEST;
+        pnlForm.add(tfNPersone, gbc);
+
+        // Label mezzo
+        JLabel lblMezzo = new JLabel("Mezzo:");
+        gbc.gridx = 3;
+        gbc.gridy = 5;
+        gbc.anchor = GridBagConstraints.WEST;
+        pnlForm.add(lblMezzo, gbc);
+
+        // ComboBox mezzo
+        JComboBox<String> cbMezzo = new JComboBox(listaMezzi.toArray());
+        cbMezzo.setPreferredSize(datePickerArrivo.getPreferredSize());
+        cbMezzo.setFocusable(false);
+        cbMezzo.setSelectedItem(null);
+        ((JLabel) cbMezzo.getRenderer()).setHorizontalAlignment(SwingConstants.CENTER);
+        gbc.gridx = 4;
+        gbc.gridy = 5;
+        gbc.anchor = GridBagConstraints.WEST;
+        pnlForm.add(cbMezzo, gbc);
+
+        // Label nazione
+        JLabel lblNazione = new JLabel("Nazione:");
+        gbc.gridx = 0;
+        gbc.gridy = 6;
+        gbc.anchor = GridBagConstraints.WEST;
+        pnlForm.add(lblNazione, gbc);
+
+        // TextField nazione
+        JTextField tfNazione = new JTextField();
+        tfNazione.setPreferredSize(datePickerArrivo.getPreferredSize());
+        gbc.gridx = 1;
+        gbc.gridy = 6;
+        gbc.anchor = GridBagConstraints.WEST;
+        pnlForm.add(tfNazione, gbc);
+
         // Imposta i vincoli sulle textFields
         TextFieldsController.setupTextFieldsInteger(tfTelefono);
         TextFieldsController.setupTextFieldsFloat(tfAcconto);
         TextFieldsController.setupTextFieldsString(tfNome);
+        TextFieldsController.setupTextFieldsInteger(tfNPersone);
+        TextFieldsController.setupTextFieldsString(tfNazione);
         /* --------------------------------------- */
 
         /* Panel dedicato ai buttons */
@@ -736,6 +790,9 @@ public class MenuPrenotazioni extends JPanel implements StopTableEditObservers {
                 String telefono = "";
                 String email = "";
                 String acconto = "";
+                String nPersone = "";
+                String mezzo = "";
+                String nazione = "";
                 if(!Objects.equals(tfNome.getText(), ""))
                     nomePrenotazione = tfNome.getText();
                 if(!Objects.equals(cbSceltaPiazzola.getSelectedItem().toString(), ""))
@@ -752,6 +809,12 @@ public class MenuPrenotazioni extends JPanel implements StopTableEditObservers {
                     email = tfEmail.getText();
                 if(!Objects.equals(tfAcconto.getText(), ""))
                     acconto = tfAcconto.getText();
+                if(!Objects.equals(tfNPersone.getText(), ""))
+                    nPersone = tfNPersone.getText();
+                if(!Objects.equals(cbMezzo.getSelectedItem().toString(), ""))
+                    mezzo = cbMezzo.getSelectedItem().toString();
+                if(!Objects.equals(tfNazione.getText(), ""))
+                    nazione = tfNazione.getText();
 
                 // Controllo che non ci siano già altre prenotazioni nelle date scelte per quella piazzola!
                 try {
@@ -765,14 +828,14 @@ public class MenuPrenotazioni extends JPanel implements StopTableEditObservers {
                 }
 
                 // Eseguo la query di inserimento della prenotazione
-                String query = "INSERT INTO Prenotazioni (Piazzola, Arrivo, Partenza, Nome, Acconto, Info, Telefono, Email) " +
-                               "VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
+                String query = "INSERT INTO Prenotazioni (Piazzola, Arrivo, Partenza, Nome, Acconto, Info, Telefono, Email, Persone, Mezzo, Nazione) " +
+                               "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 
                 try {
                     if(!Objects.equals(acconto, ""))
-                        new Gateway().execUpdateQuery(query, piazzolaScelta, dataArrivo, dataPartenza, nomePrenotazione, "€ " + acconto, info, telefono, email);
+                        new Gateway().execUpdateQuery(query, piazzolaScelta, dataArrivo, dataPartenza, nomePrenotazione, "€ " + acconto, info, telefono, email, nPersone, mezzo, nazione);
                     else
-                        new Gateway().execUpdateQuery(query, piazzolaScelta, dataArrivo, dataPartenza, nomePrenotazione, null, info, telefono, email);
+                        new Gateway().execUpdateQuery(query, piazzolaScelta, dataArrivo, dataPartenza, nomePrenotazione, null, info, telefono, email, nPersone, mezzo, nazione);
 
                     // Inserisce le info nella tabella SaldoAcconti
                     if (!Objects.equals(acconto, "")) {
@@ -793,6 +856,7 @@ public class MenuPrenotazioni extends JPanel implements StopTableEditObservers {
                 }
 
                 // Controlla che la nuova prenotazione sia stata inserita
+                //TODO: controlla con l'ìd??
                 String checkQuery = "SELECT * FROM Prenotazioni WHERE Nome = ? AND Piazzola = ? AND Arrivo = ? AND Partenza = ?";
 
                 try {
