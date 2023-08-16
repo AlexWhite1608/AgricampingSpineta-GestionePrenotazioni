@@ -4,13 +4,14 @@ import controllers.ControllerPiazzole;
 import controllers.TablePrenotazioniController;
 import data_access.Gateway;
 import observer.StopTableEditObservers;
+import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
+import org.jdesktop.swingx.autocomplete.ObjectToStringConverter;
 import views.MenuPrenotazioni;
 
 import javax.swing.*;
 import javax.swing.table.TableCellEditor;
 import java.awt.*;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.EventObject;
@@ -18,10 +19,12 @@ import java.util.EventObject;
 public class CustomCellEditorPrenotazioni extends AbstractCellEditor implements TableCellEditor {
     private JComboBox<String> cbPiazzole;
     private JComboBox<String> cbMezzi;
-    private JTextField textField;
+    private JTextField tfStandard;
+    private JTextField tfNazione;
     private Object originalValue;
     private int editingColumn;
     private int editingRow;
+
     private JTable tabellaPrenotazioni;
     private final TablePrenotazioniController tablePrenotazioniController;
 
@@ -45,11 +48,13 @@ public class CustomCellEditorPrenotazioni extends AbstractCellEditor implements 
             }
         });
 
-        textField = new JTextField();
-        textField.addActionListener(e -> stopCellEditing());
+        tfStandard = new JTextField();
+        tfStandard.addActionListener(e -> stopCellEditing());
+
+        tfNazione = new JTextField();
+        tfNazione.addActionListener(e -> stopCellEditing());
+
     }
-
-
 
     @Override
     public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
@@ -84,7 +89,41 @@ public class CustomCellEditorPrenotazioni extends AbstractCellEditor implements 
 
             return cbPiazzole;
 
-        // Combobx mezzi
+        // Textfield nazioni (per completer)
+        } else if (column == 10) {
+            // Implementa il completer per le nazioni
+            AutoCompleteDecorator.decorate(tfNazione, ListOfNations.getListaNazioni(), false, ObjectToStringConverter.DEFAULT_IMPLEMENTATION);
+
+            // Aggiungi ActionListener per accettare il suggerimento premendo il tasto invio
+            tfNazione.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    // Memorizza il valore attuale del campo tfNazione
+                    String autoCompleteValue = tfNazione.getText();
+
+                    // Imposta il valore nella cella della tabella
+                    tabellaPrenotazioni.setValueAt(autoCompleteValue, editingRow, editingColumn);
+
+                    // Trasferisce il focus al componente successivo
+                    tfNazione.transferFocus();
+                }
+            });
+
+            // Aggiungi FocusListener per salvare il valore quando il campo perde il focus
+            tfNazione.addFocusListener(new FocusAdapter() {
+                @Override
+                public void focusLost(FocusEvent e) {
+                    // Memorizza il valore attuale del campo tfNazione
+                    String value = tfNazione.getText();
+
+                    // Imposta il valore nella cella della tabella
+                    tabellaPrenotazioni.setValueAt(value, editingRow, editingColumn);
+                }
+            });
+
+            return tfNazione;
+
+        // Combobox mezzi
         } else if (column == 9){
 
             // Rimuovi temporaneamente l'ActionListener per evitare la selezione automatica
@@ -107,15 +146,15 @@ public class CustomCellEditorPrenotazioni extends AbstractCellEditor implements 
 
         } else {
             // Imposta il valore della cella
-            textField.setText(value != null ? value.toString() : "");
+            tfStandard.setText(value != null ? value.toString() : "");
 
-            return textField;
+            return tfStandard;
         }
     }
 
     @Override
     public Object getCellEditorValue() {
-        return editingColumn == 0 ? cbPiazzole.getSelectedItem() : textField.getText();
+        return editingColumn == 0 ? cbPiazzole.getSelectedItem() : tfStandard.getText();
     }
 
     @Override
@@ -176,7 +215,7 @@ public class CustomCellEditorPrenotazioni extends AbstractCellEditor implements 
 
             }
         } else {
-            String newValue = textField.getText();
+            String newValue = tfStandard.getText();
 
             if(editingColumn == 1 || editingColumn == 2){
                 if(newValue.length() < 10) {
@@ -217,16 +256,15 @@ public class CustomCellEditorPrenotazioni extends AbstractCellEditor implements 
         return true;
     }
 
-
     @Override
     public void cancelCellEditing() {
         super.cancelCellEditing();
         if (editingColumn == 0) {
             cbPiazzole.setSelectedItem(originalValue);
         } else {
-            String newValue = textField.getText();
+            String newValue = tfStandard.getText();
             originalValue = newValue.isEmpty() ? null : newValue;
-            textField.setText(originalValue != null ? originalValue.toString() : "");
+            tfStandard.setText(originalValue != null ? originalValue.toString() : "");
         }
     }
 
