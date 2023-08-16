@@ -22,6 +22,7 @@ public class HomePage extends JFrame{
     private final static String MENU_CALENDARIO = "Calendario";
     private final static String MENU_PRENOTAZIONI = "Prenotazioni";
     private final static String MENU_ARRIVI_PARTENZE = "Arrivi/Partenze";
+    private final static String MENU_STATISTICHE = "Statistiche";
 
     private final static boolean DEBUG_MODE = true;     //TODO: imposta false per avere il funzionamento completo!!
 
@@ -40,11 +41,13 @@ public class HomePage extends JFrame{
         MenuCalendario menuCalendario = new MenuCalendario();
         MenuPrenotazioni menuPrenotazioni = new MenuPrenotazioni();
         MenuArriviPartenze menuArriviPartenze = new MenuArriviPartenze();
+        MenuStatistiche menuStatistiche = new MenuStatistiche();
 
         //Aggiunge i menu al tabbed layout
         tabbedPane.addTab(MENU_CALENDARIO, menuCalendario);
         tabbedPane.addTab(MENU_PRENOTAZIONI, menuPrenotazioni);
         tabbedPane.addTab(MENU_ARRIVI_PARTENZE, menuArriviPartenze);
+        tabbedPane.addTab(MENU_STATISTICHE, menuStatistiche);
 
         this.add(tabbedPane, BorderLayout.CENTER);
 
