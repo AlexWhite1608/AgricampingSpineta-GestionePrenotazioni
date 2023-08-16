@@ -744,7 +744,6 @@ public class MenuPrenotazioni extends JPanel implements StopTableEditObservers {
         TextFieldsController.setupTextFieldsFloat(tfAcconto);
         TextFieldsController.setupTextFieldsString(tfNome);
         TextFieldsController.setupTextFieldsInteger(tfNPersone);
-        TextFieldsController.setupTextFieldsString(tfNazione);
 
         // Implementa il completer per le nazioni
         AutoCompleteDecorator.decorate(tfNazione, ListOfNations.getListaNazioni(), false, ObjectToStringConverter.DEFAULT_IMPLEMENTATION);
