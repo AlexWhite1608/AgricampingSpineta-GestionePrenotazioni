@@ -1,14 +1,12 @@
-package controllers;
+package view_controllers;
 
 import data_access.Gateway;
 import observer.PrenotazioniObservers;
 import renderers.ArriviPartenzeRenderer;
-import renderers.DefaultTableHeaderCellRenderer;
 import utils.TableConstants;
 import views.MenuPrenotazioni;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;

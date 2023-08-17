@@ -1,4 +1,4 @@
-package controllers;
+package view_controllers;
 
 import data_access.Gateway;
 import observer.PrenotazioniObservers;

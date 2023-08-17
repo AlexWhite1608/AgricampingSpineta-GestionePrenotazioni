@@ -1,14 +1,7 @@
-package controllers;
-
-import data_access.CloudUploader;
+package view_controllers;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.security.GeneralSecurityException;
-
-import static java.awt.Window.getWindows;
 
 public class MessageController {
     public static void getErrorMessage(Component component, String msg){

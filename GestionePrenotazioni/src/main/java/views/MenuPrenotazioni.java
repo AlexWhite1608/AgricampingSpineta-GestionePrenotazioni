@@ -2,7 +2,7 @@ package views;
 
 import com.github.lgooddatepicker.components.DatePicker;
 import com.github.lgooddatepicker.components.DatePickerSettings;
-import controllers.*;
+import view_controllers.*;
 import data_access.CloudUploader;
 import data_access.Gateway;
 import observer.StopTableEditObservers;

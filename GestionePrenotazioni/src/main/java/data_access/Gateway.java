@@ -1,20 +1,14 @@
 package data_access;
 
-import controllers.ControllerDatePrenotazioni;
-import controllers.MessageController;
-import controllers.TablePrenotazioniController;
+import view_controllers.ControllerDatePrenotazioni;
+import view_controllers.MessageController;
+import view_controllers.TablePrenotazioniController;
 import views.HomePage;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.URL;
 import java.nio.file.FileSystems;
 import java.sql.*;
-import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Objects;

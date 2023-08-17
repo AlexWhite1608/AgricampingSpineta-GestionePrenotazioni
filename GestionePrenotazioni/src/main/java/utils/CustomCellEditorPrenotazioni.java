@@ -1,7 +1,7 @@
 package utils;
 
-import controllers.ControllerPiazzole;
-import controllers.TablePrenotazioniController;
+import view_controllers.ControllerPiazzole;
+import view_controllers.TablePrenotazioniController;
 import data_access.Gateway;
 import observer.StopTableEditObservers;
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;

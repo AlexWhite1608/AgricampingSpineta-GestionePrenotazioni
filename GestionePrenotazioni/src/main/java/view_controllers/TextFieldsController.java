@@ -1,4 +1,4 @@
-package controllers;
+package view_controllers;
 
 import javax.swing.*;
 import javax.swing.text.AbstractDocument;

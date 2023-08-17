@@ -1,8 +1,6 @@
 package views;
 
-import com.github.lgooddatepicker.components.DatePicker;
-import com.github.lgooddatepicker.components.DatePickerSettings;
-import controllers.*;
+import view_controllers.*;
 import data_access.Gateway;
 import utils.TableConstants;
 
@@ -18,7 +16,6 @@ import java.awt.event.MouseEvent;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 
 public class MenuArriviPartenze extends JPanel {
 

@@ -1,4 +1,4 @@
-package controllers;
+package view_controllers;
 
 import com.github.lgooddatepicker.components.DatePicker;
 import data_access.Gateway;

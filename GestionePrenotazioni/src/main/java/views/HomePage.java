@@ -1,6 +1,6 @@
 package views;
 
-import controllers.MessageController;
+import view_controllers.MessageController;
 import data_access.CloudUploader;
 import loading_dialogs.DeleteOldBackups;
 import utils.TableConstants;
@@ -53,7 +53,6 @@ public class HomePage extends JFrame{
 
         this.setTitle("Gestione prenotazioni");
         this.setLocationRelativeTo(null);
-        this.setSize((int)Toolkit.getDefaultToolkit().getScreenSize().getWidth(), (int)Toolkit.getDefaultToolkit().getScreenSize().getHeight());
         this.setResizable(true);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 

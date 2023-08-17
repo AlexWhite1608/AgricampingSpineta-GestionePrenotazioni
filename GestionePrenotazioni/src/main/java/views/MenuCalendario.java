@@ -2,13 +2,11 @@ package views;
 
 import com.github.lgooddatepicker.components.DatePicker;
 import com.github.lgooddatepicker.components.DatePickerSettings;
-import controllers.ControllerDatePrenotazioni;
-import controllers.MessageController;
-import controllers.TableCalendarioController;
-import utils.TableConstants;
+import view_controllers.ControllerDatePrenotazioni;
+import view_controllers.MessageController;
+import view_controllers.TableCalendarioController;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
