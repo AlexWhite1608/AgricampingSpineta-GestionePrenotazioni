@@ -89,8 +89,8 @@ public class MenuStatistiche extends JPanel {
         tblPresenze.getTableHeader().setReorderingAllowed(false);
         TablePresenzeController tablePresenzeController = new TablePresenzeController(tblPresenze);
         TablePresenzeController.setTableModel();
-        if(tblPresenze.getColumnCount() > 6)
-            tblPresenze.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+//        if(tblPresenze.getColumnCount() > 10)
+//            tblPresenze.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 
         // Imposta il renderer
         TablePresenzeController.createTableRenderer();
