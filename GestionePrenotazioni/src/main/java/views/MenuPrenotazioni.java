@@ -904,9 +904,6 @@ public class MenuPrenotazioni extends JPanel implements StopTableEditObservers {
     private void filtraPrenotazioniDialog() throws SQLException {
         JDialog dialogFiltraPrenotazione = new JDialog((Frame) SwingUtilities.getWindowAncestor(this), "Filtra le prenotazioni", true);
         dialogFiltraPrenotazione.setLayout(new BorderLayout());
-        dialogFiltraPrenotazione.pack();
-        dialogFiltraPrenotazione.setLocationRelativeTo(SwingUtilities.getWindowAncestor(this)); // Utilizza HomePage come riferimento
-        dialogFiltraPrenotazione.setResizable(false);
 
         /* Panel dedicato agli elementi del form */
         JPanel pnlForm = new JPanel(new GridBagLayout());
@@ -1187,6 +1184,8 @@ public class MenuPrenotazioni extends JPanel implements StopTableEditObservers {
         dialogFiltraPrenotazione.add(pnlForm, BorderLayout.CENTER);
         dialogFiltraPrenotazione.add(pnlButtons, BorderLayout.SOUTH);
         dialogFiltraPrenotazione.pack();
+        dialogFiltraPrenotazione.setLocationRelativeTo(null);
+        dialogFiltraPrenotazione.setResizable(false);
         dialogFiltraPrenotazione.setVisible(true);
     }
 
