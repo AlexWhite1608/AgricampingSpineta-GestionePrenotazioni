@@ -44,6 +44,14 @@ public class MenuStatistiche extends JPanel {
         // Inizializza la toolbar
         pnlToolbar = new JPanel(new BorderLayout());
         toolBar = new JToolBar();
+        toolBar.setLayout(new BorderLayout());
+        JPanel pnlButtonsToolbar = new JPanel(new FlowLayout(FlowLayout.CENTER));
+
+
+        toolBar.setFloatable(false);
+        toolBar.add(pnlButtonsToolbar, BorderLayout.CENTER);
+        pnlToolbar.add(toolBar, BorderLayout.CENTER);
+        mainPanelStatistiche.add(pnlToolbar, BorderLayout.NORTH);
     }
 
     // Setup tabelle presenze
