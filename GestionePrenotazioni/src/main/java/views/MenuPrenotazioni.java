@@ -522,8 +522,6 @@ public class MenuPrenotazioni extends JPanel implements StopTableEditObservers {
     private void addPrenotazioneDialog() throws SQLException {
         JDialog dialogNuovaPrenotazione = new JDialog((Frame) SwingUtilities.getWindowAncestor(MenuPrenotazioni.this), "Aggiungi nuova prenotazione", true);
         dialogNuovaPrenotazione.setLayout(new BorderLayout());
-        dialogNuovaPrenotazione.setLocationRelativeTo(SwingUtilities.getWindowAncestor(this));
-        dialogNuovaPrenotazione.setResizable(false);
 
         /* Panel dedicato agli elementi del form */
         JPanel pnlForm = new JPanel(new GridBagLayout());
@@ -897,6 +895,8 @@ public class MenuPrenotazioni extends JPanel implements StopTableEditObservers {
         dialogNuovaPrenotazione.add(pnlForm, BorderLayout.CENTER);
         dialogNuovaPrenotazione.add(pnlButtons, BorderLayout.SOUTH);
         dialogNuovaPrenotazione.pack();
+        dialogNuovaPrenotazione.setLocationRelativeTo(null);
+        dialogNuovaPrenotazione.setResizable(false);
         dialogNuovaPrenotazione.setVisible(true);
     }
 
