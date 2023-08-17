@@ -1,9 +1,12 @@
 package views;
 
 import stats_controllers.TablePresenzeController;
+import utils.TableConstants;
 import utils.TimeManager;
 
 import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.util.ArrayList;
 
@@ -73,6 +76,12 @@ public class MenuStatistiche extends JPanel {
     private void setupTablesPresenze() {
         pnlPresenze = new JPanel(new FlowLayout());
 
+        // Imposta il bordo
+        Border blackline = BorderFactory.createLineBorder(Color.BLACK);
+        TitledBorder titledBorder = BorderFactory.createTitledBorder(blackline, "Presenze", TitledBorder.LEFT, TitledBorder.TOP);
+        titledBorder.setTitleFont(titledBorder.getTitleFont().deriveFont(Font.BOLD, 16));
+        pnlPresenze.setBorder(titledBorder);
+
         JPanel pnlPlotPresenze = new JPanel(new BorderLayout());
         JPanel pnlTablesPresenze = new JPanel(new GridLayout(2, 1));
 
@@ -97,6 +106,12 @@ public class MenuStatistiche extends JPanel {
     private void setupTableMezzi() {
         pnlMezzi = new JPanel(new FlowLayout());
 
+        // Imposta il bordo
+        Border blackline = BorderFactory.createLineBorder(Color.BLACK);
+        TitledBorder titledBorder = BorderFactory.createTitledBorder(blackline, "Mezzi", TitledBorder.LEFT, TitledBorder.TOP);
+        titledBorder.setTitleFont(titledBorder.getTitleFont().deriveFont(Font.BOLD, 16));
+        pnlMezzi.setBorder(titledBorder);
+
         JPanel pnlPlotMezzi = new JPanel(new BorderLayout());
         JPanel pnlTableMezzi = new JPanel(new BorderLayout());
 
@@ -108,6 +123,12 @@ public class MenuStatistiche extends JPanel {
     // Setup tabella nazioni
     private void setupTableNazioni() {
         pnlNazioni = new JPanel(new FlowLayout());
+
+        // Imposta il bordo
+        Border blackline = BorderFactory.createLineBorder(Color.BLACK);
+        TitledBorder titledBorder = BorderFactory.createTitledBorder(blackline, "Nazioni", TitledBorder.LEFT, TitledBorder.TOP);
+        titledBorder.setTitleFont(titledBorder.getTitleFont().deriveFont(Font.BOLD, 16));
+        pnlNazioni.setBorder(titledBorder);
 
         JPanel pnlPlotNazioni = new JPanel(new BorderLayout());
         JPanel pnlTableNazioni = new JPanel(new BorderLayout());
