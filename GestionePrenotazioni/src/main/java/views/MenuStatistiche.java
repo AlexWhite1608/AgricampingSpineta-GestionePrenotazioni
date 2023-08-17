@@ -78,8 +78,12 @@ public class MenuStatistiche extends JPanel {
 
         // Setting controller tabella Presenze
         tblPresenze = new JTable();
+        tblPresenze.setGridColor(Color.BLACK);
+        tblPresenze.getTableHeader().setReorderingAllowed(false);
         TablePresenzeController tablePresenzeController = new TablePresenzeController(tblPresenze);
         TablePresenzeController.setTableModel();
+        if(tblPresenze.getColumnCount() > 6)
+            tblPresenze.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 
         pnlTablesPresenze.add(new JScrollPane(tblPresenze, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED));
 

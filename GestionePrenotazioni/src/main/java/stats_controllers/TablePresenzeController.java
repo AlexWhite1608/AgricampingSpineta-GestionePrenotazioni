@@ -45,6 +45,7 @@ public class TablePresenzeController implements PrenotazioniObservers {
 
             for (int j = 0; j < columnNames.size(); j++) {
 
+                //TODO: aggiungi il valore effettivo
                 rowData.add("prova");
             }
 
