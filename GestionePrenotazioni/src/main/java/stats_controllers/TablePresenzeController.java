@@ -30,7 +30,7 @@ public class TablePresenzeController implements PrenotazioniObservers {
 
         // Imposta le colonne (gli anni)
         Vector<String> columnNames = new Vector<>();
-        columnNames.add("Mesi");
+        columnNames.add("");
         columnNames.addAll(TimeManager.getPlotYears());
 
         // Ottiene i mesi dell'anno da utilizzare come righe del modello
@@ -51,6 +51,17 @@ public class TablePresenzeController implements PrenotazioniObservers {
 
             data.add(rowData);
         }
+
+        // Aggiungi l'ultima riga con la stringa "TOTALE"
+        Vector<Object> totalRow = new Vector<>();
+        totalRow.add("TOTALE");
+
+        for (int j = 0; j < columnNames.size(); j++) {
+            //TODO: aggiungi il valore effettivo per il totale
+            totalRow.add("valore_totale");
+        }
+
+        data.add(totalRow);
 
         // Genera il DefaultTableModel con i dati ricavati
         DefaultTableModel model = new DefaultTableModel(data, columnNames){
