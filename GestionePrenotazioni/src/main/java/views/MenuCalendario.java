@@ -111,8 +111,6 @@ public class MenuCalendario extends JPanel {
 
                 // Creazione del dialog con il datepicker
                 JDialog newDateDialog = new JDialog((Frame) SwingUtilities.getWindowAncestor(MenuCalendario.this), "Scegli la data", true);
-                newDateDialog.setLocationRelativeTo(null);
-                newDateDialog.setResizable(false);
                 newDateDialog.setLayout(new BorderLayout());
 
                 // Creazione del panel per il layout
@@ -180,6 +178,8 @@ public class MenuCalendario extends JPanel {
                 newDateDialog.add(pnlNewDate, BorderLayout.CENTER);
                 newDateDialog.add(pnlButtons, BorderLayout.SOUTH);
                 newDateDialog.pack();
+                newDateDialog.setLocationRelativeTo(null);
+                newDateDialog.setResizable(false);
                 newDateDialog.setVisible(true);
             }
         });
