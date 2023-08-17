@@ -29,7 +29,9 @@ public class TablePresenzeController implements PrenotazioniObservers {
     public static void setTableModel() {
 
         // Imposta le colonne (gli anni)
-        Vector<String> columnNames = new Vector<>(TimeManager.getPlotYears());
+        Vector<String> columnNames = new Vector<>();
+        columnNames.add("Mesi");
+        columnNames.addAll(TimeManager.getPlotYears());
 
         // Ottiene i mesi dell'anno da utilizzare come righe del modello
         ArrayList<String> months = TimeManager.getYearMonths();

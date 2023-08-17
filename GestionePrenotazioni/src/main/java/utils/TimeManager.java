@@ -11,7 +11,6 @@ public class TimeManager {
 
     private static final String INITIAL_YEAR = "2023";
     private static ArrayList<String> yearsPrenotazioni = new ArrayList<>();
-    private static ArrayList<String> yearsPlot = new ArrayList<>();
 
     // Ritorna gli anni dell'attività per il filtraggio delle prenotazioni
     public static ArrayList<String> getPrenotazioniYears(){
@@ -24,6 +23,7 @@ public class TimeManager {
 
     // Ritorna gli anni dell'attività per il display dei grafici nelle statistiche
     public static ArrayList<String> getPlotYears(){
+        ArrayList<String> yearsPlot = new ArrayList<>();
 
         yearsPlot.add(INITIAL_YEAR);
         addCurrentYearIfNotPresent(yearsPlot);
@@ -47,7 +47,9 @@ public class TimeManager {
                     TextStyle.FULL,
                     Locale.ITALIAN
             );
-            months.add(meseItaliano);
+
+            String meseMaiuscola = meseItaliano.substring(0, 1).toUpperCase() + meseItaliano.substring(1);
+            months.add(meseMaiuscola);
         }
 
         return months;
