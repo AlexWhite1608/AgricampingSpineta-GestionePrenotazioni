@@ -1,7 +1,6 @@
 package views;
 
 import stats_controllers.TablePresenzeController;
-import utils.TableConstants;
 import utils.TimeManager;
 
 import javax.swing.*;
@@ -93,8 +92,8 @@ public class MenuStatistiche extends JPanel {
         if(tblPresenze.getColumnCount() > 6)
             tblPresenze.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 
-        // Imposta i renderer
-        TablePresenzeController.createCellRenderer();
+        // Imposta il renderer
+        TablePresenzeController.createTableRenderer();
 
         pnlTablesPresenze.add(new JScrollPane(tblPresenze, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED), BorderLayout.CENTER);
 
