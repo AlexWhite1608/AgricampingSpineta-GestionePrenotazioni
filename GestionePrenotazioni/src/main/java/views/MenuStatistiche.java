@@ -1,7 +1,10 @@
 package views;
 
+import utils.DataFilter;
+
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 
 public class MenuStatistiche extends JPanel {
 
@@ -16,6 +19,9 @@ public class MenuStatistiche extends JPanel {
     private JTable tblMezzi;
     private JTable tblNazioni;
 
+    // Lista degli anni
+    private final ArrayList<String> YEARS = DataFilter.getPlotYears();
+
     public MenuStatistiche() {
 
         createUIComponents();
@@ -25,6 +31,7 @@ public class MenuStatistiche extends JPanel {
         setupTableNazioni();
 
         setLayout(new BorderLayout());
+        add(pnlToolbar, BorderLayout.NORTH);
         add(mainPanelStatistiche, BorderLayout.CENTER);
         setVisible(true);
     }
@@ -34,7 +41,7 @@ public class MenuStatistiche extends JPanel {
 
         // Main panel
         mainPanelStatistiche = new JPanel();
-        mainPanelStatistiche.setLayout(new GridLayout(4, 1));
+        mainPanelStatistiche.setLayout(new GridLayout(3, 1));
 
     }
 
@@ -45,13 +52,20 @@ public class MenuStatistiche extends JPanel {
         pnlToolbar = new JPanel(new BorderLayout());
         toolBar = new JToolBar();
         toolBar.setLayout(new BorderLayout());
-        JPanel pnlButtonsToolbar = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        JPanel pnlButtonsToolbar = new JPanel(new FlowLayout(FlowLayout.LEFT));
 
+        // ComboBox per la scelta dell'anno di visualizzazione nei grafici
+        JLabel lblPlotYears = new JLabel("Mostra grafici per l'anno: ");
+        JComboBox cbPlotYears = new JComboBox<>(YEARS.toArray());
+        cbPlotYears.setFocusable(false);
+        ((JLabel) cbPlotYears.getRenderer()).setHorizontalAlignment(SwingConstants.CENTER);
+
+        pnlButtonsToolbar.add(lblPlotYears);
+        pnlButtonsToolbar.add(cbPlotYears);
 
         toolBar.setFloatable(false);
         toolBar.add(pnlButtonsToolbar, BorderLayout.CENTER);
         pnlToolbar.add(toolBar, BorderLayout.CENTER);
-        mainPanelStatistiche.add(pnlToolbar, BorderLayout.NORTH);
     }
 
     // Setup tabelle presenze
