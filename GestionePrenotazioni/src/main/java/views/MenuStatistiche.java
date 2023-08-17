@@ -73,7 +73,7 @@ public class MenuStatistiche extends JPanel {
 
     // Setup tabelle presenze
     private void setupTablesPresenze() {
-        pnlPresenze = new JPanel(new FlowLayout());
+        pnlPresenze = new JPanel(new GridLayout(1, 2));
 
         // Imposta il bordo
         Border blackline = BorderFactory.createLineBorder(Color.BLACK);
@@ -93,7 +93,10 @@ public class MenuStatistiche extends JPanel {
         if(tblPresenze.getColumnCount() > 6)
             tblPresenze.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 
-        pnlTablesPresenze.add(new JScrollPane(tblPresenze, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED), BorderLayout.EAST);
+        // Imposta i renderer
+        TablePresenzeController.createCellRenderer();
+
+        pnlTablesPresenze.add(new JScrollPane(tblPresenze, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED), BorderLayout.CENTER);
 
         pnlPresenze.add(pnlPlotPresenze);
         pnlPresenze.add(pnlTablesPresenze);

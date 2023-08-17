@@ -2,11 +2,17 @@ package stats_controllers;
 
 import data_access.Gateway;
 import observer.PrenotazioniObservers;
+import renderers.CalendarioCellRenderer;
+import renderers.TabellaPresenzeRenderer;
+import utils.TableConstants;
 import utils.TimeManager;
 import views.MenuPrenotazioni;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Objects;
@@ -73,6 +79,21 @@ public class TablePresenzeController implements PrenotazioniObservers {
 
         tabellaPresenze.setModel(model);
 
+    }
+
+    // Imposta il renderer per le celle
+    public static void createCellRenderer() {
+        DefaultTableCellRenderer cellRenderer = new TabellaPresenzeRenderer();
+        for(int columnIndex = 0; columnIndex < tabellaPresenze.getColumnCount(); columnIndex++) {
+            tabellaPresenze.getColumnModel().getColumn(columnIndex).setCellRenderer(cellRenderer);
+        }
+
+        // Imposta la larghezza delle colonne (tranne Piazzole)
+        TableColumnModel columnModel = tabellaPresenze.getColumnModel();
+        for (int i = 0; i < columnModel.getColumnCount(); i++) {
+            TableColumn column = columnModel.getColumn(i);
+            column.setPreferredWidth(TableConstants.COLUMNS_WIDTH_CALENDARIO);
+        }
     }
 
     @Override
