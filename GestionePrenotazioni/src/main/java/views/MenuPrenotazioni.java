@@ -772,12 +772,21 @@ public class MenuPrenotazioni extends JPanel implements StopTableEditObservers {
                     (datePickerArrivo.getText().isEmpty() && !datePickerPartenza.getText().isEmpty())) {
                     MessageController.getErrorMessage(dialogNuovaPrenotazione,"Inserire entrambe le date!");
 
-                // Controllo di aver inserito i valori obbligatori (nome, piazzola)
+                // Controllo di aver inserito i valori obbligatori (nome, piazzola, mezzo, numero persone, nazione)
                 } else if (tfNome.getText().isEmpty()) {
                     MessageController.getErrorMessage(dialogNuovaPrenotazione, "Inserire il nome!");
                     return;
                 } else if(cbSceltaPiazzola.getSelectedItem() == null) {
                     MessageController.getErrorMessage(dialogNuovaPrenotazione, "Inserire la piazzola!");
+                    return;
+                } else if(cbMezzo.getSelectedItem() == null) {
+                    MessageController.getErrorMessage(dialogNuovaPrenotazione, "Inserire il mezzo!");
+                    return;
+                } else if(tfNazione.getText().isEmpty()) {
+                    MessageController.getErrorMessage(dialogNuovaPrenotazione, "Inserire la nazione!");
+                    return;
+                } else if(tfNPersone.getText().isEmpty()) {
+                    MessageController.getErrorMessage(dialogNuovaPrenotazione, "Inserire il numero di persone!");
                     return;
                 }
 
