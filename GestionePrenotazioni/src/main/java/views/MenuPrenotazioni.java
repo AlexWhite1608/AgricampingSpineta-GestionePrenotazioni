@@ -362,7 +362,6 @@ public class MenuPrenotazioni extends JPanel implements StopTableEditObservers {
     private void setupAggiungiPiazzola(){
         JDialog aggiungiPiazzolaDialog = new JDialog((Frame) SwingUtilities.getWindowAncestor(MenuPrenotazioni.this), "Aggiungi piazzola", true);
         aggiungiPiazzolaDialog.setLayout(new BorderLayout());
-        aggiungiPiazzolaDialog.setLocationRelativeTo(null);
         aggiungiPiazzolaDialog.setResizable(false);
 
         /* Panel dedicato agli elementi del form */
@@ -432,6 +431,7 @@ public class MenuPrenotazioni extends JPanel implements StopTableEditObservers {
         aggiungiPiazzolaDialog.add(pnlForm, BorderLayout.CENTER);
         aggiungiPiazzolaDialog.add(pnlButtons, BorderLayout.SOUTH);
         aggiungiPiazzolaDialog.pack();
+        aggiungiPiazzolaDialog.setLocationRelativeTo(null);
         aggiungiPiazzolaDialog.setVisible(true);
     }
 
@@ -439,8 +439,6 @@ public class MenuPrenotazioni extends JPanel implements StopTableEditObservers {
     private void setupRimuoviPiazzola() throws SQLException {
         JDialog rimuoviPiazzolaDialog = new JDialog((Frame) SwingUtilities.getWindowAncestor(MenuPrenotazioni.this), "Rimuovi piazzola", true);
         rimuoviPiazzolaDialog.setLayout(new BorderLayout());
-        rimuoviPiazzolaDialog.setLocationRelativeTo(null);
-        rimuoviPiazzolaDialog.setResizable(false);
 
         /* Panel dedicato agli elementi del form */
         JPanel pnlForm = new JPanel(new GridBagLayout());
@@ -515,6 +513,8 @@ public class MenuPrenotazioni extends JPanel implements StopTableEditObservers {
         rimuoviPiazzolaDialog.add(pnlForm, BorderLayout.CENTER);
         rimuoviPiazzolaDialog.add(pnlButtons, BorderLayout.SOUTH);
         rimuoviPiazzolaDialog.pack();
+        rimuoviPiazzolaDialog.setLocationRelativeTo(null);
+        rimuoviPiazzolaDialog.setResizable(false);
         rimuoviPiazzolaDialog.setVisible(true);
     }
 
