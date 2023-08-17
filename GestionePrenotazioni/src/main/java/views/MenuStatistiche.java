@@ -1,6 +1,7 @@
 package views;
 
-import utils.DataFilter;
+import stats_controllers.TablePresenzeController;
+import utils.TimeManager;
 
 import javax.swing.*;
 import java.awt.*;
@@ -20,7 +21,7 @@ public class MenuStatistiche extends JPanel {
     private JTable tblNazioni;
 
     // Lista degli anni
-    private final ArrayList<String> YEARS = DataFilter.getPlotYears();
+    private final ArrayList<String> YEARS = TimeManager.getPlotYears();
 
     public MenuStatistiche() {
 
@@ -74,6 +75,13 @@ public class MenuStatistiche extends JPanel {
 
         JPanel pnlPlotPresenze = new JPanel(new BorderLayout());
         JPanel pnlTablesPresenze = new JPanel(new GridLayout(2, 1));
+
+        // Setting controller tabella Presenze
+        tblPresenze = new JTable();
+        TablePresenzeController tablePresenzeController = new TablePresenzeController(tblPresenze);
+        TablePresenzeController.setTableModel();
+
+        pnlTablesPresenze.add(new JScrollPane(tblPresenze, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED));
 
         pnlPresenze.add(pnlPlotPresenze);
         pnlPresenze.add(pnlTablesPresenze);

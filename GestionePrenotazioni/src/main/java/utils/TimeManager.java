@@ -1,15 +1,17 @@
 package utils;
 
 import java.time.LocalDate;
+import java.time.Month;
+import java.time.format.TextStyle;
 import java.util.ArrayList;
+import java.util.Locale;
 
 // Gestisce i filtri della visualizzazione delle prenotazioni
-public class DataFilter {
+public class TimeManager {
 
     private static final String INITIAL_YEAR = "2023";
     private static ArrayList<String> yearsPrenotazioni = new ArrayList<>();
     private static ArrayList<String> yearsPlot = new ArrayList<>();
-    private static String[] months;
 
     // Ritorna gli anni dell'attività per il filtraggio delle prenotazioni
     public static ArrayList<String> getPrenotazioniYears(){
@@ -35,6 +37,20 @@ public class DataFilter {
         if (!years.contains(currentYear)) {
             years.add(currentYear);
         }
+    }
+
+    public static ArrayList<String> getYearMonths() {
+        ArrayList<String> months = new ArrayList<>();
+
+        for (Month month : Month.values()) {
+            String meseItaliano = month.getDisplayName(
+                    TextStyle.FULL,
+                    Locale.ITALIAN
+            );
+            months.add(meseItaliano);
+        }
+
+        return months;
     }
 
 }

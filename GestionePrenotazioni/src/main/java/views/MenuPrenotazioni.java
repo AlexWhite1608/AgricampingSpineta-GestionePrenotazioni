@@ -9,7 +9,7 @@ import observer.StopTableEditObservers;
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 import org.jdesktop.swingx.autocomplete.ObjectToStringConverter;
 import utils.CustomCellEditorPrenotazioni;
-import utils.DataFilter;
+import utils.TimeManager;
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellEditor;
@@ -35,7 +35,7 @@ public class MenuPrenotazioni extends JPanel implements StopTableEditObservers {
     private final int DIALOG_SEPARATOR_WIDTH = 30;
 
     // Anni contenuti nella cbFiltroAnni
-    private final ArrayList<String> YEARS = DataFilter.getPrenotazioniYears();
+    private final ArrayList<String> YEARS = TimeManager.getPrenotazioniYears();
 
     // Lista dei mezzi
     private static final ArrayList<String> listaMezzi = new ArrayList<>(List.of(new String[]{"Camper", "Caravan", "Auto + Tenda", "Van", "Bici + Tenda", "Moto + Tenda", "Casa Mobile"}));
