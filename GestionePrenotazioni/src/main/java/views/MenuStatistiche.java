@@ -19,7 +19,6 @@ public class MenuStatistiche extends JPanel {
     private JPanel pnlToolbar;
     private JToolBar toolBar;
     private JTable tblPresenze;
-    private JTable tblTotalePresenze;
     private JTable tblMezzi;
     private JTable tblNazioni;
 
@@ -83,7 +82,7 @@ public class MenuStatistiche extends JPanel {
         pnlPresenze.setBorder(titledBorder);
 
         JPanel pnlPlotPresenze = new JPanel(new BorderLayout());
-        JPanel pnlTablesPresenze = new JPanel(new GridLayout(2, 1));
+        JPanel pnlTablesPresenze = new JPanel(new BorderLayout());
 
         // Setting controller tabella Presenze
         tblPresenze = new JTable();
@@ -94,7 +93,7 @@ public class MenuStatistiche extends JPanel {
         if(tblPresenze.getColumnCount() > 6)
             tblPresenze.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 
-        pnlTablesPresenze.add(new JScrollPane(tblPresenze, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED));
+        pnlTablesPresenze.add(new JScrollPane(tblPresenze, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED), BorderLayout.EAST);
 
         pnlPresenze.add(pnlPlotPresenze);
         pnlPresenze.add(pnlTablesPresenze);
