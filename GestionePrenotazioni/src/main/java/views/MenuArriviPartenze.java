@@ -355,7 +355,7 @@ public class MenuArriviPartenze extends JPanel {
     private void setupToolbar() {
         // Impostazione del layout
         toolBar.setLayout(new BorderLayout());
-        JPanel pnlButtonsToolbar = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        JPanel pnlButtonsToolbar = new JPanel(new FlowLayout(FlowLayout.LEFT));
 
         // Creazione degli elementi della toolbar
         JButton btnDomani = new JButton("Domani");
@@ -443,7 +443,7 @@ public class MenuArriviPartenze extends JPanel {
         });
 
         toolBar.setFloatable(false);
-        toolBar.add(pnlButtonsToolbar, BorderLayout.WEST);
+        toolBar.add(pnlButtonsToolbar, BorderLayout.CENTER);
         pnlToolbar.add(toolBar, BorderLayout.CENTER);
         mainPanelArriviPartenze.add(pnlToolbar, BorderLayout.NORTH);
     }

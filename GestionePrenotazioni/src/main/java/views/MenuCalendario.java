@@ -80,7 +80,7 @@ public class MenuCalendario extends JPanel {
 
         // Impostazione del layout
         toolBar.setLayout(new BorderLayout());
-        JPanel pnlButtonsToolbar = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        JPanel pnlButtonsToolbar = new JPanel(new FlowLayout(FlowLayout.LEFT));
 
         // Creazione degli elementi della toolbar
         JButton btnScegliGiorno = new JButton("Giorno");
@@ -207,7 +207,7 @@ public class MenuCalendario extends JPanel {
         });
 
         toolBar.setFloatable(false);
-        toolBar.add(pnlButtonsToolbar, BorderLayout.WEST);
+        toolBar.add(pnlButtonsToolbar, BorderLayout.CENTER);
         pnlToolbar.add(toolBar, BorderLayout.CENTER);
         mainPanelCalendario.add(pnlToolbar, BorderLayout.NORTH);
     }
