@@ -7,6 +7,7 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class MenuStatistiche extends JPanel {
@@ -24,7 +25,7 @@ public class MenuStatistiche extends JPanel {
     // Lista degli anni
     private final ArrayList<String> YEARS = TimeManager.getPlotYears();
 
-    public MenuStatistiche() {
+    public MenuStatistiche() throws SQLException {
 
         createUIComponents();
         setupToolbar();
@@ -71,7 +72,7 @@ public class MenuStatistiche extends JPanel {
     }
 
     // Setup tabelle presenze
-    private void setupTablesPresenze() {
+    private void setupTablesPresenze() throws SQLException {
         pnlPresenze = new JPanel(new GridLayout(1, 2));
 
         // Imposta il bordo

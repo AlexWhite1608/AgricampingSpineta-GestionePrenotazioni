@@ -2,6 +2,7 @@ package stats_controllers;
 
 import data_access.Gateway;
 import observer.PrenotazioniObservers;
+import org.jfree.data.category.DefaultCategoryDataset;
 import renderers.TabellaPresenzeRenderer;
 import utils.TableConstants;
 import utils.TimeManager;
@@ -30,7 +31,7 @@ public class TablePresenzeController implements PrenotazioniObservers {
     }
 
     // Imposta il tableModel iniziale della tabella
-    public static void setTableModel() {
+    public static void setTableModel() throws SQLException {
 
         // Imposta le colonne (gli anni)
         Vector<String> columnNames = new Vector<>();
@@ -42,6 +43,9 @@ public class TablePresenzeController implements PrenotazioniObservers {
 
         // Imposta i dati del modello
         Vector<Vector<Object>> data = new Vector<>();
+
+        //FIXME:
+        DefaultCategoryDataset dataset = DatasetPresenzeController.getDataset();
 
         for (int i = 0; i < months.size(); i++) {
             Vector<Object> rowData = new Vector<>();
