@@ -90,7 +90,7 @@ public class MenuStatistiche extends JPanel {
         tblPresenze.setGridColor(Color.BLACK);
         tblPresenze.getTableHeader().setReorderingAllowed(false);
         TablePresenzeController tablePresenzeController = new TablePresenzeController(tblPresenze);
-        TablePresenzeController.setTableModel(cbPlotYears.getSelectedItem().toString());
+        TablePresenzeController.setTableModel();
 //        if(tblPresenze.getColumnCount() > 10)
 //            tblPresenze.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 

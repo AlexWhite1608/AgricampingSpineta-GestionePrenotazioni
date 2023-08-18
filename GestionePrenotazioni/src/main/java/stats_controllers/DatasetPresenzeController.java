@@ -13,9 +13,8 @@ import java.util.Map;
 
 public class DatasetPresenzeController {
 
-    // Ricava il dataset per il grafico
-    //TODO: devi considerare l'anno proveniente dalla combobox
-    public static DefaultCategoryDataset getDataset(String annoSelezionato) throws SQLException {
+    // TODO: Ricava il dataset per il grafico (considerando l'anno scelto)
+    public static DefaultCategoryDataset getPlotDataset(String annoSelezionato) throws SQLException {
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 
         Map<String, Map<String, Integer>> presenzeForMese = getPresenzeForMese();
@@ -29,6 +28,11 @@ public class DatasetPresenzeController {
         }
 
         return dataset;
+    }
+
+    // Ricava il dataset per la tabella
+    public static Map<String, Map<String, Integer>> getTableDataset() throws SQLException {
+        return getPresenzeForMese();
     }
 
     // Ricava le presenze per ogni mese dal database
