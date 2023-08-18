@@ -13,6 +13,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 
 public class DatasetPresenzeController {
 
@@ -24,9 +25,14 @@ public class DatasetPresenzeController {
 
         for(Map.Entry<String, Map<String, Integer>> entryAnni : presenzeForMese.entrySet()){
             String anno = entryAnni.getKey();
-            for(Map.Entry<String, Integer> entryPresenze : entryAnni.getValue().entrySet()){
-                String mese = entryPresenze.getKey();
-                int presenze = entryPresenze.getValue();
+
+            if(Objects.equals(anno, annoSelezionato)) {
+                for(Map.Entry<String, Integer> entryPresenze : entryAnni.getValue().entrySet()){
+                    String mese = entryPresenze.getKey();
+                    int presenze = entryPresenze.getValue();
+
+                    dataset.addValue(presenze, "Mesi", mese);
+                }
             }
         }
 
