@@ -59,9 +59,9 @@ public class TablePresenzeController implements PrenotazioniObservers {
                 Map<String, Integer> presenzeAnno = datasetConvertito.get(anno);
                 if (presenzeAnno != null) {
                     Integer presenzeMese = presenzeAnno.get(mese);
-                    rowData.add(presenzeMese != null ? presenzeMese : 0); // Aggiunge il valore delle presenze o 0
+                    rowData.add(presenzeMese != null ? presenzeMese : 0);
                 } else {
-                    rowData.add(0); // Nessuna presenza per quell'anno
+                    rowData.add(0); // Nessuna presenza per quell'anno e quel mese
                 }
             }
 

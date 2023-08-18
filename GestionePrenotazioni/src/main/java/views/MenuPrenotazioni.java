@@ -96,7 +96,7 @@ public class MenuPrenotazioni extends JPanel implements StopTableEditObservers {
         cbFiltroAnni = new JComboBox(YEARS.toArray());
 
         // Mostra la query in base al valore della comboBox
-        cbFiltroAnni.setSelectedItem(YEARS.get(YEARS.size() - 1));
+        cbFiltroAnni.setSelectedItem("Tutto");
         tabellaPrenotazioni = tablePrenotazioniController.initView(cbFiltroAnni, null);
 
     }
@@ -894,6 +894,8 @@ public class MenuPrenotazioni extends JPanel implements StopTableEditObservers {
                 } catch (SQLException ex) {
                     throw new RuntimeException(ex);
                 }
+
+                //TODO: Aggiorna la comboBox degli anni nel caso in cui l'anno della nuova prenotazione non sia presente
             }
         });
 

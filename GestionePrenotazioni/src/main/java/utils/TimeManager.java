@@ -1,5 +1,9 @@
 package utils;
 
+import data_access.Gateway;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.Month;
 import java.time.format.TextStyle;
@@ -13,10 +17,27 @@ public class TimeManager {
     private static ArrayList<String> yearsPrenotazioni = new ArrayList<>();
 
     // Ritorna gli anni dell'attività per il filtraggio delle prenotazioni
-    public static ArrayList<String> getPrenotazioniYears(){
+    public static ArrayList<String> getPrenotazioniYears() throws SQLException {
         yearsPrenotazioni.add("Tutto");     // Mostra tutti gli anni
         yearsPrenotazioni.add(INITIAL_YEAR);
         addCurrentYearIfNotPresent(yearsPrenotazioni);
+
+        // In base agli anni delle prenotazioni aggiunge eventuali nuovi anni
+        String yearsQuery = "SELECT Arrivo, Partenza FROM Prenotazioni";
+        ResultSet rs = new Gateway().execSelectQuery(yearsQuery);
+
+        while (rs.next()) {
+            String annoArrivo = rs.getString("Arrivo").substring(6, 10);
+            String annoPartenza = rs.getString("Partenza").substring(6, 10);
+
+            if(!yearsPrenotazioni.contains(annoArrivo)){
+                yearsPrenotazioni.add(annoArrivo);
+            } else if (!yearsPrenotazioni.contains(annoPartenza)) {
+                yearsPrenotazioni.add(annoPartenza);
+            }
+        }
+
+        rs.close();
 
         return yearsPrenotazioni;
     }
@@ -39,6 +60,7 @@ public class TimeManager {
         }
     }
 
+    // Ritorna i mesi dell'anno per le statistiche
     public static ArrayList<String> getYearMonths() {
         ArrayList<String> months = new ArrayList<>();
 
