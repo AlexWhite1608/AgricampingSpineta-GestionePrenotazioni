@@ -72,9 +72,12 @@ public class TablePresenzeController implements PrenotazioniObservers {
         Vector<Object> totalRow = new Vector<>();
         totalRow.add("TOTALE");
 
-        for (int j = 0; j < columnNames.size(); j++) {
-            //TODO: aggiungi il valore effettivo per il totale
-            totalRow.add("valore_totale");
+        for (int j = 1; j < columnNames.size(); j++) {
+            int totale = 0;
+            for(int k = 0; k < months.size(); k++){
+                totale += (int) data.get(k).get(j);
+            }
+            totalRow.add(totale);
         }
 
         data.add(totalRow);
