@@ -31,7 +31,7 @@ public class TablePresenzeController implements PrenotazioniObservers {
     }
 
     // Imposta il tableModel iniziale della tabella
-    public static void setTableModel() throws SQLException {
+    public static void setTableModel(String annoSelezionato) throws SQLException {
 
         // Imposta le colonne (gli anni)
         Vector<String> columnNames = new Vector<>();
@@ -45,7 +45,7 @@ public class TablePresenzeController implements PrenotazioniObservers {
         Vector<Vector<Object>> data = new Vector<>();
 
         //FIXME:
-        DefaultCategoryDataset dataset = DatasetPresenzeController.getDataset();
+        DefaultCategoryDataset dataset = DatasetPresenzeController.getDataset(annoSelezionato);
 
         for (int i = 0; i < months.size(); i++) {
             Vector<Object> rowData = new Vector<>();

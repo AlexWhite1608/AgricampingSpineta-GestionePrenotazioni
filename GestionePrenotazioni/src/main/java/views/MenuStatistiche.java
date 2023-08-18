@@ -21,6 +21,7 @@ public class MenuStatistiche extends JPanel {
     private JTable tblPresenze;
     private JTable tblMezzi;
     private JTable tblNazioni;
+    private JComboBox cbPlotYears;
 
     // Lista degli anni
     private final ArrayList<String> YEARS = TimeManager.getPlotYears();
@@ -59,7 +60,7 @@ public class MenuStatistiche extends JPanel {
 
         // ComboBox per la scelta dell'anno di visualizzazione nei grafici
         JLabel lblPlotYears = new JLabel("Mostra grafici per l'anno: ");
-        JComboBox cbPlotYears = new JComboBox<>(YEARS.toArray());
+        cbPlotYears = new JComboBox<>(YEARS.toArray());
         cbPlotYears.setFocusable(false);
         ((JLabel) cbPlotYears.getRenderer()).setHorizontalAlignment(SwingConstants.CENTER);
 
@@ -89,7 +90,7 @@ public class MenuStatistiche extends JPanel {
         tblPresenze.setGridColor(Color.BLACK);
         tblPresenze.getTableHeader().setReorderingAllowed(false);
         TablePresenzeController tablePresenzeController = new TablePresenzeController(tblPresenze);
-        TablePresenzeController.setTableModel();
+        TablePresenzeController.setTableModel(cbPlotYears.getSelectedItem().toString());
 //        if(tblPresenze.getColumnCount() > 10)
 //            tblPresenze.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 

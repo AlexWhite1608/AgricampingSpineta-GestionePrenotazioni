@@ -15,10 +15,18 @@ public class DatasetPresenzeController {
 
     // Ricava il dataset per il grafico
     //TODO: devi considerare l'anno proveniente dalla combobox
-    public static DefaultCategoryDataset getDataset() throws SQLException {
+    public static DefaultCategoryDataset getDataset(String annoSelezionato) throws SQLException {
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 
         Map<String, Map<String, Integer>> presenzeForMese = getPresenzeForMese();
+
+        for(Map.Entry<String, Map<String, Integer>> entryAnni : presenzeForMese.entrySet()){
+            String anno = entryAnni.getKey();
+            for(Map.Entry<String, Integer> entryPresenze : entryAnni.getValue().entrySet()){
+                String mese = entryPresenze.getKey();
+                int presenze = entryPresenze.getValue();
+            }
+        }
 
         return dataset;
     }
@@ -36,22 +44,40 @@ public class DatasetPresenzeController {
         ResultSet rs = new Gateway().execSelectQuery(query);
 
         while (rs.next()) {
-            String mese = rs.getString("mese");
             int persone = rs.getInt("Persone");
-            String anno = mese.substring(3, 7);
+            String anno = rs.getString("mese").substring(3, 7);
 
-            // Calcolo il numero di notti per poi ottenere le presenze come: numNotti * persone
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
             LocalDate arrivo = LocalDate.parse(rs.getString("Arrivo"), formatter);
             LocalDate partenza = LocalDate.parse(rs.getString("Partenza"), formatter);
-            int numNotti = Integer.parseInt(String.valueOf(ChronoUnit.DAYS.between(arrivo, partenza)));
 
-            int presenze = numNotti * persone;
+            while (!arrivo.isAfter(partenza)) {
+                String meseCorrente = arrivo.format(DateTimeFormatter.ofPattern("MM/yyyy"));
+                int giorniNelMese = arrivo.lengthOfMonth();
+                int giorniMeseCorrente;
 
-            presenzeMap.computeIfAbsent(anno, k -> new HashMap<>())
-                    .merge(mese, presenze, Integer::sum);
+                if (arrivo.getMonth() == partenza.getMonth()) {
+                    giorniMeseCorrente = Math.min(partenza.getDayOfMonth() - arrivo.getDayOfMonth(),
+                            (int) ChronoUnit.DAYS.between(arrivo, partenza));
+                } else {
+                    giorniMeseCorrente = Math.min(giorniNelMese - arrivo.getDayOfMonth() + 1,
+                            (int) ChronoUnit.DAYS.between(arrivo, partenza) + 1);
+                }
+
+                // Calcola le presenze per il mese corrente
+                int presenzeMeseCorrente = giorniMeseCorrente * persone;
+
+                presenzeMap
+                        .computeIfAbsent(anno, k -> new HashMap<>())
+                        .merge(meseCorrente, presenzeMeseCorrente, Integer::sum);
+
+                arrivo = arrivo.plusMonths(1).withDayOfMonth(1);
+            }
         }
+
+        rs.close();
 
         return presenzeMap;
     }
+
 }
