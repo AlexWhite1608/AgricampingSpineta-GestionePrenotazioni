@@ -1,5 +1,6 @@
 package views;
 
+import stats_controllers.PresenzePlotController;
 import stats_controllers.TablePresenzeController;
 import utils.TimeManager;
 
@@ -17,6 +18,7 @@ public class MenuStatistiche extends JPanel {
     private JPanel pnlMezzi;
     private JPanel pnlNazioni;
     private JPanel pnlToolbar;
+    private JPanel pnlPlotPresenze;
     private JToolBar toolBar;
     private JTable tblPresenze;
     private JTable tblMezzi;
@@ -30,6 +32,7 @@ public class MenuStatistiche extends JPanel {
 
         createUIComponents();
         setupToolbar();
+        setupPlotPresenze();
         setupTablesPresenze();
         setupTableMezzi();
         setupTableNazioni();
@@ -46,6 +49,9 @@ public class MenuStatistiche extends JPanel {
         // Main panel
         mainPanelStatistiche = new JPanel();
         mainPanelStatistiche.setLayout(new GridLayout(3, 1));
+
+        // Panel presenze
+        pnlPresenze = new JPanel(new GridLayout(1, 2));
 
     }
 
@@ -74,7 +80,6 @@ public class MenuStatistiche extends JPanel {
 
     // Setup tabelle presenze
     private void setupTablesPresenze() throws SQLException {
-        pnlPresenze = new JPanel(new GridLayout(1, 2));
 
         // Imposta il bordo
         Border blackline = BorderFactory.createLineBorder(Color.BLACK);
@@ -82,7 +87,6 @@ public class MenuStatistiche extends JPanel {
         titledBorder.setTitleFont(titledBorder.getTitleFont().deriveFont(Font.BOLD, 16));
         pnlPresenze.setBorder(titledBorder);
 
-        JPanel pnlPlotPresenze = new JPanel(new BorderLayout());
         JPanel pnlTablesPresenze = new JPanel(new BorderLayout());
 
         // Setting controller tabella Presenze
@@ -99,10 +103,21 @@ public class MenuStatistiche extends JPanel {
 
         pnlTablesPresenze.add(new JScrollPane(tblPresenze, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED), BorderLayout.CENTER);
 
-        pnlPresenze.add(pnlPlotPresenze);
         pnlPresenze.add(pnlTablesPresenze);
         mainPanelStatistiche.add(pnlPresenze);
 
+    }
+
+    // Setup del plot Presenze
+    private void setupPlotPresenze() throws SQLException {
+        pnlPlotPresenze = new JPanel(new BorderLayout());
+        PresenzePlotController presenzePlotController = new PresenzePlotController(pnlPlotPresenze, cbPlotYears.getSelectedItem().toString());
+
+        presenzePlotController.createPlot();
+
+        // Aggiungo il panel del plot
+        pnlPresenze.add(pnlPlotPresenze);
+        mainPanelStatistiche.add(pnlPresenze);
     }
 
     // Setup tabella mezzi
