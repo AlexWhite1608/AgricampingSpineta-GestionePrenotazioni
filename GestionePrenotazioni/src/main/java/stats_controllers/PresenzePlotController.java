@@ -73,7 +73,9 @@ public class PresenzePlotController implements PlotController, PrenotazioniObser
 
     @Override
     public void refreshView() throws SQLException {
-        //TODO: implementa ricarica del grafico
+
+        // Ricostruisce il grafico con i nuovi valori
+        createPlot();
     }
 
     @Override

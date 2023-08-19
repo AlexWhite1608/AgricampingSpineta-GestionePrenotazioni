@@ -105,7 +105,11 @@ public class TablePresenzeController implements PrenotazioniObservers {
 
     @Override
     public void refreshView() throws SQLException {
-        //TODO: implementa refresh
+
+        // Ricostruisce il tableModel con i nuovi valori
+        setTableModel();
+
+        createTableRenderer();
     }
 
     @Override
