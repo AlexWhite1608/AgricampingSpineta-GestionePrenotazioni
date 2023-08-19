@@ -10,10 +10,7 @@ import java.time.Month;
 import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
 import java.time.temporal.ChronoUnit;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 public class DatasetPresenzeController {
 
@@ -89,11 +86,16 @@ public class DatasetPresenzeController {
 
         rs.close();
 
+        for (Map.Entry<String, Map<String, Integer>> yearEntry : presenzeMap.entrySet()) {
+            Map<String, Integer> monthMap = yearEntry.getValue();
+            yearEntry.setValue(invertMonthMapOrder(monthMap));
+        }
+
         return presenzeMap;
     }
 
     //TODO: sposta funzione in Utils??
-    static Map<String, Map<String, Integer>> convertMap(Map<String, Map<String, Integer>> mapToConvert) {
+    public static Map<String, Map<String, Integer>> convertMap(Map<String, Map<String, Integer>> mapToConvert) {
         Map<String, Map<String, Integer>> datasetConMesiItaliani = new HashMap<>();
 
         for (Map.Entry<String, Map<String, Integer>> entry : mapToConvert.entrySet()) {
@@ -123,5 +125,19 @@ public class DatasetPresenzeController {
         }
 
         return datasetConMesiItaliani;
+    }
+
+    // Serve per modificare l'ordine dei mesi
+    public static Map<String, Integer> invertMonthMapOrder(Map<String, Integer> monthMap) {
+        LinkedHashMap<String, Integer> invertedMonthMap = new LinkedHashMap<>();
+        List<String> monthKeys = new ArrayList<>(monthMap.keySet());
+
+        Collections.reverse(monthKeys);
+
+        for (String monthKey : monthKeys) {
+            invertedMonthMap.put(monthKey, monthMap.get(monthKey));
+        }
+
+        return invertedMonthMap;
     }
 }

@@ -113,6 +113,7 @@ public class MenuStatistiche extends JPanel {
         pnlPlotPresenze = new JPanel(new BorderLayout());
         PresenzePlotController presenzePlotController = new PresenzePlotController(pnlPlotPresenze, cbPlotYears.getSelectedItem().toString());
 
+        // Crea il grafico
         presenzePlotController.createPlot();
 
         // Aggiungo il panel del plot
