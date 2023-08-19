@@ -21,6 +21,7 @@ import java.sql.SQLException;
 public class PresenzePlotController implements PlotController, PrenotazioniObservers {
 
     private final JPanel pnlPlot;
+    private JFreeChart barChart;
     private final String PLOT_TYPE = "Presenze ";
     private String YEAR = "";
 
@@ -34,7 +35,7 @@ public class PresenzePlotController implements PlotController, PrenotazioniObser
     // Costruisce il grafico
     @Override
     public void createPlot() throws SQLException {
-        JFreeChart barChart = ChartFactory.createBarChart(
+        barChart = ChartFactory.createBarChart(
                 PLOT_TYPE + YEAR,
                 "Category",
                 "Score",
@@ -75,7 +76,13 @@ public class PresenzePlotController implements PlotController, PrenotazioniObser
     public void refreshView() throws SQLException {
 
         // Ricostruisce il grafico con i nuovi valori
-        createPlot();
+        barChart.getCategoryPlot().setDataset(DatasetPresenzeController.getPlotDataset(YEAR));
+        ChartPanel chartPanel = new ChartPanel(barChart);
+        chartPanel.setMouseWheelEnabled(false);
+        pnlPlot.removeAll();
+        pnlPlot.add(chartPanel);
+        pnlPlot.revalidate();
+        pnlPlot.repaint();
     }
 
     @Override

@@ -28,7 +28,7 @@ public class TablePresenzeController implements PrenotazioniObservers {
     // Imposta il tableModel iniziale della tabella
     public static void setTableModel() throws SQLException {
 
-        //FIXME:
+        //FIXME: quando non ci sono prenotazioni viene mostrata solo la colonna dei mesi
         Map<String, Map<String, Integer>> dataset = DatasetPresenzeController.getTableDataset();
         Set<String> listaAnni = dataset.keySet();
         List<String> listaAnniOrdinati = new ArrayList<>(listaAnni);
