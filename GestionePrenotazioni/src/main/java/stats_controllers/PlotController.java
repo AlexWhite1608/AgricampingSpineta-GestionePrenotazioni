@@ -6,4 +6,6 @@ public interface PlotController {
 
     void createPlot() throws SQLException;
 
+    void changeTitlePlot(String newYear);
+
 }
