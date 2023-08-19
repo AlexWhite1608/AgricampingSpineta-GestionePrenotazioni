@@ -10,6 +10,7 @@ import org.jfree.chart.axis.ValueAxis;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.renderer.category.BarRenderer;
+import org.jfree.chart.renderer.category.StandardBarPainter;
 import utils.TableConstants;
 import views.MenuPrenotazioni;
 
@@ -43,6 +44,7 @@ public class PresenzePlotController implements PlotController, PrenotazioniObser
 
         CategoryPlot plot = barChart.getCategoryPlot();
         plot.getRenderer().setSeriesPaint(0, TableConstants.TABELLA_PRESENZE_COLOR);
+        barChart.setBackgroundPaint(pnlPlot.getBackground());
 
         CategoryAxis xAxis = plot.getDomainAxis();
         xAxis.setCategoryLabelPositions(CategoryLabelPositions.UP_45); //X-Axis Labels will be inclined at 45degree
@@ -53,11 +55,14 @@ public class PresenzePlotController implements PlotController, PrenotazioniObser
         rangeAxis.setLabel("Presenze");
 
         BarRenderer renderer = (BarRenderer)plot.getRenderer();
-        renderer.setMaximumBarWidth(.1); //making sure that if there is only one bar, it does not occupy the entire available width
+        renderer.setMaximumBarWidth(0.1);
+        renderer.setDrawBarOutline(false);
+        renderer.setShadowVisible(false);
+        renderer.setBarPainter(new StandardBarPainter());
 
         // Collega il plot al JPanel
         ChartPanel chartPanel = new ChartPanel(barChart);
-        chartPanel.setMouseWheelEnabled(true);
+        chartPanel.setMouseWheelEnabled(false);
         pnlPlot.add(chartPanel);
     }
 
