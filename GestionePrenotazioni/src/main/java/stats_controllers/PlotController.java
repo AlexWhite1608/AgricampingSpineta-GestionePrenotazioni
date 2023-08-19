@@ -6,6 +6,4 @@ public interface PlotController {
 
     void createPlot() throws SQLException;
 
-    void refreshPlot();
-
 }

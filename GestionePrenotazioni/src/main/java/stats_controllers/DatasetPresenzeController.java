@@ -17,7 +17,6 @@ import java.util.Objects;
 
 public class DatasetPresenzeController {
 
-    // TODO: Ricava il dataset per il grafico (considerando l'anno scelto)
     public static DefaultCategoryDataset getPlotDataset(String annoSelezionato) throws SQLException {
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 
@@ -31,7 +30,7 @@ public class DatasetPresenzeController {
                     String mese = entryPresenze.getKey();
                     int presenze = entryPresenze.getValue();
 
-                    dataset.addValue(presenze, "Mesi", mese);
+                    dataset.addValue(presenze, "Mese", mese);
                 }
             }
         }

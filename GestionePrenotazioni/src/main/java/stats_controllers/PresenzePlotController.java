@@ -1,5 +1,6 @@
 package stats_controllers;
 
+import observer.PrenotazioniObservers;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -9,11 +10,14 @@ import org.jfree.chart.axis.ValueAxis;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.renderer.category.BarRenderer;
+import utils.TableConstants;
+import views.MenuPrenotazioni;
 
 import javax.swing.*;
+import java.awt.*;
 import java.sql.SQLException;
 
-public class PresenzePlotController implements PlotController{
+public class PresenzePlotController implements PlotController, PrenotazioniObservers {
 
     private final JPanel pnlPlot;
     private final String PLOT_TYPE = "Presenze ";
@@ -22,6 +26,8 @@ public class PresenzePlotController implements PlotController{
     public PresenzePlotController(JPanel pnlPlot, String year) {
         this.pnlPlot = pnlPlot;
         this.YEAR = year;
+
+        MenuPrenotazioni.getPrenotazioniObserversList().add(this);
     }
 
     // Costruisce il grafico
@@ -36,11 +42,11 @@ public class PresenzePlotController implements PlotController{
                 false, true, false);
 
         CategoryPlot plot = barChart.getCategoryPlot();
-        //plot.getRenderer().setSeriesPaint(0, new Color(0,255,0));
+        plot.getRenderer().setSeriesPaint(0, TableConstants.TABELLA_PRESENZE_COLOR);
 
         CategoryAxis xAxis = plot.getDomainAxis();
         xAxis.setCategoryLabelPositions(CategoryLabelPositions.UP_45); //X-Axis Labels will be inclined at 45degree
-        xAxis.setLabel("Mesi");
+        xAxis.setLabel("Mese");
 
         ValueAxis rangeAxis = plot.getRangeAxis();
         rangeAxis.setAutoRange(true); // Y-Axis range will be set automatically based on the supplied data
@@ -55,12 +61,18 @@ public class PresenzePlotController implements PlotController{
         pnlPlot.add(chartPanel);
     }
 
-    @Override
-    public void refreshPlot() {
-    }
-
     // Richiamata per modificare l'anno del plot quando modificato
     public void changeTitlePlot(String newYear){
         this.YEAR = newYear;
+    }
+
+    @Override
+    public void refreshView() throws SQLException {
+        //TODO: implementa ricarica del grafico
+    }
+
+    @Override
+    public void refreshPiazzola() throws SQLException {
+
     }
 }
