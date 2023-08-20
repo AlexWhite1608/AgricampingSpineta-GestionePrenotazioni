@@ -82,7 +82,7 @@ public class MenuStatistiche extends JPanel implements PrenotazioniObservers {
         pnlButtonsToolbar.add(lblPlotYears);
         pnlButtonsToolbar.add(cbPlotYears);
 
-        //TODO: implementa aggiornamento del grafico quando si cambia l'anno della cb
+        // Implementa aggiornamento del grafico quando si cambia l'anno della cb
         cbPlotYears.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
 
