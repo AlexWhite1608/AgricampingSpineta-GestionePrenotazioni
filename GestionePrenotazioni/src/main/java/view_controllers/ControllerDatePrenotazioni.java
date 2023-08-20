@@ -61,22 +61,26 @@ public class ControllerDatePrenotazioni {
             checkPrenotazione = "SELECT COUNT(*) " +
                     "FROM Prenotazioni " +
                     "WHERE Piazzola = ? " +
-                    "  AND (" +
-                    "        (Arrivo <= ? AND Partenza >= ?)" +
-                    "        OR (Arrivo <= ? AND Partenza >= ?)" +
-                    "        OR (Arrivo >= ? AND Partenza <= ?)" +
-                    "        OR (Arrivo <= ? AND Partenza >= ?)" +
-                    "      ) AND Partenza <> ?;";
+                    "AND (" +
+                    "    (Arrivo <= ? AND Partenza >= ?)" +
+                    "    OR (Arrivo <= ? AND Partenza >= ?)" +
+                    "    OR (Arrivo >= ? AND Partenza <= ?)" +
+                    "    OR (Arrivo <= ? AND Partenza >= ?)" +
+                    "    OR (Arrivo <= ? AND Partenza >= ?)" +
+                    "    OR (Arrivo >= ? AND Partenza <= ?)" +
+                    ") AND Partenza <> ?;";
         } else {
             checkPrenotazione = "SELECT COUNT(*) " +
                     "FROM Prenotazioni " +
                     "WHERE Piazzola = ? " +
-                    "  AND (" +
-                    "        (Arrivo <= ? AND Partenza >= ?)" +
-                    "        OR (Arrivo <= ? AND Partenza >= ?)" +
-                    "        OR (Arrivo >= ? AND Partenza <= ?)" +
-                    "        OR (Arrivo <= ? AND Partenza >= ?)" +
-                    "      ) AND Partenza <> ? AND Id <> ?;";
+                    "AND (" +
+                    "    (Arrivo <= ? AND Partenza >= ?)" +
+                    "    OR (Arrivo <= ? AND Partenza >= ?)" +
+                    "    OR (Arrivo >= ? AND Partenza <= ?)" +
+                    "    OR (Arrivo <= ? AND Partenza >= ?)" +
+                    "    OR (Arrivo <= ? AND Partenza >= ?)" +
+                    "    OR (Arrivo >= ? AND Partenza <= ?)" +
+                    ") AND Partenza <> ? AND Id <> ?;";
         }
 
         try {
