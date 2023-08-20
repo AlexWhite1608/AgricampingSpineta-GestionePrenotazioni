@@ -75,10 +75,14 @@ public class DatasetPresenzeController {
 
                 // Calcola le presenze per il mese corrente
                 int presenzeMeseCorrente = giorniMeseCorrente * persone;
+//                String annoCorrente = arrivo.format(DateTimeFormatter.ofPattern("yyyy"));
+//                String annoSuccessivo = arrivo.plusYears(1).format(DateTimeFormatter.ofPattern("yyyy"));
 
                 presenzeMap
                         .computeIfAbsent(anno, k -> new HashMap<>())
                         .merge(meseCorrente, presenzeMeseCorrente, Integer::sum);
+
+                //FIXME: quando c'è una prenotazione a cavallo tra due anni viene contata bene sul grafico ma non sulla tabella
 
                 arrivo = arrivo.plusMonths(1).withDayOfMonth(1);
             }

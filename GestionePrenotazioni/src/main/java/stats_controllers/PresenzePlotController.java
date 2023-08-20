@@ -12,7 +12,9 @@ import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.renderer.category.BarRenderer;
 import org.jfree.chart.renderer.category.StandardBarPainter;
 import utils.TableConstants;
+import utils.TimeManager;
 import views.MenuPrenotazioni;
+import views.MenuStatistiche;
 
 import javax.swing.*;
 import java.awt.*;
@@ -69,8 +71,10 @@ public class PresenzePlotController implements PlotController, PrenotazioniObser
 
     // Richiamata per modificare l'anno del plot quando modificato
     @Override
-    public void changeTitlePlot(String newYear){
+    public void changeTitlePlot(String newYear) throws SQLException {
         this.YEAR = newYear;
+
+        refreshView();
     }
 
     @Override

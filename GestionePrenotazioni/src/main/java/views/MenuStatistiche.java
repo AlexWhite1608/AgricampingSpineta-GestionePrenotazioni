@@ -1,5 +1,6 @@
 package views;
 
+import observer.PrenotazioniObservers;
 import stats_controllers.PresenzePlotController;
 import stats_controllers.TablePresenzeController;
 import utils.TimeManager;
@@ -11,7 +12,7 @@ import java.awt.*;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-public class MenuStatistiche extends JPanel {
+public class MenuStatistiche extends JPanel implements PrenotazioniObservers {
 
     private JPanel mainPanelStatistiche;
     private JPanel pnlPresenze;
@@ -26,7 +27,7 @@ public class MenuStatistiche extends JPanel {
     private JComboBox cbPlotYears;
 
     // Lista degli anni
-    private final ArrayList<String> YEARS = TimeManager.getPlotYears();
+    private ArrayList<String> YEARS = TimeManager.getPlotYears();
 
     public MenuStatistiche() throws SQLException {
 
@@ -41,6 +42,8 @@ public class MenuStatistiche extends JPanel {
         add(pnlToolbar, BorderLayout.NORTH);
         add(mainPanelStatistiche, BorderLayout.CENTER);
         setVisible(true);
+
+        MenuPrenotazioni.getPrenotazioniObserversList().add(this);
     }
 
     // Inizializzazione degli elementi di UI
@@ -155,5 +158,22 @@ public class MenuStatistiche extends JPanel {
         pnlNazioni.add(pnlPlotNazioni);
         pnlNazioni.add(pnlTableNazioni);
         mainPanelStatistiche.add(pnlNazioni);
+    }
+
+    // Ricarica la cb degli anni
+    @Override
+    public void refreshView() throws SQLException {
+        YEARS = TimeManager.getPlotYears();
+
+        cbPlotYears.removeAllItems();
+
+        for (String year : YEARS) {
+            cbPlotYears.addItem(year);
+        }
+    }
+
+    @Override
+    public void refreshPiazzola() throws SQLException {
+
     }
 }
