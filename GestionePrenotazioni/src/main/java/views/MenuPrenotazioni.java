@@ -191,6 +191,14 @@ public class MenuPrenotazioni extends JPanel implements StopTableEditObservers {
             }
         });
 
+        // Quando si aggiunge una nuova prenotazione si scorre sempre verso l'ultima
+        tabellaPrenotazioni.addComponentListener(new ComponentAdapter() {
+            public void componentResized(ComponentEvent e) {
+                int lastIndex = tabellaPrenotazioni.getRowCount() - 1;
+                tabellaPrenotazioni.changeSelection(lastIndex, 0,false,false);
+            }
+        });
+
         scrollPane = new JScrollPane(tabellaPrenotazioni);
         mainPanelPrenotazioni.add(scrollPane, BorderLayout.CENTER);
     }
