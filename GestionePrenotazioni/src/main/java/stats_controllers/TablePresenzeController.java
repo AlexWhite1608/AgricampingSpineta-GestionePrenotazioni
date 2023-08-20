@@ -82,19 +82,19 @@ public class TablePresenzeController implements PrenotazioniObservers {
 
         data.add(totalRow);
 
-        // Calcola le percentuali per ciascun mese rispetto all'anno precedente
-
-        for (int j = 1; j < columnNames.size(); j++) {
-            int currentYearTotal = (int) totalRow.get(j);
-            int previousYearTotal = 0;
-
-            if (j > 1) { // Ignora il primo anno (non c'è anno precedente)
-                previousYearTotal = (int) totalRow.get(j - 1);
-            }
-
-            // Calcola la percentuale di variazione
-            double percentageChange = calculatePercentageChange(previousYearTotal, currentYearTotal);
-        }
+//        // Calcola le percentuali per ciascun mese rispetto all'anno precedente
+//
+//        for (int j = 1; j < columnNames.size(); j++) {
+//            int currentYearTotal = (int) totalRow.get(j);
+//            int previousYearTotal = 0;
+//
+//            if (j > 1) { // Ignora il primo anno (non c'è anno precedente)
+//                previousYearTotal = (int) totalRow.get(j - 1);
+//            }
+//
+//            // Calcola la percentuale di variazione
+//            double percentageChange = calculatePercentageChange(previousYearTotal, currentYearTotal);
+//        }
 
         // Genera il DefaultTableModel con i dati ricavati
         DefaultTableModel model = new DefaultTableModel(data, columnNames){
@@ -106,14 +106,6 @@ public class TablePresenzeController implements PrenotazioniObservers {
 
         tabellaPresenze.setModel(model);
 
-    }
-
-    private static double calculatePercentageChange(int previousValue, int currentValue) {
-        if (previousValue == 0) {
-            return 0;
-        }
-
-        return ((double) (currentValue - previousValue) / previousValue) * 100;
     }
 
     // Imposta il renderer per le celle
