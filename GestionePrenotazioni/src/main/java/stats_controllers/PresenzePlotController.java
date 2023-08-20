@@ -24,7 +24,6 @@ public class PresenzePlotController implements PlotController, PrenotazioniObser
     private final JPanel pnlPlot;
     private JFreeChart barChart;
     private final String PLOT_TYPE = "Presenze ";
-
     private static String YEAR = "";
 
     public PresenzePlotController(JPanel pnlPlot, String year) {
@@ -108,6 +107,7 @@ public class PresenzePlotController implements PlotController, PrenotazioniObser
 
         // Ricostruisce il grafico con i nuovi valori
         barChart.getCategoryPlot().setDataset(DatasetPresenzeController.getPlotDataset(YEAR));
+        barChart.setTitle(PLOT_TYPE + YEAR);
         ChartPanel chartPanel = new ChartPanel(barChart);
         chartPanel.setMouseWheelEnabled(false);
         pnlPlot.removeAll();
