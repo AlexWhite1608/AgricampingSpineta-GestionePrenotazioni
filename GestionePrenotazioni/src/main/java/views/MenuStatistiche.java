@@ -1,5 +1,6 @@
 package views;
 
+import observer.PlotControllerObservers;
 import observer.PrenotazioniObservers;
 import stats_controllers.PresenzePlotController;
 import stats_controllers.TablePresenzeController;
@@ -9,6 +10,8 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
@@ -28,6 +31,9 @@ public class MenuStatistiche extends JPanel implements PrenotazioniObservers {
 
     // Lista degli anni
     private ArrayList<String> YEARS = TimeManager.getPlotYears();
+
+    // Lista dei controller observer dei plotControllers
+    private static ArrayList<PlotControllerObservers> plotControllersObserversList = new ArrayList<>();
 
     public MenuStatistiche() throws SQLException {
 
@@ -75,6 +81,22 @@ public class MenuStatistiche extends JPanel implements PrenotazioniObservers {
 
         pnlButtonsToolbar.add(lblPlotYears);
         pnlButtonsToolbar.add(cbPlotYears);
+
+        //TODO: implementa aggiornamento del grafico quando si cambia l'anno della cb
+        cbPlotYears.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+
+                for(PlotControllerObservers observer : plotControllersObserversList){
+                    observer.setSelectedYear(cbPlotYears.getSelectedItem().toString());
+                    try {
+                        observer.refreshPlot();
+                    } catch (SQLException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                }
+
+            }
+        });
 
         toolBar.setFloatable(false);
         toolBar.add(pnlButtonsToolbar, BorderLayout.CENTER);
@@ -163,17 +185,35 @@ public class MenuStatistiche extends JPanel implements PrenotazioniObservers {
     // Ricarica la cb degli anni
     @Override
     public void refreshView() throws SQLException {
+        ArrayList<String> currentItems = new ArrayList<>();
         YEARS = TimeManager.getPlotYears();
 
-        cbPlotYears.removeAllItems();
+        // Ottieni gli elementi attualmente presenti nella combobox
+        for (int i = 0; i < cbPlotYears.getItemCount(); i++) {
+            currentItems.add((String) cbPlotYears.getItemAt(i));
+        }
 
+        // Rimuovi gli elementi non presenti in YEARS dalla combobox
+        for (String currentItem : currentItems) {
+            if (!YEARS.contains(currentItem)) {
+                cbPlotYears.removeItem(currentItem);
+            }
+        }
+
+        // Aggiungi gli elementi presenti in YEARS alla combobox se non già presenti
         for (String year : YEARS) {
-            cbPlotYears.addItem(year);
+            if (!currentItems.contains(year)) {
+                cbPlotYears.addItem(year);
+            }
         }
     }
 
     @Override
     public void refreshPiazzola() throws SQLException {
 
+    }
+
+    public static ArrayList<PlotControllerObservers> getPlotControllersObserversList() {
+        return plotControllersObserversList;
     }
 }
