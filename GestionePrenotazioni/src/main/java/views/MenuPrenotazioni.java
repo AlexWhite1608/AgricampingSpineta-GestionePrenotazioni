@@ -816,8 +816,10 @@ public class MenuPrenotazioni extends JPanel implements StopTableEditObservers {
                     acconto = tfAcconto.getText();
                 if(!Objects.equals(tfNPersone.getText(), ""))
                     nPersone = tfNPersone.getText();
-                if(!Objects.equals(cbMezzo.getSelectedItem().toString(), ""))
+                if(cbMezzo.getSelectedItem() != null)
                     mezzo = cbMezzo.getSelectedItem().toString();
+                else
+                    mezzo = "";
                 if(!Objects.equals(tfNazione.getText(), ""))
                     nazione = tfNazione.getText();
 
