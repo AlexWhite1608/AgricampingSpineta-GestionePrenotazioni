@@ -63,6 +63,9 @@ public class MenuStatistiche extends JPanel implements PrenotazioniObservers {
         // Panel presenze
         pnlPresenze = new JPanel(new GridLayout(1, 2));
 
+        // Panel mezzi
+        pnlMezzi = new JPanel(new GridLayout(1, 2));
+
     }
 
     // Setup toolbar
@@ -149,7 +152,6 @@ public class MenuStatistiche extends JPanel implements PrenotazioniObservers {
 
     // Setup tabella mezzi
     private void setupTableMezzi() throws SQLException {
-        pnlMezzi = new JPanel(new FlowLayout());
 
         // Imposta il bordo
         Border blackline = BorderFactory.createLineBorder(Color.BLACK);
@@ -164,7 +166,9 @@ public class MenuStatistiche extends JPanel implements PrenotazioniObservers {
         tblMezzi.setGridColor(Color.BLACK);
         tblMezzi.getTableHeader().setReorderingAllowed(false);
         TableMezziController tableMezziController = new TableMezziController(tblMezzi);
-        tableMezziController.setTableModel();
+        TableMezziController.setTableModel();
+
+        TableMezziController.createTableRenderer();
 
         pnlTableMezzi.add(new JScrollPane(tblMezzi, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED), BorderLayout.CENTER);
 
