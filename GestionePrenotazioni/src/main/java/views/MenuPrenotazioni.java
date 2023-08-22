@@ -38,7 +38,7 @@ public class MenuPrenotazioni extends JPanel implements StopTableEditObservers {
     private final ArrayList<String> YEARS = TimeManager.getPrenotazioniYears();
 
     // Lista dei mezzi
-    private static final ArrayList<String> listaMezzi = new ArrayList<>(List.of(new String[]{"Camper", "Caravan", "Auto + Tenda", "Van", "Bici + Tenda", "Moto + Tenda", "Casa Mobile"}));
+    private static final ArrayList<String> listaMezzi = new ArrayList<>(List.of(new String[]{"Camper", "Caravan", "Van", "Auto + Tenda", "Bici + Tenda", "Moto + Tenda", "StarsBox", "Casa Mobile"}));
 
     // Controller della tabella
     TablePrenotazioniController tablePrenotazioniController;
