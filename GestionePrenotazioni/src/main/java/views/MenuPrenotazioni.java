@@ -2,6 +2,7 @@ package views;
 
 import com.github.lgooddatepicker.components.DatePicker;
 import com.github.lgooddatepicker.components.DatePickerSettings;
+import utils.TableConstants;
 import view_controllers.*;
 import data_access.CloudUploader;
 import data_access.Gateway;
@@ -23,7 +24,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 import observer.PrenotazioniObservers;
 import utils.ListOfNations;
@@ -36,9 +36,6 @@ public class MenuPrenotazioni extends JPanel implements StopTableEditObservers {
 
     // Anni contenuti nella cbFiltroAnni
     private final ArrayList<String> YEARS = TimeManager.getPrenotazioniYears();
-
-    // Lista dei mezzi
-    private static final ArrayList<String> listaMezzi = new ArrayList<>(List.of(new String[]{"Camper", "Caravan", "Van", "Auto + Tenda", "Bici + Tenda", "Moto + Tenda", "StarsBox", "Casa Mobile"}));
 
     // Controller della tabella
     TablePrenotazioniController tablePrenotazioniController;
@@ -720,7 +717,7 @@ public class MenuPrenotazioni extends JPanel implements StopTableEditObservers {
         pnlForm.add(lblMezzo, gbc);
 
         // ComboBox mezzo
-        JComboBox<String> cbMezzo = new JComboBox(listaMezzi.toArray());
+        JComboBox<String> cbMezzo = new JComboBox(TableConstants.listaMezzi.toArray());
         cbMezzo.setPreferredSize(datePickerArrivo.getPreferredSize());
         cbMezzo.setFocusable(false);
         cbMezzo.setSelectedItem(null);
@@ -1373,6 +1370,6 @@ public class MenuPrenotazioni extends JPanel implements StopTableEditObservers {
     }
 
     public static ArrayList<String> getListaMezzi() {
-        return listaMezzi;
+        return TableConstants.listaMezzi;
     }
 }
