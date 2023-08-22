@@ -2,6 +2,7 @@ package stats_controllers;
 
 import data_access.Gateway;
 import org.jfree.data.category.DefaultCategoryDataset;
+import utils.TimeManager;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -17,7 +18,10 @@ public class DatasetPresenzeController {
 
         Map<String, Map<String, Integer>> presenzeForMese = getPresenzeForMese();
 
-        for(Map.Entry<String, Map<String, Integer>> entryAnni : presenzeForMese.entrySet()){
+        // Ordina i mesi
+        Map<String, Map<String, Integer>> presenzeForMeseOrdinate = TimeManager.orderMesiPresenzeMap(presenzeForMese);
+
+        for(Map.Entry<String, Map<String, Integer>> entryAnni : presenzeForMeseOrdinate.entrySet()){
             String anno = entryAnni.getKey();
 
             if(Objects.equals(anno, annoSelezionato)) {

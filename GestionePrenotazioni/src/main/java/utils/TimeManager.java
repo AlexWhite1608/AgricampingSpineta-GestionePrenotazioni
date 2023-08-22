@@ -6,11 +6,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.Month;
+import java.time.YearMonth;
+import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 // Gestisce i filtri della visualizzazione delle prenotazioni
 public class TimeManager {
@@ -98,7 +98,7 @@ public class TimeManager {
 
 
     //FIXME: sposta i metodi di ordinamento in utils
-    public static Map<String, Map<String, Integer>> orderPresenzeMap(Map<String, Map<String, Integer>> mapToConvert) {
+    public static Map<String, Map<String, Integer>> orderAnniPresenzeMap(Map<String, Map<String, Integer>> mapToConvert) {
         Map<String, Map<String, Integer>> datasetConMesiItaliani = new HashMap<>();
 
         for (Map.Entry<String, Map<String, Integer>> entry : mapToConvert.entrySet()) {
@@ -151,6 +151,35 @@ public class TimeManager {
         }
 
         return sortedDataset;
+    }
+
+    public static Map<String, Map<String, Integer>> orderMesiPresenzeMap(Map<String, Map<String, Integer>> dataset) {
+        Map<String, Map<String, Integer>> datasetOrdinato = new HashMap<>();
+
+        for (String outerKey : dataset.keySet()) {
+            Map<String, Integer> innerMap = dataset.get(outerKey);
+
+            TreeMap<String, Integer> orderedMap = new TreeMap<>(new MonthComparator());
+            for (String mese : innerMap.keySet()) {
+                int numMese = Integer.parseInt(mese.substring(0, 2));
+                orderedMap.put(mese, numMese);
+            }
+
+            Map<String, Integer> innerMapOrdinato = new LinkedHashMap<>();
+            orderedMap.forEach((mese, numMese) -> innerMapOrdinato.put(mese, innerMap.get(mese)));
+            datasetOrdinato.put(outerKey, innerMapOrdinato);
+        }
+
+        return datasetOrdinato;
+    }
+
+    static class MonthComparator implements Comparator<String> {
+        @Override
+        public int compare(String o1, String o2) {
+            int numMese1 = Integer.parseInt(o1.substring(0, 2));
+            int numMese2 = Integer.parseInt(o2.substring(0, 2));
+            return Integer.compare(numMese1, numMese2);
+        }
     }
 
 }

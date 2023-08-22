@@ -12,6 +12,7 @@ import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.renderer.category.BarRenderer;
 import org.jfree.chart.renderer.category.StandardBarPainter;
+import org.jfree.data.category.DefaultCategoryDataset;
 import utils.TableConstants;
 import views.MenuPrenotazioni;
 import views.MenuStatistiche;
@@ -37,11 +38,12 @@ public class PresenzePlotController implements PlotController, PrenotazioniObser
     // Costruisce il grafico
     @Override
     public void createPlot() throws SQLException {
+        DefaultCategoryDataset dataset = DatasetPresenzeController.getPlotDataset(YEAR);
         barChart = ChartFactory.createBarChart(
                 PLOT_TYPE + YEAR,
                 "Category",
                 "Score",
-                DatasetPresenzeController.getPlotDataset(YEAR),
+                dataset,
                 PlotOrientation.VERTICAL,
                 false, true, false);
 
