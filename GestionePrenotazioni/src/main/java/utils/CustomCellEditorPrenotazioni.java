@@ -215,7 +215,12 @@ public class CustomCellEditorPrenotazioni extends AbstractCellEditor implements 
 
             }
         } else {
-            String newValue = tfStandard.getText();
+
+            String newValue = "";
+            if(editingColumn == 10)
+                newValue = tfNazione.getText();
+            else
+                newValue = tfStandard.getText();
 
             if(editingColumn == 1 || editingColumn == 2){
                 if(newValue.length() < 10) {
