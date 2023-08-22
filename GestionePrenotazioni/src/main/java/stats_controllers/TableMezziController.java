@@ -31,7 +31,7 @@ public class TableMezziController implements PrenotazioniObservers {
         Set<String> listaAnni = dataset.keySet();
         List<String> listaAnniOrdinati = new ArrayList<>(listaAnni);
 
-        // Ordina la lista degli anni in modo crescente e converte i mesi
+        // Ordina la lista degli anni in modo crescente
         Collections.sort(listaAnniOrdinati);
         Map<String, Map<String, Integer>> datasetConvertito = TimeManager.orderMezziMap(dataset);
 
