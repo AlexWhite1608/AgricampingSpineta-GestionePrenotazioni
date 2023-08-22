@@ -784,15 +784,6 @@ public class MenuPrenotazioni extends JPanel implements StopTableEditObservers {
                 } else if(cbSceltaPiazzola.getSelectedItem() == null) {
                     MessageController.getErrorMessage(dialogNuovaPrenotazione, "Inserire la piazzola!");
                     return;
-                } else if(cbMezzo.getSelectedItem() == null) {
-                    MessageController.getErrorMessage(dialogNuovaPrenotazione, "Inserire il mezzo!");
-                    return;
-                } else if(tfNazione.getText().isEmpty()) {
-                    MessageController.getErrorMessage(dialogNuovaPrenotazione, "Inserire la nazione!");
-                    return;
-                } else if(tfNPersone.getText().isEmpty()) {
-                    MessageController.getErrorMessage(dialogNuovaPrenotazione, "Inserire il numero di persone!");
-                    return;
                 }
 
                 // Ricavo tutte le info inserite
