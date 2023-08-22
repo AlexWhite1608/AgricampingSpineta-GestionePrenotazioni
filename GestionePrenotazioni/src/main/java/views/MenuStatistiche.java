@@ -3,6 +3,7 @@ package views;
 import observer.PlotControllerObservers;
 import observer.PrenotazioniObservers;
 import stats_controllers.PresenzePlotController;
+import stats_controllers.TableMezziController;
 import stats_controllers.TablePresenzeController;
 import utils.TimeManager;
 
@@ -112,7 +113,7 @@ public class MenuStatistiche extends JPanel implements PrenotazioniObservers {
         titledBorder.setTitleFont(titledBorder.getTitleFont().deriveFont(Font.BOLD, 16));
         pnlPresenze.setBorder(titledBorder);
 
-        JPanel pnlTablesPresenze = new JPanel(new BorderLayout());
+        JPanel pnlTablePresenze = new JPanel(new BorderLayout());
 
         // Setting controller tabella Presenze
         tblPresenze = new JTable();
@@ -126,9 +127,9 @@ public class MenuStatistiche extends JPanel implements PrenotazioniObservers {
         // Imposta il renderer
         TablePresenzeController.createTableRenderer();
 
-        pnlTablesPresenze.add(new JScrollPane(tblPresenze, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED), BorderLayout.CENTER);
+        pnlTablePresenze.add(new JScrollPane(tblPresenze, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED), BorderLayout.CENTER);
 
-        pnlPresenze.add(pnlTablesPresenze);
+        pnlPresenze.add(pnlTablePresenze);
         mainPanelStatistiche.add(pnlPresenze);
 
     }
@@ -147,7 +148,7 @@ public class MenuStatistiche extends JPanel implements PrenotazioniObservers {
     }
 
     // Setup tabella mezzi
-    private void setupTableMezzi() {
+    private void setupTableMezzi() throws SQLException {
         pnlMezzi = new JPanel(new FlowLayout());
 
         // Imposta il bordo
@@ -156,10 +157,17 @@ public class MenuStatistiche extends JPanel implements PrenotazioniObservers {
         titledBorder.setTitleFont(titledBorder.getTitleFont().deriveFont(Font.BOLD, 16));
         pnlMezzi.setBorder(titledBorder);
 
-        JPanel pnlPlotMezzi = new JPanel(new BorderLayout());
         JPanel pnlTableMezzi = new JPanel(new BorderLayout());
 
-        pnlMezzi.add(pnlPlotMezzi);
+        // Setting controller tabella Presenze
+        tblMezzi = new JTable();
+        tblMezzi.setGridColor(Color.BLACK);
+        tblMezzi.getTableHeader().setReorderingAllowed(false);
+        TableMezziController tableMezziController = new TableMezziController(tblMezzi);
+        tableMezziController.setTableModel();
+
+        pnlTableMezzi.add(new JScrollPane(tblMezzi, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED), BorderLayout.CENTER);
+
         pnlMezzi.add(pnlTableMezzi);
         mainPanelStatistiche.add(pnlMezzi);
     }

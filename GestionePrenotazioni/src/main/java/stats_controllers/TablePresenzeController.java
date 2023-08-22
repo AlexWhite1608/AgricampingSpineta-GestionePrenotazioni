@@ -35,7 +35,7 @@ public class TablePresenzeController implements PrenotazioniObservers {
 
         // Ordina la lista degli anni in modo crescente e converte i mesi
         Collections.sort(listaAnniOrdinati);
-        Map<String, Map<String, Integer>> datasetConvertito = DatasetPresenzeController.convertMap(dataset);
+        Map<String, Map<String, Integer>> datasetConvertito = TimeManager.orderPresenzeMap(dataset);
 
         // Imposta le colonne (gli anni)
         Vector<String> columnNames = new Vector<>();

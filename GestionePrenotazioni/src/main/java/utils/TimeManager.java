@@ -96,8 +96,9 @@ public class TimeManager {
         return months;
     }
 
-    //TODO: sposta funzione in Utils??
-    public static Map<String, Map<String, Integer>> convertMap(Map<String, Map<String, Integer>> mapToConvert) {
+
+    //FIXME: sposta i metodi di ordinamento in utils
+    public static Map<String, Map<String, Integer>> orderPresenzeMap(Map<String, Map<String, Integer>> mapToConvert) {
         Map<String, Map<String, Integer>> datasetConMesiItaliani = new HashMap<>();
 
         for (Map.Entry<String, Map<String, Integer>> entry : mapToConvert.entrySet()) {
@@ -128,4 +129,28 @@ public class TimeManager {
 
         return datasetConMesiItaliani;
     }
+
+    public static Map<String, Map<String, Integer>> orderMezziMap(Map<String, Map<String, Integer>> mapToConvert) {
+        Map<String, Map<String, Integer>> sortedDataset = new HashMap<>(); // TreeMap per ordinare gli anni
+
+        for (Map.Entry<String, Map<String, Integer>> entry : mapToConvert.entrySet()) {
+            String anno = entry.getKey();
+            Map<String, Integer> mesiPresenze = entry.getValue();
+            Map<String, Integer> veicoliPerAnno = sortedDataset.computeIfAbsent(anno, k -> new HashMap<>());
+
+            for (Map.Entry<String, Integer> mesePresenzeEntry : mesiPresenze.entrySet()) {
+                String meseAnno = mesePresenzeEntry.getKey();
+                Integer numeroVeicoli = mesePresenzeEntry.getValue();
+
+                // Esempio: "Auto + Tenda" diventa "AutoTenda"
+                String tipoVeicolo = meseAnno.replace(" ", "").replace("+", "");
+
+                // Aggiungi alla mappa con i veicoli per l'anno
+                veicoliPerAnno.put(tipoVeicolo, numeroVeicoli);
+            }
+        }
+
+        return sortedDataset;
+    }
+
 }
