@@ -34,16 +34,6 @@ public class PresenzePlotController implements PlotController, PrenotazioniObser
         MenuStatistiche.getPlotControllersObserversList().add(this);
     }
 
-    // Metodo per verificare se un valore è presente nella cb degli anni
-    public static boolean containsItem(JComboBox<String> comboBox, String item) {
-        for (int i = 0; i < comboBox.getItemCount(); i++) {
-            if (comboBox.getItemAt(i).equals(item)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     // Costruisce il grafico
     @Override
     public void createPlot() throws SQLException {
