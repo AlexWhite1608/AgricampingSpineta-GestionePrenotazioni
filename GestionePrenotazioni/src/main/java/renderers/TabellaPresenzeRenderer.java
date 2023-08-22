@@ -1,5 +1,6 @@
 package renderers;
 
+import utils.CalculatePercentageChange;
 import utils.TableConstants;
 
 import javax.swing.*;
@@ -37,6 +38,34 @@ public class TabellaPresenzeRenderer extends DefaultTableCellRenderer  {
 
         } else {
             c.setBackground(table.getBackground());
+        }
+
+        // Inserisce la percentuale rispetto all'anno precedente
+        if (table.getColumnCount() > 2 && column > 1) {
+            // Ottieni il valore della cella dell'anno precedente
+            Object previousYearValue = table.getValueAt(row, column - 1);
+
+            if (previousYearValue != null && previousYearValue instanceof Number) {
+                int currentValue = ((Number) value).intValue();
+
+                // Calcola la percentuale di variazione
+                double percentageChange = CalculatePercentageChange.calculatePercentageChange((int) previousYearValue, currentValue);
+
+                // Formatta la percentuale con due decimali
+                String formattedPercentage = String.format("%.2f%%", percentageChange);
+                String combinedValue = String.format("%s (%s)", value, formattedPercentage);
+
+                ((JLabel) c).setText(combinedValue);
+
+                // Imposta il colore del testo in base alla percentuale di variazione
+                if (percentageChange > 0) {
+                    c.setBackground(TableConstants.ACCONTO_SALDATO_COLOR);
+                } else if (percentageChange < 0) {
+                    c.setBackground(TableConstants.TABELLA_PRESENZE_COLOR);
+                } else {
+                    c.setBackground(c.getBackground());
+                }
+            }
         }
 
         return c;
