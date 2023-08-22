@@ -8,7 +8,9 @@ import java.time.LocalDate;
 import java.time.Month;
 import java.time.format.TextStyle;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 // Gestisce i filtri della visualizzazione delle prenotazioni
 public class TimeManager {
@@ -94,4 +96,36 @@ public class TimeManager {
         return months;
     }
 
+    //TODO: sposta funzione in Utils??
+    public static Map<String, Map<String, Integer>> convertMap(Map<String, Map<String, Integer>> mapToConvert) {
+        Map<String, Map<String, Integer>> datasetConMesiItaliani = new HashMap<>();
+
+        for (Map.Entry<String, Map<String, Integer>> entry : mapToConvert.entrySet()) {
+            String anno = entry.getKey();
+            Map<String, Integer> mesiPresenze = entry.getValue();
+            Map<String, Integer> mesiPresenzeItaliani = new HashMap<>();
+
+            for (Map.Entry<String, Integer> mesePresenzeEntry : mesiPresenze.entrySet()) {
+                String meseAnno = mesePresenzeEntry.getKey();
+                Integer presenze = mesePresenzeEntry.getValue();
+
+                // Converte il mese dall formato "mm/yyyy" a Month
+                String[] parts = meseAnno.split("/");
+                int mese = Integer.parseInt(parts[0]);
+                Month month = Month.of(mese);
+
+                // Ottieni il nome del mese in italiano con la prima lettera maiuscola
+                String nomeMese = month.getDisplayName(TextStyle.FULL, Locale.ITALIAN);
+                String meseMaiuscola = nomeMese.substring(0, 1).toUpperCase() + nomeMese.substring(1);
+
+                // Aggiungi alla mappa con i mesi in italiano
+                mesiPresenzeItaliani.put(meseMaiuscola, presenze);
+            }
+
+            // Aggiungi alla mappa principale con i mesi in italiano
+            datasetConMesiItaliani.put(anno, mesiPresenzeItaliani);
+        }
+
+        return datasetConMesiItaliani;
+    }
 }
