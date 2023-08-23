@@ -35,6 +35,7 @@ public class CustomCellEditorPrenotazioni extends AbstractCellEditor implements 
         this.tablePrenotazioniController = tablePrenotazioniController;
 
         cbPiazzole = new JComboBox<>();
+        ((JLabel) cbPiazzole.getRenderer()).setHorizontalAlignment(SwingConstants.CENTER);
         cbPiazzole.addActionListener(e -> {
             if (cbPiazzole.getSelectedItem() != null) {
                 stopCellEditing(); // Interrompi l'editing solo se è stato selezionato un elemento
@@ -42,6 +43,7 @@ public class CustomCellEditorPrenotazioni extends AbstractCellEditor implements 
         });
 
         cbMezzi = new JComboBox<>();
+        ((JLabel) cbMezzi.getRenderer()).setHorizontalAlignment(SwingConstants.CENTER);
         cbMezzi.addActionListener(e -> {
             if (cbMezzi.getSelectedItem() != null) {
                 stopCellEditing(); // Interrompi l'editing solo se è stato selezionato un elemento

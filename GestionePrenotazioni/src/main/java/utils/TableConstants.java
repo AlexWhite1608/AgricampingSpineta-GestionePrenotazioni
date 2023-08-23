@@ -34,5 +34,5 @@ public class TableConstants {
     public static final int DAYS_BEFORE_DELETE = 4;
 
     // Lista dei mezzi
-    public static final ArrayList<String> listaMezzi = new ArrayList<>(List.of(new String[]{"Camper", "Caravan", "Van", "A piedi + Tenda", "Auto + Tenda", "Bici + Tenda", "Moto + Tenda", "StarsBox", "Casa Mobile"}));
+    public static final ArrayList<String> listaMezzi = new ArrayList<>(List.of(new String[]{"Camper", "Caravan", "Van", "Tenda", "Auto + Tenda", "Bici + Tenda", "Moto + Tenda", "StarsBox", "Casa Mobile"}));
 }
