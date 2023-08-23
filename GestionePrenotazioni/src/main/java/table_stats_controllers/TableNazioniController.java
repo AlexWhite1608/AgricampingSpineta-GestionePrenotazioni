@@ -4,11 +4,14 @@ import data_access.Gateway;
 import datasets.DatasetMezziController;
 import datasets.DatasetNazioniController;
 import observer.PrenotazioniObservers;
+import renderers.TabellaMezziRenderer;
+import renderers.TabellaNazioniRenderer;
 import utils.TableConstants;
 import utils.TimeManager;
 import views.MenuPrenotazioni;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import java.sql.SQLException;
 import java.util.*;
@@ -96,6 +99,15 @@ public class TableNazioniController implements PrenotazioniObservers {
         };
 
         tabellaNazioni.setModel(model);
+
+    }
+
+    // Imposta il renderer per le celle
+    public static void createTableRenderer() {
+        DefaultTableCellRenderer cellRenderer = new TabellaNazioniRenderer();
+        for(int columnIndex = 0; columnIndex < tabellaNazioni.getColumnCount(); columnIndex++) {
+            tabellaNazioni.getColumnModel().getColumn(columnIndex).setCellRenderer(cellRenderer);
+        }
 
     }
 

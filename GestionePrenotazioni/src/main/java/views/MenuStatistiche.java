@@ -215,7 +215,7 @@ public class MenuStatistiche extends JPanel implements PrenotazioniObservers {
         TableNazioniController tableNazioniController = new TableNazioniController(tblNazioni);
         TableNazioniController.setTableModel();
 
-        //TableNazioniController.createTableRenderer();
+        TableNazioniController.createTableRenderer();
 
         pnlTableNazioni.add(new JScrollPane(tblNazioni, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED), BorderLayout.CENTER);
 
