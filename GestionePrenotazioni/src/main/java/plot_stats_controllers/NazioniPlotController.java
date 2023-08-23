@@ -98,6 +98,7 @@ public class NazioniPlotController implements PlotController, PrenotazioniObserv
         // Aggiungi il generatore di etichette personalizzato per mostrare le percentuali nei tooltip
         PiePlot plot = (PiePlot) pieChart.getPlot();
         plot.setLabelGenerator(new CustomPieSectionLabelGenerator(dataset));
+        pieChart.setBackgroundPaint(pnlPlot.getBackground());
 
         // Collega il plot al JPanel
         ChartPanel chartPanel = new ChartPanel(pieChart);
