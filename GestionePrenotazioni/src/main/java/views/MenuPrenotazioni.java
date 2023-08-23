@@ -916,6 +916,10 @@ public class MenuPrenotazioni extends JPanel implements StopTableEditObservers {
 
         /* Panel dedicato agli elementi del form */
         JPanel pnlForm = new JPanel(new GridBagLayout());
+        pnlForm.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createEmptyBorder(10, 10, 10, 10),
+                pnlForm.getBorder()
+        ));
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);
 
@@ -967,6 +971,7 @@ public class MenuPrenotazioni extends JPanel implements StopTableEditObservers {
 
             ControllerDatePrenotazioni.checkOrdineDate(arrivo, arrivo.isAfter(partenza), datePickerPartenza, dialogFiltraPrenotazione);
         });
+
         datePickerArrivo.addDateChangeListener((dateChangeEvent) -> {
             LocalDate arrivo = dateChangeEvent.getNewDate();
             LocalDate partenza = datePickerPartenza.getDate();
@@ -1007,7 +1012,7 @@ public class MenuPrenotazioni extends JPanel implements StopTableEditObservers {
         gbc.anchor = GridBagConstraints.WEST;
         pnlForm.add(lblNome, gbc);
 
-        // TextField nome prenotazione
+        // TextField nome della prenotazione
         JTextField tfNome = new JTextField();
         tfNome.setPreferredSize(datePickerArrivo.getPreferredSize());
         gbc.gridx = 4;
@@ -1075,14 +1080,46 @@ public class MenuPrenotazioni extends JPanel implements StopTableEditObservers {
         gbc.anchor = GridBagConstraints.WEST;
         pnlForm.add(tfEmail, gbc);
 
+        // Label mezzo
+        JLabel lblMezzo = new JLabel("Mezzo:");
+        gbc.gridx = 3;
+        gbc.gridy = 5;
+        gbc.anchor = GridBagConstraints.WEST;
+        pnlForm.add(lblMezzo, gbc);
+
+        // ComboBox mezzo
+        JComboBox<String> cbMezzo = new JComboBox(TableConstants.listaMezzi.toArray());
+        cbMezzo.setPreferredSize(datePickerArrivo.getPreferredSize());
+        cbMezzo.setFocusable(false);
+        cbMezzo.setSelectedItem(null);
+        ((JLabel) cbMezzo.getRenderer()).setHorizontalAlignment(SwingConstants.CENTER);
+        gbc.gridx = 4;
+        gbc.gridy = 5;
+        gbc.anchor = GridBagConstraints.WEST;
+        pnlForm.add(cbMezzo, gbc);
+
+        // Label nazione
+        JLabel lblNazione = new JLabel("Nazione:");
+        gbc.gridx = 0;
+        gbc.gridy = 5;
+        gbc.anchor = GridBagConstraints.WEST;
+        pnlForm.add(lblNazione, gbc);
+
+        // TextField nazione
+        JTextField tfNazione = new JTextField();
+        tfNazione.setPreferredSize(datePickerArrivo.getPreferredSize());
+        gbc.gridx = 1;
+        gbc.gridy = 5;
+        gbc.anchor = GridBagConstraints.WEST;
+        pnlForm.add(tfNazione, gbc);
+
         // Imposta i vincoli sulle textFields
         TextFieldsController.setupTextFieldsInteger(tfTelefono);
         TextFieldsController.setupTextFieldsFloat(tfAcconto);
         TextFieldsController.setupTextFieldsString(tfNome);
 
-        // Implementa il completer per la tf del nome
-        AutoCompleteDecorator.decorate(tfNome, TablePrenotazioniController.getAllNames(), false, ObjectToStringConverter.DEFAULT_IMPLEMENTATION);
-        /* --------------------------------------- */
+        // Implementa il completer per le nazioni
+        AutoCompleteDecorator.decorate(tfNazione, ListOfNations.getListaNazioni(), false, ObjectToStringConverter.DEFAULT_IMPLEMENTATION);
 
         /* Panel dedicato ai buttons */
         JPanel pnlButtons = new JPanel(new FlowLayout());
@@ -1113,6 +1150,8 @@ public class MenuPrenotazioni extends JPanel implements StopTableEditObservers {
                 String telefono = "";
                 String email = "";
                 String acconto = "";
+                String mezzo = "";
+                String nazione = "";
                 if(!Objects.equals(tfNome.getText(), ""))
                     nomePrenotazione = tfNome.getText();
                 if(!Objects.equals(cbSceltaPiazzola.getSelectedItem(), null))
@@ -1129,6 +1168,12 @@ public class MenuPrenotazioni extends JPanel implements StopTableEditObservers {
                     email = tfEmail.getText();
                 if(!Objects.equals(tfAcconto.getText(), ""))
                     acconto = tfAcconto.getText();
+                if(cbMezzo.getSelectedItem() != null)
+                    mezzo = cbMezzo.getSelectedItem().toString();
+                else
+                    mezzo = "";
+                if(!Objects.equals(tfNazione.getText(), ""))
+                    nazione = tfNazione.getText();
 
                 // Eseguo la query del filtro (in base al radio button selezionato) con eventuale messaggio se non esiste nessun valore per il filtro scelto
                 String filterQuery = "SELECT * FROM Prenotazioni WHERE ";
@@ -1160,6 +1205,12 @@ public class MenuPrenotazioni extends JPanel implements StopTableEditObservers {
                 }
                 if (!acconto.isEmpty()) {
                     conditions.add("Acconto = '" + acconto + "'");
+                }
+                if (!mezzo.isEmpty()) {
+                    conditions.add("Mezzo = '" + mezzo + "'");
+                }
+                if (!nazione.isEmpty()) {
+                    conditions.add("Nazione = '" + nazione + "'");
                 }
 
                 // Unisco le condizioni utilizzando l'operatore AND oppure OR a seconda del radio button
