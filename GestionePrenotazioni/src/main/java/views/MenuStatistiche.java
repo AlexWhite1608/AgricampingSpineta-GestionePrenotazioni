@@ -2,6 +2,7 @@ package views;
 
 import observer.PlotControllerObservers;
 import observer.PrenotazioniObservers;
+import stats_controllers.MezziPlotController;
 import stats_controllers.PresenzePlotController;
 import stats_controllers.TableMezziController;
 import stats_controllers.TablePresenzeController;
@@ -24,6 +25,7 @@ public class MenuStatistiche extends JPanel implements PrenotazioniObservers {
     private JPanel pnlNazioni;
     private JPanel pnlToolbar;
     private JPanel pnlPlotPresenze;
+    private JPanel pnlPlotMezzi;
     private JToolBar toolBar;
     private JTable tblPresenze;
     private JTable tblMezzi;
@@ -42,6 +44,7 @@ public class MenuStatistiche extends JPanel implements PrenotazioniObservers {
         setupToolbar();
         setupPlotPresenze();
         setupTablesPresenze();
+        setupPlotMezzi();
         setupTableMezzi();
         setupTableNazioni();
 
@@ -173,6 +176,19 @@ public class MenuStatistiche extends JPanel implements PrenotazioniObservers {
         pnlTableMezzi.add(new JScrollPane(tblMezzi, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED), BorderLayout.CENTER);
 
         pnlMezzi.add(pnlTableMezzi);
+        mainPanelStatistiche.add(pnlMezzi);
+    }
+
+    // Setup del plot Mezzi
+    private void setupPlotMezzi() throws SQLException {
+        pnlPlotMezzi = new JPanel(new BorderLayout());
+        MezziPlotController mezziPlotController = new MezziPlotController(pnlPlotMezzi, cbPlotYears.getSelectedItem().toString());
+
+        // Crea il grafico
+        mezziPlotController.createPlot();
+
+        // Aggiungo il panel del plot
+        pnlMezzi.add(pnlPlotMezzi);
         mainPanelStatistiche.add(pnlMezzi);
     }
 

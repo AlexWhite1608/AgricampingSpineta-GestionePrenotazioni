@@ -1,6 +1,8 @@
 package stats_controllers;
 
 import data_access.Gateway;
+import org.jfree.data.category.DefaultCategoryDataset;
+import utils.TimeManager;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -9,6 +11,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class DatasetMezziController {
 
@@ -40,6 +43,27 @@ public class DatasetMezziController {
         rs.close();
 
         return mezziMap;
+    }
+
+    public static DefaultCategoryDataset getPlotDataset(String annoSelezionato) throws SQLException {
+        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+
+        Map<String, Map<String, Integer>> numeroMezzi = getCountMezzi();
+
+        for(Map.Entry<String, Map<String, Integer>> entryAnni : numeroMezzi.entrySet()){
+            String anno = entryAnni.getKey();
+
+            if(Objects.equals(anno, annoSelezionato)) {
+                for(Map.Entry<String, Integer> entryMezzi : entryAnni.getValue().entrySet()){
+                    String mezzo = entryMezzi.getKey();
+                    int numMezzi = entryMezzi.getValue();
+
+                    dataset.addValue(numMezzi, "Mezzo", mezzo);
+                }
+            }
+        }
+
+        return dataset;
     }
 
 }

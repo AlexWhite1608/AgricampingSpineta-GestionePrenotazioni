@@ -41,8 +41,8 @@ public class PresenzePlotController implements PlotController, PrenotazioniObser
         DefaultCategoryDataset dataset = DatasetPresenzeController.getPlotDataset(YEAR);
         barChart = ChartFactory.createBarChart(
                 PLOT_TYPE + YEAR,
-                "Category",
-                "Score",
+                "Mese",
+                "Presenze",
                 dataset,
                 PlotOrientation.VERTICAL,
                 false, true, false);
@@ -53,11 +53,9 @@ public class PresenzePlotController implements PlotController, PrenotazioniObser
 
         CategoryAxis xAxis = plot.getDomainAxis();
         xAxis.setCategoryLabelPositions(CategoryLabelPositions.UP_45); //X-Axis Labels will be inclined at 45degree
-        xAxis.setLabel("Mese");
 
         ValueAxis rangeAxis = plot.getRangeAxis();
         rangeAxis.setAutoRange(true); // Y-Axis range will be set automatically based on the supplied data
-        rangeAxis.setLabel("Presenze");
 
         BarRenderer renderer = (BarRenderer)plot.getRenderer();
         renderer.setMaximumBarWidth(0.1);
