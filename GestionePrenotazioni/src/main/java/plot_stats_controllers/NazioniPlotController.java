@@ -10,6 +10,8 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.CategoryAxis;
 import org.jfree.chart.axis.CategoryLabelPositions;
 import org.jfree.chart.axis.ValueAxis;
+import org.jfree.chart.labels.PieSectionLabelGenerator;
+import org.jfree.chart.labels.StandardPieSectionLabelGenerator;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PiePlot;
 import org.jfree.chart.plot.PlotOrientation;
@@ -17,6 +19,7 @@ import org.jfree.chart.renderer.category.BarRenderer;
 import org.jfree.chart.renderer.category.StandardBarPainter;
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.general.DefaultPieDataset;
+import utils.CustomPieSectionLabelGenerator;
 import utils.TableConstants;
 import views.MenuPrenotazioni;
 import views.MenuStatistiche;
@@ -90,21 +93,9 @@ public class NazioniPlotController implements PlotController, PrenotazioniObserv
                 dataset,
                 false, true, false);
 
-//        CategoryPlot plot = pieChart.getCategoryPlot();
-//        plot.getRenderer().setSeriesPaint(0, TableConstants.TABELLA_NAZIONI_COLOR);
-//        pieChart.setBackgroundPaint(pnlPlot.getBackground());
-
-//        CategoryAxis xAxis = plot.getDomainAxis();
-//        xAxis.setCategoryLabelPositions(CategoryLabelPositions.UP_45); //X-Axis Labels will be inclined at 45degree
-//
-//        ValueAxis rangeAxis = plot.getRangeAxis();
-//        rangeAxis.setAutoRange(true); // Y-Axis range will be set automatically based on the supplied data
-//
-//        BarRenderer renderer = (BarRenderer)plot.getRenderer();
-//        renderer.setMaximumBarWidth(0.1);
-//        renderer.setDrawBarOutline(false);
-//        renderer.setShadowVisible(false);
-//        renderer.setBarPainter(new StandardBarPainter());
+        // Aggiungi il generatore di etichette personalizzato per mostrare le percentuali nei tooltip
+        PiePlot plot = (PiePlot) pieChart.getPlot();
+        plot.setLabelGenerator(new CustomPieSectionLabelGenerator(dataset));
 
         // Collega il plot al JPanel
         ChartPanel chartPanel = new ChartPanel(pieChart);
