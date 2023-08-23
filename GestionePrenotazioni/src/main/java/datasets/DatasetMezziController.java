@@ -19,6 +19,27 @@ public class DatasetMezziController {
         return getCountMezzi();
     }
 
+    public static DefaultCategoryDataset getPlotDataset(String annoSelezionato) throws SQLException {
+        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+
+        Map<String, Map<String, Integer>> numeroMezzi = getCountMezzi();
+
+        for(Map.Entry<String, Map<String, Integer>> entryAnni : numeroMezzi.entrySet()){
+            String anno = entryAnni.getKey();
+
+            if(Objects.equals(anno, annoSelezionato)) {
+                for(Map.Entry<String, Integer> entryMezzi : entryAnni.getValue().entrySet()){
+                    String mezzo = entryMezzi.getKey();
+                    int numMezzi = entryMezzi.getValue();
+
+                    dataset.addValue(numMezzi, "Mezzo", mezzo);
+                }
+            }
+        }
+
+        return dataset;
+    }
+
     // Ricava il numero di mezzi per ciascun anno
     private static Map<String, Map<String, Integer>> getCountMezzi() throws SQLException {
         Map<String, Map<String, Integer>> mezziMap = new HashMap<>();
@@ -43,27 +64,6 @@ public class DatasetMezziController {
         rs.close();
 
         return mezziMap;
-    }
-
-    public static DefaultCategoryDataset getPlotDataset(String annoSelezionato) throws SQLException {
-        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-
-        Map<String, Map<String, Integer>> numeroMezzi = getCountMezzi();
-
-        for(Map.Entry<String, Map<String, Integer>> entryAnni : numeroMezzi.entrySet()){
-            String anno = entryAnni.getKey();
-
-            if(Objects.equals(anno, annoSelezionato)) {
-                for(Map.Entry<String, Integer> entryMezzi : entryAnni.getValue().entrySet()){
-                    String mezzo = entryMezzi.getKey();
-                    int numMezzi = entryMezzi.getValue();
-
-                    dataset.addValue(numMezzi, "Mezzo", mezzo);
-                }
-            }
-        }
-
-        return dataset;
     }
 
 }

@@ -5,6 +5,7 @@ import observer.PrenotazioniObservers;
 import plot_stats_controllers.MezziPlotController;
 import plot_stats_controllers.PresenzePlotController;
 import table_stats_controllers.TableMezziController;
+import table_stats_controllers.TableNazioniController;
 import table_stats_controllers.TablePresenzeController;
 import utils.TimeManager;
 
@@ -26,6 +27,7 @@ public class MenuStatistiche extends JPanel implements PrenotazioniObservers {
     private JPanel pnlToolbar;
     private JPanel pnlPlotPresenze;
     private JPanel pnlPlotMezzi;
+    private JPanel pnlPlotNazioni;
     private JToolBar toolBar;
     private JTable tblPresenze;
     private JTable tblMezzi;
@@ -68,6 +70,9 @@ public class MenuStatistiche extends JPanel implements PrenotazioniObservers {
 
         // Panel mezzi
         pnlMezzi = new JPanel(new GridLayout(1, 2));
+
+        // Panel nazioni
+        pnlNazioni = new JPanel(new GridLayout(1, 2));
 
     }
 
@@ -193,8 +198,7 @@ public class MenuStatistiche extends JPanel implements PrenotazioniObservers {
     }
 
     // Setup tabella nazioni
-    private void setupTableNazioni() {
-        pnlNazioni = new JPanel(new FlowLayout());
+    private void setupTableNazioni() throws SQLException {
 
         // Imposta il bordo
         Border blackline = BorderFactory.createLineBorder(Color.BLACK);
@@ -202,10 +206,19 @@ public class MenuStatistiche extends JPanel implements PrenotazioniObservers {
         titledBorder.setTitleFont(titledBorder.getTitleFont().deriveFont(Font.BOLD, 16));
         pnlNazioni.setBorder(titledBorder);
 
-        JPanel pnlPlotNazioni = new JPanel(new BorderLayout());
         JPanel pnlTableNazioni = new JPanel(new BorderLayout());
 
-        pnlNazioni.add(pnlPlotNazioni);
+        // Setting controller tabella Presenze
+        tblNazioni = new JTable();
+        tblNazioni.setGridColor(Color.BLACK);
+        tblNazioni.getTableHeader().setReorderingAllowed(false);
+        TableNazioniController tableNazioniController = new TableNazioniController(tblNazioni);
+        TableNazioniController.setTableModel();
+
+        //TableNazioniController.createTableRenderer();
+
+        pnlTableNazioni.add(new JScrollPane(tblNazioni, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED), BorderLayout.CENTER);
+
         pnlNazioni.add(pnlTableNazioni);
         mainPanelStatistiche.add(pnlNazioni);
     }

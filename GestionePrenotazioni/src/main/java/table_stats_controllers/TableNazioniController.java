@@ -2,25 +2,24 @@ package table_stats_controllers;
 
 import data_access.Gateway;
 import datasets.DatasetMezziController;
+import datasets.DatasetNazioniController;
 import observer.PrenotazioniObservers;
-import renderers.TabellaMezziRenderer;
 import utils.TableConstants;
 import utils.TimeManager;
 import views.MenuPrenotazioni;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import java.sql.SQLException;
 import java.util.*;
 
-public class TableMezziController implements PrenotazioniObservers {
+public class TableNazioniController implements PrenotazioniObservers {
 
-    private static JTable tabellaMezzi;
+    private static JTable tabellaNazioni;
     private static Gateway gateway;
 
-    public TableMezziController(JTable tabellaMezzi) {
-        TableMezziController.tabellaMezzi = tabellaMezzi;
+    public TableNazioniController(JTable tabellaNazioni) {
+        TableNazioniController.tabellaNazioni = tabellaNazioni;
         gateway = new Gateway();
 
         // Si iscrive alle notifiche del MenuPrenotazioni
@@ -30,7 +29,7 @@ public class TableMezziController implements PrenotazioniObservers {
     // Imposta il tableModel iniziale della tabella
     public static void setTableModel() throws SQLException {
 
-        Map<String, Map<String, Integer>> dataset = DatasetMezziController.getTableDataset();
+        Map<String, Map<String, Integer>> dataset = DatasetNazioniController.getTableDataset();
         Set<String> listaAnni = dataset.keySet();
         List<String> listaAnniOrdinati = new ArrayList<>(listaAnni);
 
@@ -43,26 +42,32 @@ public class TableMezziController implements PrenotazioniObservers {
         columnNames.add("");
         columnNames.addAll(listaAnniOrdinati);
 
-        // Ottiene i mezzi da utilizzare come righe del modello
-        ArrayList<String> listaMezzi = TableConstants.listaMezzi;
+        // Ottiene le nazioni da utilizzare come righe del modello
+        ArrayList<String> listaNazioni = new ArrayList<>();
+        for (Map<String, Integer> innerMap : dataset.values()) {
+            for (String nazione : innerMap.keySet()){
+                if(!Objects.equals(nazione, ""))
+                    listaNazioni.add(nazione);
+            }
+        }
 
         // Imposta i dati del modello
         Vector<Vector<Object>> data = new Vector<>();
 
-        for (int i = 0; i < listaMezzi.size(); i++) {
-            String mezzo = listaMezzi.get(i);
+        for (int i = 0; i < listaNazioni.size(); i++) {
+            String nazione = listaNazioni.get(i);
             Vector<Object> rowData = new Vector<>();
-            rowData.add(mezzo); // Inserisce il mezzo
+            rowData.add(nazione); // Inserisce la nazione
 
             for (int j = 1; j < columnNames.size(); j++) {
                 String anno = columnNames.get(j);
 
-                Map<String, Integer> mezziAnno = datasetConvertito.get(anno);
-                if (mezziAnno != null) {
-                    Integer numMezzi = mezziAnno.get(mezzo);
-                    rowData.add(numMezzi != null ? numMezzi : 0);
+                Map<String, Integer> nazioniAnno = datasetConvertito.get(anno);
+                if (nazioniAnno != null) {
+                    Integer numPresenzeNazioni = nazioniAnno.get(nazione);
+                    rowData.add(numPresenzeNazioni != null ? numPresenzeNazioni : 0);
                 } else {
-                    rowData.add(0); // Nessun mezzo
+                    rowData.add(0); // Nessuna nazione
                 }
             }
 
@@ -75,7 +80,7 @@ public class TableMezziController implements PrenotazioniObservers {
 
         for (int j = 1; j < columnNames.size(); j++) {
             int totale = 0;
-            for(int k = 0; k < listaMezzi.size(); k++){
+            for(int k = 0; k < listaNazioni.size(); k++){
                 totale += (int) data.get(k).get(j);
             }
             totalRow.add(totale);
@@ -90,26 +95,13 @@ public class TableMezziController implements PrenotazioniObservers {
             }
         };
 
-        tabellaMezzi.setModel(model);
-
-    }
-
-    // Imposta il renderer per le celle
-    public static void createTableRenderer() {
-        DefaultTableCellRenderer cellRenderer = new TabellaMezziRenderer();
-        for(int columnIndex = 0; columnIndex < tabellaMezzi.getColumnCount(); columnIndex++) {
-            tabellaMezzi.getColumnModel().getColumn(columnIndex).setCellRenderer(cellRenderer);
-        }
+        tabellaNazioni.setModel(model);
 
     }
 
     @Override
     public void refreshView() throws SQLException {
 
-        // Ricostruisce il tableModel con i nuovi valori
-        setTableModel();
-
-        createTableRenderer();
     }
 
     @Override
