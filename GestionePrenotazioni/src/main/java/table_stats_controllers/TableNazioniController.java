@@ -114,6 +114,10 @@ public class TableNazioniController implements PrenotazioniObservers {
     @Override
     public void refreshView() throws SQLException {
 
+        // Ricostruisce il tableModel con i nuovi valori
+        setTableModel();
+
+        createTableRenderer();
     }
 
     @Override
