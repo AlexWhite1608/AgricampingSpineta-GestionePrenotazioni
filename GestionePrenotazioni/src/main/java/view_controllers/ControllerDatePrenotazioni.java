@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.time.format.TextStyle;
 import java.util.Locale;
+import java.util.Objects;
 
 public class ControllerDatePrenotazioni {
 
@@ -39,98 +40,75 @@ public class ControllerDatePrenotazioni {
     public static boolean isAlreadyBooked(String arrivo, String partenza, String piazzola, String idPrenotazione) throws SQLException {
         boolean isAlreadyBooked = false;
 
-//        String overlapPrenotazione = "SELECT COUNT(*) " +
-//                "FROM Prenotazioni " +
-//                "WHERE Piazzola = ? AND ((Partenza = ?) OR (Arrivo = ?))";
-//
-//        try {
-//            ResultSet rs = new Gateway().execSelectQuery(overlapPrenotazione, piazzola, arrivo, partenza);
-//            if (rs.next()) {
-//                if (rs.getInt(1) != 0) {
-//                    rs.close();
-//                    return false;
-//                }
-//            }
-//            rs.close();
-//        } catch (SQLException ex) {
-//            throw new RuntimeException(ex);
-//        }
-
         String checkPrenotazione;
         if (idPrenotazione == null) {
-            checkPrenotazione = "SELECT COUNT(*) " +
+            checkPrenotazione = "SELECT Arrivo, Partenza " +
                     "FROM Prenotazioni " +
                     "WHERE Piazzola = ? " +
-                    "AND (" +
-                    "    (Arrivo <= ? AND Partenza >= ?)" +
-                    "    OR (Arrivo <= ? AND Partenza >= ?)" +
-                    "    OR (Arrivo >= ? AND Partenza <= ?)" +
-                    "    OR (Arrivo <= ? AND Partenza >= ?)" +
-                    "    OR (Arrivo <= ? AND Partenza >= ?)" +
-                    "    OR (Arrivo >= ? AND Partenza <= ?)" +
-                    ") AND Partenza <> ?;";
+                    "AND (Arrivo <= ? AND Partenza >= ?)";
         } else {
-            checkPrenotazione = "SELECT COUNT(*) " +
+            checkPrenotazione = "SELECT Arrivo, Partenza " +
                     "FROM Prenotazioni " +
                     "WHERE Piazzola = ? " +
-                    "AND (" +
-                    "    (Arrivo <= ? AND Partenza >= ?)" +
-                    "    OR (Arrivo <= ? AND Partenza >= ?)" +
-                    "    OR (Arrivo >= ? AND Partenza <= ?)" +
-                    "    OR (Arrivo <= ? AND Partenza >= ?)" +
-                    "    OR (Arrivo <= ? AND Partenza >= ?)" +
-                    "    OR (Arrivo >= ? AND Partenza <= ?)" +
-                    ") AND Partenza <> ? AND Id <> ?;";
+                    "AND (Arrivo <= ? AND Partenza >= ?) " +
+                    "AND Id <> ?";
         }
 
         try {
             ResultSet rs;
             if (idPrenotazione == null) {
-                rs = new Gateway().execSelectQuery(checkPrenotazione, piazzola, partenza, arrivo, partenza, partenza, arrivo, partenza, arrivo, arrivo, arrivo);
+                rs = new Gateway().execSelectQuery(checkPrenotazione, piazzola, partenza, arrivo);
             } else {
-                rs = new Gateway().execSelectQuery(checkPrenotazione, piazzola, partenza, arrivo, partenza, partenza, arrivo, partenza, arrivo, arrivo, arrivo, idPrenotazione);
+                rs = new Gateway().execSelectQuery(checkPrenotazione, piazzola, partenza, arrivo, idPrenotazione);
             }
 
-            if (rs.next()) {
-                if(rs.getInt(1) != 0)
+            while (rs.next()) {
+                String oldArrivo = rs.getString("Arrivo");
+                String oldPartenza = rs.getString("Partenza");
+                if(Objects.equals(oldArrivo, partenza) || Objects.equals(oldPartenza, arrivo)) {
+
+                    // Verifico che i giorni compresi tra le nuove date non vadano ad interferire con tutte le altre date!
+                    ArrayList<String> listOfNewDays = getDatesBetween(arrivo, partenza);
+                    ArrayList<String> listOfOldDays = getDatesBetween(oldArrivo, oldPartenza);
+
+                    for(String newDay : listOfNewDays) {
+                        if(listOfOldDays.contains(newDay)){
+                            isAlreadyBooked = true;
+                            break;
+                        }
+                    }
+                } else {
                     isAlreadyBooked = true;
+                    break;
+                }
             }
             rs.close();
         } catch (SQLException ex) {
             throw new RuntimeException(ex);
         }
 
-
         return isAlreadyBooked;
-//        boolean isAreadyBooked = false;
-//
-//        //TODO: ATTENTO A ID_PRENOTAZIONE!
-//
-//        // Ricavo la lista dei giorni tra arrivo e partenza
-//        ArrayList<String> listaGiorni = getDaysFromDates(arrivo, partenza);
-//
-//        // Controllo, per ciascun giorno in listaGiorni, se si sovrappone con le prenotazioni già presenti
-//        String checkPrenotazioneQuery;
-//        if(idPrenotazione != null) {
-//            checkPrenotazioneQuery = "SELECT COUNT(*) FROM Prenotazioni " +
-//                    "WHERE Piazzola = ? AND (" +
-//                    "(Arrivo BETWEEN ? AND ?) OR " +
-//                    "(Partenza BETWEEN ? AND ?) OR " +
-//                    "(Arrivo <= ? AND Partenza >= ?) OR " +
-//                    "(Arrivo IN (?, ...) OR Partenza IN (?, ...))" +
-//                    ") AND (Id != ?)";
-//        } else {
-//            checkPrenotazioneQuery = "SELECT COUNT(*) FROM Prenotazioni " +
-//                    "WHERE Piazzola = ? AND (" +
-//                    "(Arrivo BETWEEN ? AND ?) OR " +
-//                    "(Partenza BETWEEN ? AND ?) OR " +
-//                    "(Arrivo <= ? AND Partenza >= ?) OR " +
-//                    "(Arrivo IN (?, ...) OR Partenza IN (?, ...)))";
-//        }
-//
-//
-//        return isAreadyBooked;
     }
+
+    // Ottiene tutti i giorni compresi tra le date indicate
+    private static ArrayList<String> getDatesBetween(String startDate, String endDate) {
+        ArrayList<String> dates = new ArrayList<>();
+
+        LocalDate start = LocalDate.parse(startDate, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+        LocalDate end = LocalDate.parse(endDate, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+
+        // Incrementa la data di partenza di un giorno
+        LocalDate current = start.plusDays(1);
+
+        while (!current.isAfter(end.minusDays(1))) {
+            dates.add(current.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+            current = current.plusDays(1);
+        }
+
+        return dates;
+    }
+
+
 
     // Controlla che la data di partenza sia successiva a quella di arrivo
     public static void checkOrdineDate(LocalDate arrivo, boolean isNotCorrectOrder, DatePicker datePickerPartenza, JDialog dialogNuovaPrenotazione) {
