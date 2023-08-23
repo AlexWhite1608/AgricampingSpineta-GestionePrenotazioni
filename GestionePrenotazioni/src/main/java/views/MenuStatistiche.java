@@ -2,10 +2,10 @@ package views;
 
 import observer.PlotControllerObservers;
 import observer.PrenotazioniObservers;
-import stats_controllers.MezziPlotController;
-import stats_controllers.PresenzePlotController;
-import stats_controllers.TableMezziController;
-import stats_controllers.TablePresenzeController;
+import plot_stats_controllers.MezziPlotController;
+import plot_stats_controllers.PresenzePlotController;
+import table_stats_controllers.TableMezziController;
+import table_stats_controllers.TablePresenzeController;
 import utils.TimeManager;
 
 import javax.swing.*;

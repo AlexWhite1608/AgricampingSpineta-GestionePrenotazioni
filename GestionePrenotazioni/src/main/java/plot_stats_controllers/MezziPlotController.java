@@ -1,5 +1,6 @@
-package stats_controllers;
+package plot_stats_controllers;
 
+import datasets.DatasetMezziController;
 import observer.PlotControllerObservers;
 import observer.PrenotazioniObservers;
 import org.jfree.chart.ChartFactory;

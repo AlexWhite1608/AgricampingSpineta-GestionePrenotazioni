@@ -1,6 +1,7 @@
-package stats_controllers;
+package table_stats_controllers;
 
 import data_access.Gateway;
+import datasets.DatasetPresenzeController;
 import observer.PrenotazioniObservers;
 import renderers.TabellaPresenzeRenderer;
 import utils.TimeManager;

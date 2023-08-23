@@ -1,4 +1,4 @@
-package stats_controllers;
+package plot_stats_controllers;
 
 import java.sql.SQLException;
 

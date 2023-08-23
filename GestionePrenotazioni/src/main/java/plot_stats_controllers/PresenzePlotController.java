@@ -1,5 +1,6 @@
-package stats_controllers;
+package plot_stats_controllers;
 
+import datasets.DatasetPresenzeController;
 import observer.PlotControllerObservers;
 import observer.PrenotazioniObservers;
 import org.jfree.chart.ChartFactory;
@@ -13,6 +14,7 @@ import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.renderer.category.BarRenderer;
 import org.jfree.chart.renderer.category.StandardBarPainter;
 import org.jfree.data.category.DefaultCategoryDataset;
+import plot_stats_controllers.PlotController;
 import utils.TableConstants;
 import views.MenuPrenotazioni;
 import views.MenuStatistiche;
