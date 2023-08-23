@@ -72,7 +72,7 @@ public class PresenzePlotController implements PlotController, PrenotazioniObser
     // Richiamata per modificare l'anno del plot quando modificato
     @Override
     public void changeTitlePlot(String newYear) throws SQLException {
-        this.YEAR = newYear;
+        YEAR = newYear;
 
         refreshView();
     }

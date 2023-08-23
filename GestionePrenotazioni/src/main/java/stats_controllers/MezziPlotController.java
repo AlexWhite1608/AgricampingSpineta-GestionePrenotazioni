@@ -39,6 +39,15 @@ public class MezziPlotController implements PlotController, PrenotazioniObserver
     @Override
     public void refreshPlot() throws SQLException {
 
+        // Ricostruisce il grafico con i nuovi valori
+        barChart.getCategoryPlot().setDataset(DatasetMezziController.getPlotDataset(YEAR));
+        barChart.setTitle(PLOT_TYPE + YEAR);
+        ChartPanel chartPanel = new ChartPanel(barChart);
+        chartPanel.setMouseWheelEnabled(false);
+        pnlPlot.removeAll();
+        pnlPlot.add(chartPanel);
+        pnlPlot.revalidate();
+        pnlPlot.repaint();
     }
 
     @Override
@@ -50,6 +59,14 @@ public class MezziPlotController implements PlotController, PrenotazioniObserver
     @Override
     public void refreshView() throws SQLException {
 
+        // Ricostruisce il grafico con i nuovi valori
+        barChart.getCategoryPlot().setDataset(DatasetMezziController.getPlotDataset(YEAR));
+        ChartPanel chartPanel = new ChartPanel(barChart);
+        chartPanel.setMouseWheelEnabled(false);
+        pnlPlot.removeAll();
+        pnlPlot.add(chartPanel);
+        pnlPlot.revalidate();
+        pnlPlot.repaint();
     }
 
     @Override
@@ -94,6 +111,8 @@ public class MezziPlotController implements PlotController, PrenotazioniObserver
     // Richiamata per modificare l'anno del plot quando modificato
     @Override
     public void changeTitlePlot(String newYear) throws SQLException {
+        YEAR = newYear;
 
+        refreshView();
     }
 }
