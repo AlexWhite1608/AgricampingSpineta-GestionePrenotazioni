@@ -5,6 +5,9 @@ import utils.TableConstants;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
 import java.awt.*;
 
 public class TabellaMezziRenderer extends DefaultTableCellRenderer {
@@ -58,15 +61,17 @@ public class TabellaMezziRenderer extends DefaultTableCellRenderer {
 
                 // Imposta il colore del testo in base alla percentuale di variazione
                 if (percentageChange > 0) {
-                    c.setForeground(TableConstants.TABELLA_PERCENTUALE_CRESCITA);
+                    c.setBackground(TableConstants.TABELLA_PERCENTUALE_CRESCITA);
                 } else if (percentageChange < 0) {
-                    c.setForeground(TableConstants.TABELLA_PERCENTUALE_DECRESCITA);
+                    c.setBackground(TableConstants.TABELLA_PERCENTUALE_DECRESCITA);
                 } else {
-                    c.setForeground(Color.BLACK);
+                    c.setBackground(c.getBackground());
                 }
             }
         }
 
         return c;
     }
+
+
 }

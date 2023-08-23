@@ -140,6 +140,8 @@ public class MenuStatistiche extends JPanel implements PrenotazioniObservers {
         // Imposta il renderer
         TablePresenzeController.createTableRenderer();
 
+        tblPresenze.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
+
         pnlTablePresenze.add(new JScrollPane(tblPresenze, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED), BorderLayout.CENTER);
 
         pnlPresenze.add(pnlTablePresenze);
@@ -180,6 +182,9 @@ public class MenuStatistiche extends JPanel implements PrenotazioniObservers {
 
         TableMezziController.createTableRenderer();
 
+
+        tblMezzi.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
+
         pnlTableMezzi.add(new JScrollPane(tblMezzi, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED), BorderLayout.CENTER);
 
         pnlMezzi.add(pnlTableMezzi);
@@ -218,6 +223,8 @@ public class MenuStatistiche extends JPanel implements PrenotazioniObservers {
         TableNazioniController.setTableModel();
 
         TableNazioniController.createTableRenderer();
+
+        tblNazioni.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
 
         pnlTableNazioni.add(new JScrollPane(tblNazioni, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED), BorderLayout.CENTER);
 
