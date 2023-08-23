@@ -38,7 +38,7 @@ public class ListOfNations {
             "Sudan del Sud", "Sudan", "Suriname", "Svezia", "Svizzera", "Swaziland", "Tagikistan",
             "Taiwan", "Tanzania", "Thailandia", "Timor Est", "Togo", "Tonga", "Trinidad e Tobago",
             "Tunisia", "Turchia", "Turkmenistan", "Tuvalu", "Ucraina", "Uganda", "Unione delle Comore",
-            "Uruguay", "Uzbekistan", "Vanuatu", "Venezuela", "Vietnam", "Yemen", "Zambia", "Zimbabwe"
+            "Uruguay", "Uzbekistan", "Vanuatu", "Venezuela", "Vietnam", "Yemen", "Zambia", "Zimbabwe", "Olanda"
     ));
 
 
