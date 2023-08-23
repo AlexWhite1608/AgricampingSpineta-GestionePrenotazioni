@@ -50,6 +50,7 @@ public class NazioniPlotController implements PlotController, PrenotazioniObserv
         // Ricostruisce il grafico con i nuovi valori
         PiePlot plot = (PiePlot) pieChart.getPlot();
         plot.setDataset(DatasetNazioniController.getPlotDataset(YEAR));
+        plot.setLabelGenerator(new CustomPieSectionLabelGenerator(DatasetNazioniController.getPlotDataset(YEAR)));
         pieChart.setTitle(PLOT_TYPE + YEAR);
         ChartPanel chartPanel = new ChartPanel(pieChart);
         chartPanel.setMouseWheelEnabled(false);
@@ -71,6 +72,7 @@ public class NazioniPlotController implements PlotController, PrenotazioniObserv
         // Ricostruisce il grafico con i nuovi valori
         PiePlot plot = (PiePlot) pieChart.getPlot();
         plot.setDataset(DatasetNazioniController.getPlotDataset(YEAR));
+        plot.setLabelGenerator(new CustomPieSectionLabelGenerator(DatasetNazioniController.getPlotDataset(YEAR)));
         ChartPanel chartPanel = new ChartPanel(pieChart);
         chartPanel.setMouseWheelEnabled(false);
         pnlPlot.removeAll();
