@@ -3,6 +3,7 @@ package views;
 import observer.PlotControllerObservers;
 import observer.PrenotazioniObservers;
 import plot_stats_controllers.MezziPlotController;
+import plot_stats_controllers.NazioniPlotController;
 import plot_stats_controllers.PresenzePlotController;
 import table_stats_controllers.TableMezziController;
 import table_stats_controllers.TableNazioniController;
@@ -48,6 +49,7 @@ public class MenuStatistiche extends JPanel implements PrenotazioniObservers {
         setupTablesPresenze();
         setupPlotMezzi();
         setupTableMezzi();
+        setupPlotNazioni();
         setupTableNazioni();
 
         setLayout(new BorderLayout());
@@ -115,7 +117,7 @@ public class MenuStatistiche extends JPanel implements PrenotazioniObservers {
         pnlToolbar.add(toolBar, BorderLayout.CENTER);
     }
 
-    // Setup tabelle presenze
+    // Setup tabelle Presenze
     private void setupTablesPresenze() throws SQLException {
 
         // Imposta il bordo
@@ -158,7 +160,7 @@ public class MenuStatistiche extends JPanel implements PrenotazioniObservers {
         mainPanelStatistiche.add(pnlPresenze);
     }
 
-    // Setup tabella mezzi
+    // Setup tabella Mezzi
     private void setupTableMezzi() throws SQLException {
 
         // Imposta il bordo
@@ -197,7 +199,7 @@ public class MenuStatistiche extends JPanel implements PrenotazioniObservers {
         mainPanelStatistiche.add(pnlMezzi);
     }
 
-    // Setup tabella nazioni
+    // Setup tabella Nazioni
     private void setupTableNazioni() throws SQLException {
 
         // Imposta il bordo
@@ -220,6 +222,19 @@ public class MenuStatistiche extends JPanel implements PrenotazioniObservers {
         pnlTableNazioni.add(new JScrollPane(tblNazioni, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED), BorderLayout.CENTER);
 
         pnlNazioni.add(pnlTableNazioni);
+        mainPanelStatistiche.add(pnlNazioni);
+    }
+
+    // Setup plot Nazioni
+    private void setupPlotNazioni() throws SQLException {
+        pnlPlotNazioni = new JPanel(new BorderLayout());
+        NazioniPlotController nazioniPlotController = new NazioniPlotController(pnlPlotNazioni, cbPlotYears.getSelectedItem().toString());
+
+        // Crea il grafico
+        nazioniPlotController.createPlot();
+
+        // Aggiungo il panel del plot
+        pnlNazioni.add(pnlPlotNazioni);
         mainPanelStatistiche.add(pnlNazioni);
     }
 

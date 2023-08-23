@@ -1,16 +1,41 @@
 package datasets;
 
 import data_access.Gateway;
+import org.jfree.data.category.DefaultCategoryDataset;
+import org.jfree.data.general.DefaultPieDataset;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class DatasetNazioniController {
 
     public static Map<String, Map<String, Integer>> getTableDataset() throws SQLException {
         return getCountNazioni();
+    }
+
+    public static DefaultPieDataset getPlotDataset(String annoSelezionato) throws SQLException {
+        DefaultPieDataset dataset = new DefaultPieDataset();
+
+        Map<String, Map<String, Integer>> numeroPresenzeNazioni = getCountNazioni();
+
+        for(Map.Entry<String, Map<String, Integer>> entryAnni : numeroPresenzeNazioni.entrySet()){
+            String anno = entryAnni.getKey();
+
+            if(Objects.equals(anno, annoSelezionato)) {
+                for(Map.Entry<String, Integer> entryNazioni : entryAnni.getValue().entrySet()){
+                    String nazione = entryNazioni.getKey();
+                    int numPresenze = entryNazioni.getValue();
+
+                    if(!Objects.equals(nazione, ""))
+                        dataset.setValue(nazione, numPresenze);
+                }
+            }
+        }
+
+        return dataset;
     }
 
     // Ricava il numero di nazioni per ciascun anno
