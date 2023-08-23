@@ -14,7 +14,7 @@ public class TabellaMezziRenderer extends DefaultTableCellRenderer {
         Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 
         // Imposta altezza righe in base al numero di righe
-        table.setRowHeight(30);
+        table.setRowHeight(28);
 
         // Centra le celle
         setHorizontalAlignment(HORIZONTAL);
