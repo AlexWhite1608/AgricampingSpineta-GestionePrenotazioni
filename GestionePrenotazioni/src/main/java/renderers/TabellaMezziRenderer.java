@@ -58,11 +58,11 @@ public class TabellaMezziRenderer extends DefaultTableCellRenderer {
 
                 // Imposta il colore del testo in base alla percentuale di variazione
                 if (percentageChange > 0) {
-                    c.setBackground(TableConstants.ACCONTO_SALDATO_COLOR);
+                    c.setForeground(TableConstants.TABELLA_PERCENTUALE_CRESCITA);
                 } else if (percentageChange < 0) {
-                    c.setBackground(TableConstants.TABELLA_PRESENZE_COLOR);
+                    c.setForeground(TableConstants.TABELLA_PERCENTUALE_DECRESCITA);
                 } else {
-                    c.setBackground(c.getBackground());
+                    c.setForeground(Color.BLACK);
                 }
             }
         }

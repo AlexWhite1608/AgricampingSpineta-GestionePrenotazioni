@@ -25,7 +25,9 @@ public class TableConstants {
     public static final Color ARRIVI_CONTORNO_COLOR = new Color(63, 227, 48);
     public static final Color TABELLA_PRESENZE_COLOR = new Color(249, 83, 53);
     public static final Color TABELLA_MEZZI_COLOR = new Color(252, 175, 56);
-    public static final Color TABELLA_NAZIONI_COLOR = new Color(80, 163, 164);
+    public static final Color TABELLA_PERCENTUALE_CRESCITA = new Color(208, 247, 208);
+    public static final Color TABELLA_PERCENTUALE_DECRESCITA = new Color(252, 167, 167);
+
 
     public static final int COLUMNS_WIDTH_CALENDARIO = 45;
     public static final int SEPARATOR_BORDER_WIDTH = 3;
