@@ -44,58 +44,64 @@ public class ControllerDatePrenotazioni {
         if (idPrenotazione == null) {
             checkPrenotazione = "SELECT Arrivo, Partenza " +
                     "FROM Prenotazioni " +
-                    "WHERE Piazzola = ? " +
-                    "AND (" +
-                    "    (Arrivo <= ? AND Partenza >= ? AND Arrivo <= ? AND Partenza >= ?)" +
-                    "     OR (Arrivo <= ? AND Partenza >= ?)" +
-                    "     OR (Arrivo <= ? AND Partenza >= ?)" +
-                    "     OR (Arrivo >= ? AND Partenza <= ?) " +
-                    "  )";
+                    "WHERE Piazzola = ? ";
         } else {
             checkPrenotazione = "SELECT Arrivo, Partenza " +
                     "FROM Prenotazioni " +
                     "WHERE Piazzola = ? " +
-                    "AND (" +
-                    "    (Arrivo <= ? AND Partenza >= ? AND Arrivo <= ? AND Partenza >= ?)" +
-                    "     OR (Arrivo <= ? AND Partenza >= ?)" +
-                    "     OR (Arrivo <= ? AND Partenza >= ?)" +
-                    "     OR (Arrivo >= ? AND Partenza <= ?) " +
-                    "  )" +
                     "AND ID <> ?";
         }
 
         try {
             ResultSet rs;
             if (idPrenotazione == null) {
-                rs = new Gateway().execSelectQuery(checkPrenotazione, piazzola, arrivo, arrivo, partenza, partenza,
-                                                                                arrivo, arrivo,
-                                                                                partenza, partenza,
-                                                                                arrivo, partenza);
+                rs = new Gateway().execSelectQuery(checkPrenotazione, piazzola);
             } else {
-                rs = new Gateway().execSelectQuery(checkPrenotazione, piazzola, arrivo, arrivo, partenza, partenza,
-                                                                                arrivo, arrivo,
-                                                                                partenza, partenza,
-                                                                                arrivo, partenza,
-                                                                                idPrenotazione);
+                rs = new Gateway().execSelectQuery(checkPrenotazione, piazzola, idPrenotazione);
             }
 
             while (rs.next()) {
 
-                String oldArrivo = rs.getString("Arrivo");
-                String oldPartenza = rs.getString("Partenza");
+                LocalDate newArrivoData = LocalDate.parse(arrivo, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+                LocalDate newPartenzaData = LocalDate.parse(partenza, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+                LocalDate oldArrivoData = LocalDate.parse(rs.getString("Arrivo"), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+                LocalDate oldPartenzaData = LocalDate.parse(rs.getString("Partenza"), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+                String oldArrivoStringa = rs.getString("Arrivo");
+                String oldPartenzaStringa = rs.getString("Partenza");
 
-                // Controllo sull'anno delle prenotazioni
-                String oldAnnoArrivo = oldArrivo.substring(6, 10);
-                String oldAnnoPartenza = oldPartenza.substring(6, 10);
-                String annoArrivo = arrivo.substring(6, 10);
-                String annoPartenza = partenza.substring(6, 10);
+                boolean condition1 = (oldArrivoData.isBefore(newArrivoData) && oldPartenzaData.isAfter(newArrivoData));
+                boolean condition2 = (oldArrivoData.isBefore(newPartenzaData) && oldPartenzaData.isAfter(newPartenzaData));
+                boolean condition3 = (oldArrivoData.isBefore(newArrivoData) && oldPartenzaData.isAfter(newPartenzaData));
+                boolean condition4 = (oldArrivoData.isAfter(newArrivoData) && oldPartenzaData.isBefore(newPartenzaData));
+                boolean condition5 = (Objects.equals(oldArrivoStringa, arrivo) || Objects.equals(oldPartenzaStringa, partenza));
 
-                if(oldAnnoArrivo.equals(annoArrivo) && oldAnnoPartenza.equals(annoPartenza)) {
-                    if(Objects.equals(oldArrivo, partenza) || Objects.equals(oldPartenza, arrivo)) {
+                if (condition1 || condition2 || condition3 || condition4 || condition5) {
+                    isAlreadyBooked = true;
+
+                    if (condition1) {
+                        System.out.println("Nuova data di arrivo interna ad una prenotazione");
+                    }
+                    if (condition2) {
+                        System.out.println("Nuova data di partenza interna ad una prenotazione");
+                    }
+                    if (condition3) {
+                        System.out.println("Nuova data arrivo e nuova data partenza interne ad una prenotazione");
+                    }
+                    if (condition4) {
+                        System.out.println("Nuova data arrivo e nuota data partenza esterne ad una prenotazione");
+                    }
+                    if (condition5) {
+                        System.out.println("Una tra arrivo/partenza coincide con una prenotazione");
+                    }
+                    break;
+                } else {
+
+                    // Verifica il caso limite in cui arrivo/partenza possono coincidere
+                    if(Objects.equals(oldArrivoStringa, partenza) || Objects.equals(oldPartenzaStringa, arrivo)) {
 
                         // Verifico che i giorni compresi tra le nuove date non vadano ad interferire con tutte le altre date!
                         ArrayList<String> listOfNewDays = getDatesBetween(arrivo, partenza);
-                        ArrayList<String> listOfOldDays = getDatesBetween(oldArrivo, oldPartenza);
+                        ArrayList<String> listOfOldDays = getDatesBetween(oldArrivoStringa, oldPartenzaStringa);
 
                         for(String newDay : listOfNewDays) {
                             if(listOfOldDays.contains(newDay)){
@@ -103,12 +109,8 @@ public class ControllerDatePrenotazioni {
                                 break;
                             }
                         }
-                    } else {
-                        isAlreadyBooked = true;
-                        break;
                     }
                 }
-
             }
             rs.close();
         } catch (SQLException ex) {
