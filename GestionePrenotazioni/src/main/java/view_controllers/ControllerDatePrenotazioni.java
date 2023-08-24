@@ -45,42 +45,70 @@ public class ControllerDatePrenotazioni {
             checkPrenotazione = "SELECT Arrivo, Partenza " +
                     "FROM Prenotazioni " +
                     "WHERE Piazzola = ? " +
-                    "AND (Arrivo <= ? AND Partenza >= ?)";
+                    "AND (" +
+                    "    (Arrivo <= ? AND Partenza >= ? AND Arrivo <= ? AND Partenza >= ?)" +
+                    "     OR (Arrivo <= ? AND Partenza >= ?)" +
+                    "     OR (Arrivo <= ? AND Partenza >= ?)" +
+                    "     OR (Arrivo >= ? AND Partenza <= ?) " +
+                    "  )";
         } else {
             checkPrenotazione = "SELECT Arrivo, Partenza " +
                     "FROM Prenotazioni " +
                     "WHERE Piazzola = ? " +
-                    "AND (Arrivo <= ? AND Partenza >= ?) " +
-                    "AND Id <> ?";
+                    "AND (" +
+                    "    (Arrivo <= ? AND Partenza >= ? AND Arrivo <= ? AND Partenza >= ?)" +
+                    "     OR (Arrivo <= ? AND Partenza >= ?)" +
+                    "     OR (Arrivo <= ? AND Partenza >= ?)" +
+                    "     OR (Arrivo >= ? AND Partenza <= ?) " +
+                    "  )" +
+                    "AND ID <> ?";
         }
 
         try {
             ResultSet rs;
             if (idPrenotazione == null) {
-                rs = new Gateway().execSelectQuery(checkPrenotazione, piazzola, partenza, arrivo);
+                rs = new Gateway().execSelectQuery(checkPrenotazione, piazzola, arrivo, arrivo, partenza, partenza,
+                                                                                arrivo, arrivo,
+                                                                                partenza, partenza,
+                                                                                arrivo, partenza);
             } else {
-                rs = new Gateway().execSelectQuery(checkPrenotazione, piazzola, partenza, arrivo, idPrenotazione);
+                rs = new Gateway().execSelectQuery(checkPrenotazione, piazzola, arrivo, arrivo, partenza, partenza,
+                                                                                arrivo, arrivo,
+                                                                                partenza, partenza,
+                                                                                arrivo, partenza,
+                                                                                idPrenotazione);
             }
 
             while (rs.next()) {
+
                 String oldArrivo = rs.getString("Arrivo");
                 String oldPartenza = rs.getString("Partenza");
-                if(Objects.equals(oldArrivo, partenza) || Objects.equals(oldPartenza, arrivo)) {
 
-                    // Verifico che i giorni compresi tra le nuove date non vadano ad interferire con tutte le altre date!
-                    ArrayList<String> listOfNewDays = getDatesBetween(arrivo, partenza);
-                    ArrayList<String> listOfOldDays = getDatesBetween(oldArrivo, oldPartenza);
+                // Controllo sull'anno delle prenotazioni
+                String oldAnnoArrivo = oldArrivo.substring(6, 10);
+                String oldAnnoPartenza = oldPartenza.substring(6, 10);
+                String annoArrivo = arrivo.substring(6, 10);
+                String annoPartenza = partenza.substring(6, 10);
 
-                    for(String newDay : listOfNewDays) {
-                        if(listOfOldDays.contains(newDay)){
-                            isAlreadyBooked = true;
-                            break;
+                if(oldAnnoArrivo.equals(annoArrivo) && oldAnnoPartenza.equals(annoPartenza)) {
+                    if(Objects.equals(oldArrivo, partenza) || Objects.equals(oldPartenza, arrivo)) {
+
+                        // Verifico che i giorni compresi tra le nuove date non vadano ad interferire con tutte le altre date!
+                        ArrayList<String> listOfNewDays = getDatesBetween(arrivo, partenza);
+                        ArrayList<String> listOfOldDays = getDatesBetween(oldArrivo, oldPartenza);
+
+                        for(String newDay : listOfNewDays) {
+                            if(listOfOldDays.contains(newDay)){
+                                isAlreadyBooked = true;
+                                break;
+                            }
                         }
+                    } else {
+                        isAlreadyBooked = true;
+                        break;
                     }
-                } else {
-                    isAlreadyBooked = true;
-                    break;
                 }
+
             }
             rs.close();
         } catch (SQLException ex) {
