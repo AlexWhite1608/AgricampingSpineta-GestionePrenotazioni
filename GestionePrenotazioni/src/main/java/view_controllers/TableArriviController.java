@@ -35,7 +35,7 @@ public class TableArriviController implements PrenotazioniObservers {
     public void setTableModel() throws SQLException {
 
         // Imposto la query che mi seleziona la vista
-        String query = "SELECT Id, Piazzola, Arrivo, Partenza, Acconto, Info, Telefono FROM Prenotazioni WHERE Arrivo = ?";
+        String query = "SELECT Id, Piazzola, Arrivo, Partenza, Nome, Acconto, Info, Telefono FROM Prenotazioni WHERE Arrivo = ?";
 
         // Costruisco il table model
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
