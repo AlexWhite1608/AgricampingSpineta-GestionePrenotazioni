@@ -18,7 +18,7 @@ public class TableConstants {
     public static final Color CALENDARIO_STARSBOX_COLOR = new Color(245, 237, 86);
     public static final Color CALENDARIO_G_COLOR = new Color(117, 232, 104);
     public static final Color CALENDARIO_MARGHERITA_COLOR = new Color(252, 163, 53);
-    public static final Color CALENDARIO_BBQ_COLOR = new Color(252, 157, 157);
+    public static final Color CALENDARIO_BBQ_COLOR = new Color(247, 89, 87);
     public static final Color BORDER_CELL_SELECTED = Color.blue;
     public static final Color CALENDARIO_PRENOTAZIONE_COLOR =  new Color(54, 70, 225, 255);
     public static final Color ARRIVI_PARTENZE_CONFERMA_COLOR = new Color(208, 247, 208);
