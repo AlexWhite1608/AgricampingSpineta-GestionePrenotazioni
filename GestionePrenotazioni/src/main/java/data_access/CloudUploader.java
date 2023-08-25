@@ -41,24 +41,30 @@ public class CloudUploader {
 
     //TODO: fai anche una versione per database.csv?
 
-    public static boolean uploadDatabaseFile() throws IOException, GeneralSecurityException, URISyntaxException {
-        final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
-        Drive service = new Drive.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT)).setApplicationName(APPLICATION_NAME).build();
+    public static boolean uploadDatabaseFile() {
+        try {
+            final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
+            Drive service = new Drive.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT)).setApplicationName(APPLICATION_NAME).build();
 
-        java.io.File backupFile = new java.io.File(BACKUP_FOLDER + FileSystems.getDefault().getSeparator() + "database.db");
+            java.io.File backupFile = new java.io.File(BACKUP_FOLDER + FileSystems.getDefault().getSeparator() + "database.db");
 
-        File fileMetadata = new File();
-        fileMetadata.setName("database.db");
+            File fileMetadata = new File();
+            fileMetadata.setName("database.db");
 
-        // Crea un oggetto FileContent con il file da caricare
-        FileContent mediaContent = new FileContent("application/sqlite", backupFile);
+            // Crea un oggetto FileContent con il file da caricare
+            FileContent mediaContent = new FileContent("application/sqlite", backupFile);
 
-        // Esegui l'upload del file nella radice di Google Drive
-        File uploadedFile = service.files().create(fileMetadata, mediaContent).setFields("id").execute();
+            // Esegui l'upload del file nella radice di Google Drive
+            File uploadedFile = service.files().create(fileMetadata, mediaContent).setFields("id").execute();
 
-        System.out.println("File ID: " + uploadedFile.getId());
-        return true;
+            System.out.println("File ID: " + uploadedFile.getId());
+            return true;
+        } catch (IOException | GeneralSecurityException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
+
 
     // Metodo per creare un file temporaneo a partire da un InputStream
     private static java.io.File createTempFile(InputStream inputStream, String prefix, String suffix) throws IOException {

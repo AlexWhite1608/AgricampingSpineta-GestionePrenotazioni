@@ -1353,14 +1353,10 @@ public class MenuPrenotazioni extends JPanel implements StopTableEditObservers {
 
     // Setup del button del salvataggio dei file su drive
     private void setupSalva() {
-        try {
-            if(CloudUploader.uploadDatabaseFile())
-                MessageController.getInfoMessage(MenuPrenotazioni.this, "Backup eseguito correttamente!");
-            else
-                MessageController.getErrorMessage(MenuPrenotazioni.this, "Impossibile eseguire il backup");
-        } catch (IOException | GeneralSecurityException | URISyntaxException ex) {
-            ex.printStackTrace();
-        }
+        if(CloudUploader.uploadDatabaseFile())
+            MessageController.getInfoMessage(MenuPrenotazioni.this, "Backup eseguito correttamente!");
+        else
+            MessageController.getErrorMessage(MenuPrenotazioni.this, "Impossibile eseguire il backup");
     }
 
     // Setting della modifica dinamica della tabella (doppio click)
