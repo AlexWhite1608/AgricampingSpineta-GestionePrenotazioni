@@ -51,7 +51,7 @@ public class HomePage extends JFrame{
 
         this.add(tabbedPane, BorderLayout.CENTER);
 
-        this.setTitle("Gestione prenotazioni");
+        this.setTitle("Agricamping Spineta");
         this.setLocationRelativeTo(null);
         this.setResizable(true);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -68,14 +68,9 @@ public class HomePage extends JFrame{
             addWindowListener(new WindowAdapter() {
                 @Override
                 public void windowClosing(WindowEvent windowEvent) {
-                    try {
-                        setCursor(Cursor.WAIT_CURSOR);
-                        CloudUploader.uploadDatabaseFile();
-                        setCursor(Cursor.DEFAULT_CURSOR);
-                    } catch (IOException | GeneralSecurityException | URISyntaxException e) {
-                        e.printStackTrace();
-                        MessageController.getErrorMessage(HomePage.this, "Errore nel salvataggio del backup sul Drive");
-                    }
+                    setCursor(Cursor.WAIT_CURSOR);
+                    CloudUploader.uploadDatabaseFile();
+                    setCursor(Cursor.DEFAULT_CURSOR);
                 }
             });
         }

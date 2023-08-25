@@ -249,8 +249,8 @@ public class MenuArriviPartenze extends JPanel {
 
     // Impostazioni popup menu Arrivi
     private void setupPopUpMenuArrivi() {
-        JMenuItem annullaArrivo = new JMenuItem("Annulla Arrivo");
-        JMenuItem confermaArrivo = new JMenuItem("Conferma Arrivo");
+        JMenuItem annullaArrivo = new JMenuItem("Annulla arrivo");
+        JMenuItem confermaArrivo = new JMenuItem("Conferma arrivo");
 
         popupMenuArrivi.add(confermaArrivo);
         popupMenuArrivi.add(annullaArrivo);
@@ -301,8 +301,8 @@ public class MenuArriviPartenze extends JPanel {
 
     // Impostazioni popup menu Partenze
     private void setupPopUpMenuPartenze() {
-        JMenuItem annullaPartenza = new JMenuItem("Annulla Partenza");
-        JMenuItem confermaPartenza = new JMenuItem("Conferma Partenza");
+        JMenuItem annullaPartenza = new JMenuItem("Annulla partenza");
+        JMenuItem confermaPartenza = new JMenuItem("Conferma partenza");
 
         popupMenuPartenze.add(confermaPartenza);
         popupMenuPartenze.add(annullaPartenza);
