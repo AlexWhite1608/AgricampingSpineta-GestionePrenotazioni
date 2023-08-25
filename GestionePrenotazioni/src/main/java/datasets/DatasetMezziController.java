@@ -32,7 +32,8 @@ public class DatasetMezziController {
                     String mezzo = entryMezzi.getKey();
                     int numMezzi = entryMezzi.getValue();
 
-                    dataset.addValue(numMezzi, "Mezzo", mezzo);
+                    if(!Objects.equals(mezzo, ""))
+                        dataset.addValue(numMezzi, "Mezzo", mezzo);
                 }
             }
         }
