@@ -165,7 +165,8 @@ public class MenuPrenotazioni extends JPanel implements StopTableEditObservers {
             }
 
             private void hidePop() {
-                popupMenu.setVisible(false);
+                if(popupMenu != null)
+                    popupMenu.setVisible(false);
             }
         });
 
