@@ -584,14 +584,16 @@ public class MenuPrenotazioni extends JPanel implements StopTableEditObservers {
             LocalDate partenza = dateChangeEvent.getNewDate();
             LocalDate arrivo = datePickerArrivo.getDate();
 
-            ControllerDatePrenotazioni.checkOrdineDate(arrivo, arrivo.isAfter(partenza), datePickerPartenza, dialogNuovaPrenotazione);
+            if(arrivo != null && partenza != null)
+                ControllerDatePrenotazioni.checkOrdineDate(arrivo, arrivo.isAfter(partenza), datePickerPartenza, dialogNuovaPrenotazione);
         });
 
         datePickerArrivo.addDateChangeListener((dateChangeEvent) -> {
             LocalDate arrivo = dateChangeEvent.getNewDate();
             LocalDate partenza = datePickerPartenza.getDate();
 
-            ControllerDatePrenotazioni.checkOrdineDate(partenza, partenza.isBefore(arrivo), datePickerArrivo, dialogNuovaPrenotazione);
+            if(partenza != null && arrivo != null)
+                ControllerDatePrenotazioni.checkOrdineDate(partenza, partenza.isBefore(arrivo), datePickerArrivo, dialogNuovaPrenotazione);
         });
 
         // Label scelta piazzola
