@@ -6,7 +6,6 @@ import utils.TableConstants;
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
-import java.util.Objects;
 
 public class TabellaPresenzeRenderer extends DefaultTableCellRenderer  {
 

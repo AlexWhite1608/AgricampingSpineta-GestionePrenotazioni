@@ -5,7 +5,6 @@ import utils.TableConstants;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.TableCellRenderer;
 import java.awt.*;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -26,12 +25,6 @@ public class ArriviPartenzeRenderer extends DefaultTableCellRenderer {
             c.setBackground(TableConstants.ALTERNATE_CELL_COLOR);
         }
 
-        // Colora di giallo la riga selezionata
-        //FIXME: NON FUNZIONA
-        if (isSelected) {
-            c.setBackground(TableConstants.SELECTION_COLOR);
-        }
-
         // Imposta il colore della riga in base al valore di Arrivato/Partito
         String idPrenotazione = table.getModel().getValueAt(row, 0).toString();
         String statusColumn = (table.getColumnCount() == 8) ? "Partito" : "Arrivato";
@@ -50,7 +43,8 @@ public class ArriviPartenzeRenderer extends DefaultTableCellRenderer {
             }
             rs.close();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            System.err.println("Impossibile confermare arrivo/partenza");
+            e.printStackTrace();
         }
 
         return c;

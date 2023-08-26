@@ -85,7 +85,6 @@ public class CalendarioCellRenderer extends DefaultTableCellRenderer {
     }
 
     // Imposta il bordo della cella a seconda della prenotazione
-    //FIXME: nel caso del giorno corrente le prenotazioni partono sempre dal primo giorno anche se ci sono giorni precedenti
     private static void setCellBorder(JTable table, int column, int row, JLabel c, Color color) {
         boolean isPrenotazioneCell = !Objects.equals(table.getValueAt(row, column).toString(), "0");
         boolean isStartOfPrenotazione = isPrenotazioneCell &&
