@@ -1,6 +1,5 @@
 package views;
 
-import view_controllers.MessageController;
 import data_access.CloudUploader;
 import loading_dialogs.DeleteOldBackups;
 import utils.TableConstants;
@@ -11,7 +10,6 @@ import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.security.GeneralSecurityException;
 import java.sql.SQLException;
 import java.time.LocalDate;

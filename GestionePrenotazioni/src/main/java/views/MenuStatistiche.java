@@ -134,10 +134,7 @@ public class MenuStatistiche extends JPanel implements PrenotazioniObservers {
         tblPresenze.getTableHeader().setReorderingAllowed(false);
         TablePresenzeController tablePresenzeController = new TablePresenzeController(tblPresenze);
         TablePresenzeController.setTableModel();
-//        if(tblPresenze.getColumnCount() > 10)
-//            tblPresenze.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 
-        // Imposta il renderer
         TablePresenzeController.createTableRenderer();
 
         tblPresenze.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);

@@ -79,8 +79,8 @@ public class MenuArriviPartenze extends JPanel {
 
         // Impostazione del tableModel e dei renderer
         tableArriviController.setTableModel();
-        tableArriviController.createCellRenderer();
-        tableArriviController.createHeaderRenderer();
+        TableArriviController.createCellRenderer();
+        TableArriviController.createHeaderRenderer();
 
         // Panel per tabellaArrivi
         JPanel pnlTabellaArrivi = new JPanel(new BorderLayout());
@@ -170,8 +170,8 @@ public class MenuArriviPartenze extends JPanel {
 
         // Impostazione del tableModel e dei renderer
         tablePartenzeController.setTableModel();
-        tablePartenzeController.createCellRenderer();
-        tablePartenzeController.createHeaderRenderer();
+        TablePartenzeController.createCellRenderer();
+        TablePartenzeController.createHeaderRenderer();
 
         // Panel per tabellaPartenze
         JPanel pnlTabellaPartenze = new JPanel(new BorderLayout());

@@ -14,7 +14,6 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-
 public class MenuCalendario extends JPanel {
 
     // Controller della tabella
@@ -46,7 +45,7 @@ public class MenuCalendario extends JPanel {
         // Inizializza il TableModel per il calendario
         tabellaCalendario = new JTable();
         tableCalendarioController = new TableCalendarioController(tabellaCalendario);
-        tableCalendarioController.setCalendarioTableModel();
+        TableCalendarioController.setCalendarioTableModel();
 
         // Inizializza la toolbar
         pnlToolbar = new JPanel(new BorderLayout());
@@ -66,10 +65,10 @@ public class MenuCalendario extends JPanel {
         tabellaCalendario.setGridColor(Color.BLACK);
 
         // Renderer per le celle
-        tableCalendarioController.createCellRenderer();
+        TableCalendarioController.createCellRenderer();
 
         // Renderer per l'header
-        tableCalendarioController.createHeaderRenderer();
+        TableCalendarioController.createHeaderRenderer();
 
         JScrollPane scrollPane = new JScrollPane(tabellaCalendario, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         mainPanelCalendario.add(scrollPane, BorderLayout.CENTER);

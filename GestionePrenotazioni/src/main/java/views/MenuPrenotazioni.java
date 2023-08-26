@@ -18,7 +18,6 @@ import javax.swing.table.TableCellRenderer;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.security.GeneralSecurityException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -895,8 +894,6 @@ public class MenuPrenotazioni extends JPanel implements StopTableEditObservers {
                 } catch (SQLException ex) {
                     throw new RuntimeException(ex);
                 }
-
-                //TODO: Aggiorna la comboBox degli anni nel caso in cui l'anno della nuova prenotazione non sia presente
             }
         });
 
@@ -1296,7 +1293,7 @@ public class MenuPrenotazioni extends JPanel implements StopTableEditObservers {
                     if (confirmResult == JOptionPane.YES_OPTION) {
                         // Eseguo la query di eliminazione
                         new Gateway().execUpdateQuery(deleteQuery, id);
-                        tablePrenotazioniController.getListaNomi().remove(nome);
+                        TablePrenotazioniController.getListaNomi().remove(nome);
 
                         // Elimino anche dalla tabella SaldoAcconti
                         String idEliminazione = tabellaPrenotazioni.getModel().getValueAt(selectedRow, 0).toString();
