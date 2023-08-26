@@ -4,8 +4,8 @@ import data_access.Gateway;
 import datasets.DatasetMezziController;
 import observer.PrenotazioniObservers;
 import renderers.TabellaMezziRenderer;
+import utils.OrderMap;
 import utils.TableConstants;
-import utils.TimeManager;
 import views.MenuPrenotazioni;
 
 import javax.swing.*;
@@ -36,7 +36,7 @@ public class TableMezziController implements PrenotazioniObservers {
 
         // Ordina la lista degli anni in modo crescente
         Collections.sort(listaAnniOrdinati);
-        Map<String, Map<String, Integer>> datasetConvertito = TimeManager.orderMezziMap(dataset);
+        Map<String, Map<String, Integer>> datasetConvertito = OrderMap.orderMezziMap(dataset);
 
         // Imposta le colonne (gli anni)
         Vector<String> columnNames = new Vector<>();

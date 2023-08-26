@@ -40,8 +40,4 @@ public class ListOfNations {
             "Tunisia", "Turchia", "Turkmenistan", "Tuvalu", "Ucraina", "Uganda", "Unione delle Comore",
             "Uruguay", "Uzbekistan", "Vanuatu", "Venezuela", "Vietnam", "Yemen", "Zambia", "Zimbabwe", "Olanda"
     ));
-
-
-
-
 }

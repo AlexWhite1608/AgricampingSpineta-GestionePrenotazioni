@@ -4,7 +4,7 @@ import data_access.Gateway;
 import datasets.DatasetNazioniController;
 import observer.PrenotazioniObservers;
 import renderers.TabellaNazioniRenderer;
-import utils.TimeManager;
+import utils.OrderMap;
 import views.MenuPrenotazioni;
 
 import javax.swing.*;
@@ -35,7 +35,7 @@ public class TableNazioniController implements PrenotazioniObservers {
 
         // Ordina la lista degli anni in modo crescente
         Collections.sort(listaAnniOrdinati);
-        Map<String, Map<String, Integer>> datasetConvertito = TimeManager.orderMezziMap(dataset);
+        Map<String, Map<String, Integer>> datasetConvertito = OrderMap.orderMezziMap(dataset);
 
         // Imposta le colonne (gli anni)
         Vector<String> columnNames = new Vector<>();

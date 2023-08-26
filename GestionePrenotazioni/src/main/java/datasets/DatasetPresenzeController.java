@@ -2,7 +2,7 @@ package datasets;
 
 import data_access.Gateway;
 import org.jfree.data.category.DefaultCategoryDataset;
-import utils.TimeManager;
+import utils.OrderMap;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -20,7 +20,7 @@ public class DatasetPresenzeController {
         Map<String, Map<String, Integer>> presenzeForMese = getPresenzeForMese();
 
         // Ordina i mesi
-        Map<String, Map<String, Integer>> presenzeForMeseOrdinate = TimeManager.orderMesiPresenzeMap(presenzeForMese);
+        Map<String, Map<String, Integer>> presenzeForMeseOrdinate = OrderMap.orderMesiPresenzeMap(presenzeForMese);
 
         for(Map.Entry<String, Map<String, Integer>> entryAnni : presenzeForMeseOrdinate.entrySet()){
             String anno = entryAnni.getKey();

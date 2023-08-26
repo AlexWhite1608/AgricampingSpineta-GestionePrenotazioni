@@ -2,6 +2,7 @@ package utils;
 
 public class CalculatePercentageChange {
 
+    // Calcola la variazione percentuale per le tabelle nelle statistiche rispetto all'anno precedente
     public static double calculatePercentageChange(int previousValue, int currentValue) {
         if (previousValue == 0) {
             if (currentValue > 0) {

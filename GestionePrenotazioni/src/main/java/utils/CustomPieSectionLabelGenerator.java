@@ -6,6 +6,7 @@ import org.jfree.data.general.PieDataset;
 
 import java.text.AttributedString;
 
+// Genera le labels per il grafico a torta con le percentuali
 public class CustomPieSectionLabelGenerator implements PieSectionLabelGenerator {
     private final DefaultPieDataset dataset;
 
