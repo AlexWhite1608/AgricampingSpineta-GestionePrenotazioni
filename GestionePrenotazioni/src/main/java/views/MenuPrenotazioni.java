@@ -865,7 +865,6 @@ public class MenuPrenotazioni extends JPanel implements StopTableEditObservers {
                 }
 
                 // Controlla che la nuova prenotazione sia stata inserita
-                //TODO: controlla con l'ìd??
                 String checkQuery = "SELECT * FROM Prenotazioni WHERE Nome = ? AND Piazzola = ? AND Arrivo = ? AND Partenza = ?";
 
                 try {
@@ -1231,7 +1230,6 @@ public class MenuPrenotazioni extends JPanel implements StopTableEditObservers {
                 tablePrenotazioniController.refreshTable(tabellaPrenotazioni, filterQuery);
                 dialogFiltraPrenotazione.dispose();
 
-                //TODO: Inserisco un flag che indica che la tabella è filtrata con relativo button per cancellare il filtro
                 lblFiltro.setText("Filtro applicato ");
                 lblFiltro.setForeground(Color.red);
             }
