@@ -138,8 +138,6 @@ public class ControllerDatePrenotazioni {
         return dates;
     }
 
-
-
     // Controlla che la data di partenza sia successiva a quella di arrivo
     public static void checkOrdineDate(LocalDate arrivo, boolean isNotCorrectOrder, DatePicker datePickerPartenza, JDialog dialogNuovaPrenotazione) {
         if (arrivo != null && isNotCorrectOrder) {

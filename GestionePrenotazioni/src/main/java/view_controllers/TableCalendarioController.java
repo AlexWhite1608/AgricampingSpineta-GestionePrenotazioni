@@ -74,7 +74,7 @@ public class TableCalendarioController implements PrenotazioniObservers {
                     if (rowData.get(0).equals(prenotazione.get(1))) {
                         if (prenotazione.contains(onlyDateColumnValue)) {
                             hasPrenotazione = true;
-                            //FIXME: ricava id prenotazione dal db!
+
                             String bookingId = prenotazione.get(0);
                             if (!Objects.equals(bookingId, currentBookingId)) {
                                 currentBookingId = bookingId;
@@ -90,8 +90,6 @@ public class TableCalendarioController implements PrenotazioniObservers {
 
             data.add(rowData);
         }
-
-
 
         // Genera il DefaultTableModel con i dati ricavati
         DefaultTableModel model = new DefaultTableModel(data, columnNames){
