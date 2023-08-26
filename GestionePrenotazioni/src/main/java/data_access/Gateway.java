@@ -29,7 +29,7 @@ public class Gateway {
         try {
             // Verifica se la connessione esiste già
             if (connection != null && !connection.isClosed()) {
-                disconnect();   //FIXME
+                disconnect();
             }
 
             // Carica il driver JDBC per SQLite
@@ -44,15 +44,16 @@ public class Gateway {
                 // Se il file scaricato esiste, connettiti a quel database
                 connection = DriverManager.getConnection("jdbc:sqlite:" + dbFile.getAbsolutePath());
             } else {
+                System.err.println("Impossibile connettersi al database");
                 MessageController.getErrorMessage(HomePage.getFrames()[0], "Impossibile connettersi al database!");
             }
 
         } catch (ClassNotFoundException e) {
-            System.out.println("JDBC driver non trovato");
+            System.err.println("JDBC driver non trovato");
             e.printStackTrace();
 
         } catch (SQLException e) {
-            System.out.println("Impossibile connettersi al database");
+            System.err.println("Impossibile connettersi al database");
             e.printStackTrace();
         }
 
@@ -68,7 +69,7 @@ public class Gateway {
             }
 
         } catch (SQLException e) {
-            System.out.println("Impossibile disconnettersi dal database");
+            System.err.println("Impossibile disconnettersi dal database");
             e.printStackTrace();
         }
     }

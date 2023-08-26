@@ -19,7 +19,6 @@ import com.google.api.services.drive.model.FileList;
 
 import javax.swing.*;
 import java.io.*;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.FileSystems;
 import java.security.GeneralSecurityException;
@@ -37,10 +36,7 @@ public class CloudUploader {
     private static final String BACKUP_FOLDER = System.getProperty("user.home") + FileSystems.getDefault().getSeparator()
             + "GestionePrenotazioni" + FileSystems.getDefault().getSeparator() + "backup";
 
-    //TODO: se il file è già presente sostituiscilo oppure fai una cartella con il giorno del caricamento?
-
-    //TODO: fai anche una versione per database.csv?
-
+    // Carica il file database.db su Google Drive
     public static boolean uploadDatabaseFile() {
         try {
             final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
@@ -65,22 +61,7 @@ public class CloudUploader {
         }
     }
 
-
-    // Metodo per creare un file temporaneo a partire da un InputStream
-    private static java.io.File createTempFile(InputStream inputStream, String prefix, String suffix) throws IOException {
-        java.io.File tempFile = java.io.File.createTempFile(prefix, suffix);
-
-        try (OutputStream outputStream = new FileOutputStream(tempFile)) {
-            byte[] buffer = new byte[4096];
-            int bytesRead;
-            while ((bytesRead = inputStream.read(buffer)) != -1) {
-                outputStream.write(buffer, 0, bytesRead);
-            }
-        }
-
-        return tempFile;
-    }
-
+    // Importa il file database.db in locale dal drive e lo sostituisce al db utilizzato attualmente
     public static boolean importFileFromDrive(String fileName) throws IOException, GeneralSecurityException {
         final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
         Drive service = new Drive.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT))
@@ -91,7 +72,7 @@ public class CloudUploader {
         List<File> files = result.getFiles();
 
         if (files.isEmpty()) {
-            System.out.println("File not found on Drive: " + fileName);
+            System.err.println("File non trovato su Drive: " + fileName);
             return false;
         }
 
@@ -120,7 +101,7 @@ public class CloudUploader {
             }
         }
 
-        System.out.println("File " + fileName + " imported successfully.");
+        System.out.println("File " + fileName + " importato correttamente.");
         return true;
     }
 
@@ -133,7 +114,7 @@ public class CloudUploader {
         if (!backupFolder.exists()) {
             boolean created = backupFolder.mkdirs();
             if (!created) {
-                System.out.println("Impossibile creare la cartella di backup.");
+                System.err.println("Impossibile creare la cartella di backup");
                 return;
             }
         }
@@ -153,19 +134,19 @@ public class CloudUploader {
                             outputStream.write(buffer, 0, bytesRead);
                         }
                     }
-                    System.out.println("Database di risorsa copiato nella cartella di backup.");
+                    System.out.println("Database di risorsa copiato nella cartella di backup");
                 } else {
-                    System.out.println("Impossibile copiare il database di risorse nella cartella di backup.");
+                    System.err.println("Impossibile copiare il database di risorse nella cartella di backup");
                 }
             } catch (IOException e) {
                 e.printStackTrace();
-                System.out.println("Errore durante la creazione del file database.db.");
+                System.err.println("Errore durante la creazione del file database.db");
             }
         }
     }
 
-    //TODO: funzione che periodicamente cancella i vecchi backup dal drive (cancella da dateToDeleteBefore) (Drive driveService = getDriveService();)
-    public static void deleteFilesBeforeDate(LocalDate dateToDeleteBefore, JProgressBar progressBar) throws IOException, GeneralSecurityException {
+    // Funzione che periodicamente cancella i vecchi backup dal drive (cancella i file prima di dateToDeleteBefore)
+    public static void deleteFilesBeforeDate(LocalDate dateToDeleteBefore, JProgressBar progressBar) {
         try {
             final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
             Drive service = new Drive.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT)).setApplicationName(APPLICATION_NAME).build();
@@ -194,9 +175,9 @@ public class CloudUploader {
                     try {
                         service.files().delete(file.getId()).execute();
                         deletedFiles++;
-                        System.out.println("File " + file.getName() + " deleted successfully.");
+                        System.out.println("File " + file.getName() + " rimosso correttamente.");
                     } catch (IOException e) {
-                        System.out.println("Error deleting file " + file.getName() + ": " + e.getMessage());
+                        System.out.println("Errore cancellazione file " + file.getName() + ": " + e.getMessage());
                     }
                 }
                 int progressValue = (int) ((double) deletedFiles / totalFiles * 100);
@@ -208,7 +189,7 @@ public class CloudUploader {
         }
     }
 
-    // Ricava le credenziali salvata nelle risorss
+    // Ricava le credenziali salvata nelle risorse
     private static Credential getCredentials(final HttpTransport httpTransport) throws IOException {
         InputStream in = Objects.requireNonNull(CloudUploader.class.getResource(CREDENTIALS_FILE_PATH)).openStream();
         GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(JSON_FACTORY, new InputStreamReader(in));
