@@ -1,13 +1,10 @@
 package loading_dialogs;
 
 import data_access.CloudUploader;
-import views.HomePage;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.io.IOException;
-import java.security.GeneralSecurityException;
 import java.time.LocalDate;
 
 public class DeleteOldBackups extends Thread {
