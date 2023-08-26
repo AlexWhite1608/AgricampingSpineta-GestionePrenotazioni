@@ -2,23 +2,21 @@ package datasets;
 
 import data_access.Gateway;
 import org.jfree.data.category.DefaultCategoryDataset;
-import utils.TimeManager;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
 public class DatasetMezziController {
 
+    // Ricava il dataset per la tabella
     public static Map<String, Map<String, Integer>> getTableDataset() throws SQLException {
         return getCountMezzi();
     }
 
+    // Ricava il dataset per il grafico
     public static DefaultCategoryDataset getPlotDataset(String annoSelezionato) throws SQLException {
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 

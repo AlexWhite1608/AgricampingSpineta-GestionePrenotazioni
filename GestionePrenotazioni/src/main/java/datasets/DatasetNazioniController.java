@@ -1,7 +1,6 @@
 package datasets;
 
 import data_access.Gateway;
-import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.general.DefaultPieDataset;
 
 import java.sql.ResultSet;
@@ -12,10 +11,12 @@ import java.util.Objects;
 
 public class DatasetNazioniController {
 
+    // Ricava il dataset per la tabella
     public static Map<String, Map<String, Integer>> getTableDataset() throws SQLException {
         return getCountNazioni();
     }
 
+    // Ricava il dataset per il grafico
     public static DefaultPieDataset getPlotDataset(String annoSelezionato) throws SQLException {
         DefaultPieDataset dataset = new DefaultPieDataset();
 

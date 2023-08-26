@@ -13,6 +13,7 @@ import java.util.*;
 
 public class DatasetPresenzeController {
 
+    // Ricava il dataset per il grafico
     public static DefaultCategoryDataset getPlotDataset(String annoSelezionato) throws SQLException {
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 
@@ -100,7 +101,7 @@ public class DatasetPresenzeController {
         return presenzeMap;
     }
 
-    // Serve per modificare l'ordine dei mesi
+    // Serve per ordinare cronologicamente i mesi
     public static Map<String, Integer> invertMonthMapOrder(Map<String, Integer> monthMap) {
         LinkedHashMap<String, Integer> invertedMonthMap = new LinkedHashMap<>();
         List<String> monthKeys = new ArrayList<>(monthMap.keySet());
