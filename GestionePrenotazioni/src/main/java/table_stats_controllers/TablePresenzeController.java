@@ -29,7 +29,6 @@ public class TablePresenzeController implements PrenotazioniObservers {
     // Imposta il tableModel iniziale della tabella
     public static void setTableModel() throws SQLException {
 
-        //FIXME: quando non ci sono prenotazioni viene mostrata solo la colonna dei mesi
         Map<String, Map<String, Integer>> dataset = DatasetPresenzeController.getTableDataset();
         Set<String> listaAnni = dataset.keySet();
         List<String> listaAnniOrdinati = new ArrayList<>(listaAnni);
@@ -83,21 +82,6 @@ public class TablePresenzeController implements PrenotazioniObservers {
 
         data.add(totalRow);
 
-//        // Calcola le percentuali per ciascun mese rispetto all'anno precedente
-//
-//        for (int j = 1; j < columnNames.size(); j++) {
-//            int currentYearTotal = (int) totalRow.get(j);
-//            int previousYearTotal = 0;
-//
-//            if (j > 1) { // Ignora il primo anno (non c'è anno precedente)
-//                previousYearTotal = (int) totalRow.get(j - 1);
-//            }
-//
-//            // Calcola la percentuale di variazione
-//            double percentageChange = calculatePercentageChange(previousYearTotal, currentYearTotal);
-//        }
-
-        // Genera il DefaultTableModel con i dati ricavati
         DefaultTableModel model = new DefaultTableModel(data, columnNames){
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -118,6 +102,7 @@ public class TablePresenzeController implements PrenotazioniObservers {
 
     }
 
+    // Ricarica la tabella
     @Override
     public void refreshView() throws SQLException {
 
@@ -127,6 +112,7 @@ public class TablePresenzeController implements PrenotazioniObservers {
         createTableRenderer();
     }
 
+    // Non utilizzato!
     @Override
     public void refreshPiazzola() throws SQLException {}
 

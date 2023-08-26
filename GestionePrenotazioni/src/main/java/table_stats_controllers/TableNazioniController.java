@@ -1,12 +1,9 @@
 package table_stats_controllers;
 
 import data_access.Gateway;
-import datasets.DatasetMezziController;
 import datasets.DatasetNazioniController;
 import observer.PrenotazioniObservers;
-import renderers.TabellaMezziRenderer;
 import renderers.TabellaNazioniRenderer;
-import utils.TableConstants;
 import utils.TimeManager;
 import views.MenuPrenotazioni;
 
@@ -111,6 +108,7 @@ public class TableNazioniController implements PrenotazioniObservers {
 
     }
 
+    // Ricarica la tabella
     @Override
     public void refreshView() throws SQLException {
 
@@ -120,6 +118,7 @@ public class TableNazioniController implements PrenotazioniObservers {
         createTableRenderer();
     }
 
+    // Non utilizzato!
     @Override
     public void refreshPiazzola() throws SQLException {
 

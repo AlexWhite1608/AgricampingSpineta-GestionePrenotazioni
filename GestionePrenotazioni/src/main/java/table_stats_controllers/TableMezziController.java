@@ -103,6 +103,7 @@ public class TableMezziController implements PrenotazioniObservers {
 
     }
 
+    // Ricarica la tabella
     @Override
     public void refreshView() throws SQLException {
 
@@ -112,6 +113,7 @@ public class TableMezziController implements PrenotazioniObservers {
         createTableRenderer();
     }
 
+    // Non utilizzato!
     @Override
     public void refreshPiazzola() throws SQLException {
 
