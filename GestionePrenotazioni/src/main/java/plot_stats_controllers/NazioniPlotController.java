@@ -81,6 +81,7 @@ public class NazioniPlotController implements PlotController, PrenotazioniObserv
         pnlPlot.repaint();
     }
 
+    // Non utilizzato!
     @Override
     public void refreshPiazzola() throws SQLException {
 

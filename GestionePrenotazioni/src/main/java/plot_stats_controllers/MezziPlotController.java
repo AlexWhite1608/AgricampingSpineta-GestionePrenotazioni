@@ -51,6 +51,7 @@ public class MezziPlotController implements PlotController, PrenotazioniObserver
         pnlPlot.repaint();
     }
 
+    // Imposta il nuovo anno
     @Override
     public void setSelectedYear(String year) {
         YEAR = year;
@@ -70,6 +71,7 @@ public class MezziPlotController implements PlotController, PrenotazioniObserver
         pnlPlot.repaint();
     }
 
+    // Non utilizzato!
     @Override
     public void refreshPiazzola() throws SQLException {
 
@@ -92,10 +94,10 @@ public class MezziPlotController implements PlotController, PrenotazioniObserver
         barChart.setBackgroundPaint(pnlPlot.getBackground());
 
         CategoryAxis xAxis = plot.getDomainAxis();
-        xAxis.setCategoryLabelPositions(CategoryLabelPositions.UP_45); //X-Axis Labels will be inclined at 45degree
+        xAxis.setCategoryLabelPositions(CategoryLabelPositions.UP_45);
 
         ValueAxis rangeAxis = plot.getRangeAxis();
-        rangeAxis.setAutoRange(true); // Y-Axis range will be set automatically based on the supplied data
+        rangeAxis.setAutoRange(true);
 
         BarRenderer renderer = (BarRenderer)plot.getRenderer();
         renderer.setMaximumBarWidth(0.1);

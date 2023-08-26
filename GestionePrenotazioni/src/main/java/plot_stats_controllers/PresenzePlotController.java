@@ -54,10 +54,10 @@ public class PresenzePlotController implements PlotController, PrenotazioniObser
         barChart.setBackgroundPaint(pnlPlot.getBackground());
 
         CategoryAxis xAxis = plot.getDomainAxis();
-        xAxis.setCategoryLabelPositions(CategoryLabelPositions.UP_45); //X-Axis Labels will be inclined at 45degree
+        xAxis.setCategoryLabelPositions(CategoryLabelPositions.UP_45);
 
         ValueAxis rangeAxis = plot.getRangeAxis();
-        rangeAxis.setAutoRange(true); // Y-Axis range will be set automatically based on the supplied data
+        rangeAxis.setAutoRange(true); //
 
         BarRenderer renderer = (BarRenderer)plot.getRenderer();
         renderer.setMaximumBarWidth(0.1);
@@ -113,6 +113,7 @@ public class PresenzePlotController implements PlotController, PrenotazioniObser
         YEAR = year;
     }
 
+    // Non utilizzato!
     @Override
     public void refreshPiazzola() throws SQLException {
 
