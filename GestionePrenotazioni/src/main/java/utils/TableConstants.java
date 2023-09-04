@@ -30,7 +30,7 @@ public class TableConstants {
 
     public static final int COLUMNS_WIDTH_CALENDARIO = 45;
     public static final int SEPARATOR_BORDER_WIDTH = 3;
-    public static final int DAYS_BEFORE_DELETE = 4;
+    public static final int DAYS_BEFORE_DELETE = 30;
 
     // Lista dei mezzi
     public static final ArrayList<String> listaMezzi = new ArrayList<>(List.of(new String[]{"Camper", "Caravan", "Van", "Tenda", "Auto + Tenda", "Bici + Tenda", "Moto + Tenda", "StarsBox", "Casa Mobile"}));
