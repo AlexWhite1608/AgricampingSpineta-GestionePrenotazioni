@@ -831,6 +831,7 @@ public class MenuPrenotazioni extends JPanel implements StopTableEditObservers {
                         MessageController.getErrorMessage(dialogNuovaPrenotazione, String.format("La piazzola %s è già prenotata per le date selezionate", piazzolaScelta));
                         datePickerArrivo.setText("");
                         datePickerPartenza.setText("");
+                        return;
                     }
                 } catch (SQLException ex) {
                     throw new RuntimeException(ex);
