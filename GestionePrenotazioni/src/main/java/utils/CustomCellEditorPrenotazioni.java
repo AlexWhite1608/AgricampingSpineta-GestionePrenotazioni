@@ -244,7 +244,7 @@ public class CustomCellEditorPrenotazioni extends AbstractCellEditor implements 
                     tabellaPrenotazioni.repaint();
                 }
             } catch (SQLException e) {
-                throw new RuntimeException(e);
+                System.err.println("Impossibile salvare sul DB le modifiche: " + e.getMessage());
             }
         }
         fireEditingStopped();

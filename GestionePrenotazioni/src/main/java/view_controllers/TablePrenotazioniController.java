@@ -133,9 +133,6 @@ public class TablePrenotazioniController {
                             if (!valoreAcconto.contains("€")) {
                                 String nuovoValoreAcconto = "€ " + valoreAcconto;
                                 table.setValueAt(nuovoValoreAcconto, row, 4);
-                            } else if(valoreAcconto.equals("€ ")) {
-                                // Rimuovi il simbolo dell'euro se l'acconto è vuoto
-                                table.setValueAt("", row, 4);
                             }
                         }
                     }
