@@ -54,10 +54,10 @@ public class PresenzePlotController implements PlotController, PrenotazioniObser
         barChart.setBackgroundPaint(pnlPlot.getBackground());
 
         CategoryAxis xAxis = plot.getDomainAxis();
-        xAxis.setCategoryLabelPositions(CategoryLabelPositions.UP_45);
+        xAxis.setCategoryLabelPositions(CategoryLabelPositions.STANDARD);
 
         ValueAxis rangeAxis = plot.getRangeAxis();
-        rangeAxis.setAutoRange(true); //
+        rangeAxis.setAutoRange(true);
 
         BarRenderer renderer = (BarRenderer)plot.getRenderer();
         renderer.setMaximumBarWidth(0.1);
