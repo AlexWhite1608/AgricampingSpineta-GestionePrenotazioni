@@ -22,7 +22,7 @@ public class HomePage extends JFrame{
     private final static String MENU_ARRIVI_PARTENZE = "Arrivi/Partenze";
     private final static String MENU_STATISTICHE = "Statistiche";
 
-    private final static boolean DEBUG_MODE = false;     //TODO: imposta false per avere il funzionamento completo!!
+    private final static boolean DEBUG_MODE = true;     //TODO: imposta false per avere il funzionamento completo!!
 
     public HomePage() throws IOException, SQLException, GeneralSecurityException {
 

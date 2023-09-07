@@ -23,6 +23,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.Objects;
 import observer.PrenotazioniObservers;
 import utils.ListOfNations;
@@ -244,6 +245,7 @@ public class MenuPrenotazioni extends JPanel implements StopTableEditObservers {
 
         // Setting combobox
         cbFiltroAnni.setFocusable(false);
+        cbFiltroAnni.setSelectedItem(String.valueOf(LocalDate.now().getYear()));
         ((JLabel) cbFiltroAnni.getRenderer()).setHorizontalAlignment(SwingConstants.CENTER);
 
         // Azione: salvataggio del database sul drive

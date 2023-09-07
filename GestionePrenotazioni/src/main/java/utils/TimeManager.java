@@ -38,6 +38,9 @@ public class TimeManager {
 
         rs.close();
 
+        // Ordina gli anni in ordine decrescente
+        yearsPrenotazioni.sort(Collections.reverseOrder());
+
         return yearsPrenotazioni;
     }
 
