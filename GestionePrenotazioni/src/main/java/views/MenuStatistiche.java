@@ -129,6 +129,26 @@ public class MenuStatistiche extends JPanel implements PrenotazioniObservers {
             }
         });
 
+        // Apre il frame di visualizzazione in full-screen delle tabelle
+        btnFocusTables.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JFrame frameFocusTables = new JFrame("Statistiche");
+
+                JToolBar toolBarFocusTables = new JToolBar();
+                toolBarFocusTables.setLayout(new BorderLayout());
+
+                JPanel pnlMainFocusTables = new JPanel(new BorderLayout());
+                JPanel pnlToolbarFocusTables = new JPanel(new BorderLayout());
+                JPanel pnlTableFocusTables = new JPanel(new BorderLayout());
+
+                frameFocusTables.pack();
+                frameFocusTables.setLocationRelativeTo(null);
+                frameFocusTables.setResizable(true);
+                frameFocusTables.setVisible(true);
+            }
+        });
+
         toolBar.setFloatable(false);
         toolBar.add(pnlButtonsToolbar, BorderLayout.CENTER);
         pnlToolbar.add(toolBar, BorderLayout.CENTER);
