@@ -17,6 +17,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class MenuStatistiche extends JPanel implements PrenotazioniObservers {
@@ -89,9 +90,11 @@ public class MenuStatistiche extends JPanel implements PrenotazioniObservers {
 
         // ComboBox per la scelta dell'anno di visualizzazione nei grafici
         JLabel lblPlotYears = new JLabel("Mostra grafici per l'anno: ");
+        //TODO: ordina cronologicamente gli anni
         cbPlotYears = new JComboBox<>(YEARS.toArray());
         cbPlotYears.setFocusable(false);
         ((JLabel) cbPlotYears.getRenderer()).setHorizontalAlignment(SwingConstants.CENTER);
+        cbPlotYears.setSelectedItem(String.valueOf(LocalDate.now().getYear()));
 
         pnlButtonsToolbar.add(lblPlotYears);
         pnlButtonsToolbar.add(cbPlotYears);

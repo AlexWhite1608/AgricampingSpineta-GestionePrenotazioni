@@ -65,6 +65,9 @@ public class TimeManager {
 
         rs.close();
 
+        // Ordina gli anni in ordine decrescente
+        yearsPlot.sort(Collections.reverseOrder());
+
         return yearsPlot;
     }
 
