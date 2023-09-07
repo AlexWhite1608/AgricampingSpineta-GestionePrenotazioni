@@ -102,8 +102,9 @@ public class MenuStatistiche extends JPanel implements PrenotazioniObservers {
         // Button per la visualizzazione del focus sulle tabelle
         btnFocusTables = new JButton();
         btnFocusTables.setFocusPainted(false);
-        Icon icon = new ImageIcon((Objects.requireNonNull(getClass().getResource("/zoom-in.png"))));
+        Icon icon = new ImageIcon((Objects.requireNonNull(getClass().getResource("/zoom-in-24x24.png"))));
         btnFocusTables.setIcon(icon);
+        btnFocusTables.setToolTipText("Ingrandisci le tabelle");
 
         JPanel pnlChooseYears = new JPanel(new FlowLayout());
         pnlChooseYears.add(lblPlotYears);
