@@ -134,19 +134,33 @@ public class MenuStatistiche extends JPanel implements PrenotazioniObservers {
             @Override
             public void actionPerformed(ActionEvent e) {
                 JFrame frameFocusTables = new JFrame("Statistiche");
+                frameFocusTables.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
+                // Toolbar
                 JToolBar toolBarFocusTables = new JToolBar();
-                toolBarFocusTables.setLayout(new BorderLayout());
+                toolBarFocusTables.setFloatable(false);
+                toolBarFocusTables.setLayout(new FlowLayout(FlowLayout.LEFT));
+                frameFocusTables.add(toolBarFocusTables, BorderLayout.NORTH);
 
-                JPanel pnlMainFocusTables = new JPanel(new BorderLayout());
-                JPanel pnlToolbarFocusTables = new JPanel(new BorderLayout());
+                // CombBox con lista tabelle
+                JComboBox<String> cbListaTabelle = new JComboBox<>(new String[] {"Presenze", "Mezzi", "Nazioni"});
+                cbListaTabelle.setSelectedItem("Presenze");
+                cbListaTabelle.setFocusable(false);
+                ((JLabel) cbListaTabelle.getRenderer()).setHorizontalAlignment(SwingConstants.CENTER);
+
                 JPanel pnlTableFocusTables = new JPanel(new BorderLayout());
+                frameFocusTables.add(pnlTableFocusTables, BorderLayout.CENTER);
+
+                toolBarFocusTables.add(new JLabel("Seleziona la tabella: "));
+                toolBarFocusTables.add(cbListaTabelle);
+
 
                 frameFocusTables.pack();
                 frameFocusTables.setLocationRelativeTo(null);
                 frameFocusTables.setResizable(true);
                 frameFocusTables.setVisible(true);
             }
+
         });
 
         toolBar.setFloatable(false);
