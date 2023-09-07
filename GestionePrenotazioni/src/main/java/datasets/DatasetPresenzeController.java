@@ -27,7 +27,7 @@ public class DatasetPresenzeController {
 
             if(Objects.equals(anno, annoSelezionato)) {
                 for(Map.Entry<String, Integer> entryPresenze : entryAnni.getValue().entrySet()){
-                    String mese = entryPresenze.getKey();
+                    String mese = entryPresenze.getKey().substring(0, 2);
                     int presenze = entryPresenze.getValue();
 
                     dataset.addValue(presenze, "Mese", mese);
@@ -78,8 +78,6 @@ public class DatasetPresenzeController {
 
                 // Calcola le presenze per il mese corrente
                 int presenzeMeseCorrente = giorniMeseCorrente * persone;
-//                String annoCorrente = arrivo.format(DateTimeFormatter.ofPattern("yyyy"));
-//                String annoSuccessivo = arrivo.plusYears(1).format(DateTimeFormatter.ofPattern("yyyy"));
 
                 presenzeMap
                         .computeIfAbsent(anno, k -> new HashMap<>())
