@@ -15,6 +15,7 @@ import java.awt.event.*;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.EventObject;
+import java.util.Objects;
 
 public class CustomCellEditorPrenotazioni extends AbstractCellEditor implements TableCellEditor {
     private JComboBox<String> cbPiazzole;
@@ -199,6 +200,9 @@ public class CustomCellEditorPrenotazioni extends AbstractCellEditor implements 
 
             Object selectedValue = cbMezzi.getSelectedItem();
             if (selectedValue != null) {
+                if(Objects.equals(selectedValue, "Nessuno")){
+                    selectedValue = "";
+                }
                 try {
                     int result = 0;
                     if(originalValue != null)

@@ -720,6 +720,7 @@ public class MenuPrenotazioni extends JPanel implements StopTableEditObservers {
 
         // ComboBox mezzo
         JComboBox<String> cbMezzo = new JComboBox(TableConstants.listaMezzi.toArray());
+        cbMezzo.removeItem("Nessuno");
         cbMezzo.setPreferredSize(datePickerArrivo.getPreferredSize());
         cbMezzo.setFocusable(false);
         cbMezzo.setSelectedItem(null);
