@@ -22,9 +22,8 @@ import java.security.GeneralSecurityException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Locale;
-import java.util.Objects;
+import java.util.*;
+
 import observer.PrenotazioniObservers;
 import utils.ListOfNations;
 
@@ -35,7 +34,7 @@ public class MenuPrenotazioni extends JPanel implements StopTableEditObservers {
     private final int DIALOG_SEPARATOR_WIDTH = 30;
 
     // Anni contenuti nella cbFiltroAnni
-    private final ArrayList<String> YEARS = TimeManager.getPrenotazioniYears();
+    private ArrayList<String> YEARS = TimeManager.getPrenotazioniYears();
 
     // Controller della tabella
     TablePrenotazioniController tablePrenotazioniController;
@@ -91,9 +90,9 @@ public class MenuPrenotazioni extends JPanel implements StopTableEditObservers {
         // ComboBox filtraggio anni
         lblFiltro = new JLabel("Filtra per anno: ");
         cbFiltroAnni = new JComboBox(YEARS.toArray());
+        cbFiltroAnni.setSelectedItem(String.valueOf(LocalDate.now().getYear()));
 
         // Mostra la query in base al valore della comboBox
-        cbFiltroAnni.setSelectedItem("Tutto");
         tabellaPrenotazioni = tablePrenotazioniController.initView(cbFiltroAnni, null);
 
     }
@@ -245,7 +244,6 @@ public class MenuPrenotazioni extends JPanel implements StopTableEditObservers {
 
         // Setting combobox
         cbFiltroAnni.setFocusable(false);
-        cbFiltroAnni.setSelectedItem(String.valueOf(LocalDate.now().getYear()));
         ((JLabel) cbFiltroAnni.getRenderer()).setHorizontalAlignment(SwingConstants.CENTER);
 
         // Azione: salvataggio del database sul drive
@@ -1392,7 +1390,19 @@ public class MenuPrenotazioni extends JPanel implements StopTableEditObservers {
         for (PrenotazioniObservers listener : prenotazioniObserversList) {
             listener.refreshView();
         }
+
+        // Refresh della cbAnni
+        Set<String> uniqueYears = new HashSet<>(TimeManager.getPrenotazioniYears());
+
+        // Ordina gli anni unici in ordine decrescente
+        ArrayList<String> sortedYears = new ArrayList<>(uniqueYears);
+        sortedYears.sort(Collections.reverseOrder());
+
+        // Aggiungi gli anni ordinati alla JComboBox
+        DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>(sortedYears.toArray(new String[0]));
+        cbFiltroAnni.setModel(model);
     }
+
 
     // Notifica i controllers observer della modifica della modifica della piazzola
     private void notifyPiazzolaChanged() throws SQLException {
