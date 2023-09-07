@@ -90,7 +90,6 @@ public class MenuStatistiche extends JPanel implements PrenotazioniObservers {
 
         // ComboBox per la scelta dell'anno di visualizzazione nei grafici
         JLabel lblPlotYears = new JLabel("Mostra grafici per l'anno: ");
-        //TODO: ordina cronologicamente gli anni
         cbPlotYears = new JComboBox<>(YEARS.toArray());
         cbPlotYears.setFocusable(false);
         ((JLabel) cbPlotYears.getRenderer()).setHorizontalAlignment(SwingConstants.CENTER);
