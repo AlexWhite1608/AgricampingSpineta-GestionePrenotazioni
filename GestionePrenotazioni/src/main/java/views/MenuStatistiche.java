@@ -10,15 +10,18 @@ import table_stats_controllers.TableNazioniController;
 import table_stats_controllers.TablePresenzeController;
 import utils.TimeManager;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class MenuStatistiche extends JPanel implements PrenotazioniObservers {
 
@@ -35,6 +38,7 @@ public class MenuStatistiche extends JPanel implements PrenotazioniObservers {
     private JTable tblMezzi;
     private JTable tblNazioni;
     private JComboBox cbPlotYears;
+    private JButton btnFocusTables;
 
     // Lista degli anni
     private ArrayList<String> YEARS = TimeManager.getPlotYears();
@@ -42,7 +46,7 @@ public class MenuStatistiche extends JPanel implements PrenotazioniObservers {
     // Lista dei controller observer dei plotControllers
     private static ArrayList<PlotControllerObservers> plotControllersObserversList = new ArrayList<>();
 
-    public MenuStatistiche() throws SQLException {
+    public MenuStatistiche() throws SQLException, IOException {
 
         createUIComponents();
         setupToolbar();
@@ -80,13 +84,13 @@ public class MenuStatistiche extends JPanel implements PrenotazioniObservers {
     }
 
     // Setup toolbar
-    private void setupToolbar() {
+    private void setupToolbar() throws IOException {
 
         // Inizializza la toolbar
         pnlToolbar = new JPanel(new BorderLayout());
         toolBar = new JToolBar();
         toolBar.setLayout(new BorderLayout());
-        JPanel pnlButtonsToolbar = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        JPanel pnlButtonsToolbar = new JPanel(new BorderLayout());
 
         // ComboBox per la scelta dell'anno di visualizzazione nei grafici
         JLabel lblPlotYears = new JLabel("Mostra grafici per l'anno: ");
@@ -95,8 +99,18 @@ public class MenuStatistiche extends JPanel implements PrenotazioniObservers {
         ((JLabel) cbPlotYears.getRenderer()).setHorizontalAlignment(SwingConstants.CENTER);
         cbPlotYears.setSelectedItem(String.valueOf(LocalDate.now().getYear()));
 
-        pnlButtonsToolbar.add(lblPlotYears);
-        pnlButtonsToolbar.add(cbPlotYears);
+        // Button per la visualizzazione del focus sulle tabelle
+        btnFocusTables = new JButton();
+        btnFocusTables.setFocusPainted(false);
+        Icon icon = new ImageIcon((Objects.requireNonNull(getClass().getResource("/zoom-in.png"))));
+        btnFocusTables.setIcon(icon);
+
+        JPanel pnlChooseYears = new JPanel(new FlowLayout());
+        pnlChooseYears.add(lblPlotYears);
+        pnlChooseYears.add(cbPlotYears);
+
+        pnlButtonsToolbar.add(pnlChooseYears, BorderLayout.WEST);
+        pnlButtonsToolbar.add(btnFocusTables, BorderLayout.EAST);
 
         // Implementa aggiornamento del grafico quando si cambia l'anno della cb
         cbPlotYears.addActionListener(new ActionListener() {
