@@ -34,27 +34,30 @@ public class CalendarioCellRenderer extends DefaultTableCellRenderer {
         }
 
         // Imposta il colore delle celle prenotate
-        String rowPiazzolaValue = table.getValueAt(row, 0).toString();
-        if(column != 0 && !Objects.equals(value.toString(), "0")){
-            c.setBackground(TableConstants.CALENDARIO_PRENOTAZIONE_COLOR);
+        if (row >= 0 && row < table.getRowCount()) {
+            String rowPiazzolaValue = table.getValueAt(row, 0).toString();
+            if(column != 0 && !Objects.equals(value.toString(), "0")){
+                c.setBackground(TableConstants.CALENDARIO_PRENOTAZIONE_COLOR);
 
-            // Imposta il bordo (con il colore del bordo che dipende dal tipo di piazzola
-            if (rowPiazzolaValue.contains("StarBox")) {
-                setCellBorder(table, column, row, (JLabel) c, TableConstants.CALENDARIO_STARSBOX_COLOR);
-            } else if (rowPiazzolaValue.contains("Margherita")) {
-                setCellBorder(table, column, row, (JLabel) c, TableConstants.CALENDARIO_MARGHERITA_COLOR);
-            } else if (rowPiazzolaValue.contains("G")) {
-                setCellBorder(table, column, row, (JLabel) c, TableConstants.CALENDARIO_G_COLOR);
-            } else if (rowPiazzolaValue.contains("BBQ")) {
-                setCellBorder(table, column, row, (JLabel) c, TableConstants.CALENDARIO_BBQ_COLOR);
+                // Imposta il bordo (con il colore del bordo che dipende dal tipo di piazzola
+                if (rowPiazzolaValue.contains("StarBox")) {
+                    setCellBorder(table, column, row, (JLabel) c, TableConstants.CALENDARIO_STARSBOX_COLOR);
+                } else if (rowPiazzolaValue.contains("Margherita")) {
+                    setCellBorder(table, column, row, (JLabel) c, TableConstants.CALENDARIO_MARGHERITA_COLOR);
+                } else if (rowPiazzolaValue.contains("G")) {
+                    setCellBorder(table, column, row, (JLabel) c, TableConstants.CALENDARIO_G_COLOR);
+                } else if (rowPiazzolaValue.contains("BBQ")) {
+                    setCellBorder(table, column, row, (JLabel) c, TableConstants.CALENDARIO_BBQ_COLOR);
+                } else {
+                    setCellBorder(table, column, row, (JLabel) c, Color.WHITE);
+                }
+
+                return;
             } else {
-                setCellBorder(table, column, row, (JLabel) c, Color.WHITE);
+                c.setBackground(table.getBackground());
             }
-
-            return;
-        } else {
-            c.setBackground(table.getBackground());
-        }
+        } else
+            System.err.println("Errore: indice di riga non valido!");
 
         // Imposta il colore delle piazzole
         if (column == 0) {
@@ -95,15 +98,26 @@ public class CalendarioCellRenderer extends DefaultTableCellRenderer {
         boolean isFirstDayOfPrenotazione = isStartOfPrenotazione;
         boolean isLastDayOfPrenotazione = isEndOfPrenotazione;
 
-        if (isStartOfPrenotazione) {
-            if(row >= 1)
-                isFirstDayOfPrenotazione = !Objects.equals(table.getValueAt(row - 1, column).toString(), table.getValueAt(row, column).toString());
-            else
-                isFirstDayOfPrenotazione = true;
-        }
+        if (row == table.getRowCount() - 1) {
 
-        if (isEndOfPrenotazione) {
-            isLastDayOfPrenotazione = !Objects.equals(table.getValueAt(row + 1, column).toString(), table.getValueAt(row, column).toString());
+            // Se sei nell'ultima riga, considera se la prenotazione inizia nella riga precedente
+            if (isStartOfPrenotazione) {
+                if (row >= 1)
+                    isFirstDayOfPrenotazione = !Objects.equals(table.getValueAt(row - 1, column).toString(), table.getValueAt(row, column).toString());
+                else
+                    isFirstDayOfPrenotazione = true;
+            }
+        } else {
+            if (isStartOfPrenotazione) {
+                if (row >= 1)
+                    isFirstDayOfPrenotazione = !Objects.equals(table.getValueAt(row - 1, column).toString(), table.getValueAt(row, column).toString());
+                else
+                    isFirstDayOfPrenotazione = true;
+            }
+
+            if (isEndOfPrenotazione) {
+                isLastDayOfPrenotazione = !Objects.equals(table.getValueAt(row + 1, column).toString(), table.getValueAt(row, column).toString());
+            }
         }
 
         if (isFirstDayOfPrenotazione && isLastDayOfPrenotazione) {
@@ -116,6 +130,8 @@ public class CalendarioCellRenderer extends DefaultTableCellRenderer {
             c.setBorder(BorderFactory.createMatteBorder(2, 0, 2, 0, color));
         }
     }
+
+
 
     // Calcola l'altezza delle righe
     private void setTableRowHeight(JTable table) {
