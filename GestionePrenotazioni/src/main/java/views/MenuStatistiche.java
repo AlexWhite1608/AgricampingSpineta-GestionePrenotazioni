@@ -156,6 +156,14 @@ public class MenuStatistiche extends JPanel implements PrenotazioniObservers {
                 JTable copyTableMezzi = new JTable(tblMezzi.getModel());
                 JTable copyTableNazioni = new JTable(tblNazioni.getModel());
 
+                //TODO: cambia estetica
+                TablePresenzeController controllerCopiaPresenze = new TablePresenzeController(copyTablePresenze);
+                TableMezziController controllerCopiaMezzi = new TableMezziController(copyTableMezzi);
+                TableNazioniController controllerCopiaNazioni = new TableNazioniController(copyTableNazioni);
+
+                controllerCopiaPresenze.createTableRenderer();
+                controllerCopiaMezzi.createTableRenderer();
+                controllerCopiaNazioni.createTableRenderer();
 
                 // Aggiungi JScrollPane per ciascuna tabella
                 JScrollPane scrollPanePresenze = new JScrollPane(copyTablePresenze);
