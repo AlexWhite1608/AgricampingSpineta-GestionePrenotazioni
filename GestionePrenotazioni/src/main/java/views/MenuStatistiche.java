@@ -148,19 +148,47 @@ public class MenuStatistiche extends JPanel implements PrenotazioniObservers {
                 cbListaTabelle.setFocusable(false);
                 ((JLabel) cbListaTabelle.getRenderer()).setHorizontalAlignment(SwingConstants.CENTER);
 
-                JPanel pnlTableFocusTables = new JPanel(new BorderLayout());
+                JPanel pnlTableFocusTables = new JPanel(new CardLayout()); // Utilizza CardLayout
                 frameFocusTables.add(pnlTableFocusTables, BorderLayout.CENTER);
+
+                // Crea copie delle tabelle
+                JTable copyTablePresenze = new JTable(tblPresenze.getModel());
+                JTable copyTableMezzi = new JTable(tblMezzi.getModel());
+                JTable copyTableNazioni = new JTable(tblNazioni.getModel());
+
+
+                // Aggiungi JScrollPane per ciascuna tabella
+                JScrollPane scrollPanePresenze = new JScrollPane(copyTablePresenze);
+                JScrollPane scrollPaneMezzi = new JScrollPane(copyTableMezzi);
+                JScrollPane scrollPaneNazioni = new JScrollPane(copyTableNazioni);
+
+                pnlTableFocusTables.add(scrollPanePresenze, "Presenze");
+                pnlTableFocusTables.add(scrollPaneMezzi, "Mezzi");
+                pnlTableFocusTables.add(scrollPaneNazioni, "Nazioni");
+
+                // Nascondi le JScrollPane inizialmente tranne quella di Presenze
+                ((CardLayout) pnlTableFocusTables.getLayout()).show(pnlTableFocusTables, "Presenze");
 
                 toolBarFocusTables.add(new JLabel("Seleziona la tabella: "));
                 toolBarFocusTables.add(cbListaTabelle);
 
+                // Implementa switch dinamico
+                cbListaTabelle.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        String selectedTable = cbListaTabelle.getSelectedItem().toString();
+
+                        // Mostra la JScrollPane corrispondente alla tabella selezionata
+                        ((CardLayout) pnlTableFocusTables.getLayout()).show(pnlTableFocusTables, selectedTable);
+                    }
+                });
 
                 frameFocusTables.pack();
                 frameFocusTables.setLocationRelativeTo(null);
                 frameFocusTables.setResizable(true);
+                frameFocusTables.setExtendedState(JFrame.MAXIMIZED_BOTH);
                 frameFocusTables.setVisible(true);
             }
-
         });
 
         toolBar.setFloatable(false);
