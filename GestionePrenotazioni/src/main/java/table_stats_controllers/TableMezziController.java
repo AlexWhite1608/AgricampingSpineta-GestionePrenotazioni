@@ -45,6 +45,7 @@ public class TableMezziController implements PrenotazioniObservers {
 
         // Ottiene i mezzi da utilizzare come righe del modello
         ArrayList<String> listaMezzi = TableConstants.listaMezzi;
+        listaMezzi.remove("Nessuno");
 
         // Imposta i dati del modello
         Vector<Vector<Object>> data = new Vector<>();
