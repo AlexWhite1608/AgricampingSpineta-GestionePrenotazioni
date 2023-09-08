@@ -1401,8 +1401,8 @@ public class MenuPrenotazioni extends JPanel implements StopTableEditObservers {
         // Aggiungi gli anni ordinati alla JComboBox
         DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>(sortedYears.toArray(new String[0]));
         cbFiltroAnni.setModel(model);
+        cbFiltroAnni.setSelectedItem(String.valueOf(LocalDate.now().getYear()));
     }
-
 
     // Notifica i controllers observer della modifica della modifica della piazzola
     private void notifyPiazzolaChanged() throws SQLException {
