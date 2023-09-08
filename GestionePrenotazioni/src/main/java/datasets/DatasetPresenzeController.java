@@ -112,4 +112,30 @@ public class DatasetPresenzeController {
 
         return invertedMonthMap;
     }
+
+    // Ritorna il totale delle prenotazioni in base all'anno fornito
+    public static String getTotalePrenotazioni(String anno) throws SQLException {
+        String numeroPrenotazioniQuery;
+        String numPrenotazioni = "0";
+
+        if (!Objects.equals(anno, "Tutto")) {
+            numeroPrenotazioniQuery = "SELECT COUNT(*) AS numero_prenotazioni " +
+                                      "FROM Prenotazioni " +
+                                      "WHERE substr(Arrivo, 7, 10) = ?";
+            ResultSet rs = new Gateway().execSelectQuery(numeroPrenotazioniQuery, anno);
+            if(rs.next())
+                numPrenotazioni = String.valueOf(rs.getInt("numero_prenotazioni"));
+
+            rs.close();
+        } else {
+            numeroPrenotazioniQuery = "SELECT COUNT(*) AS numero_prenotazioni " +
+                                      "FROM Prenotazioni";
+            ResultSet rs = new Gateway().execSelectQuery(numeroPrenotazioniQuery);
+            if(rs.next())
+                numPrenotazioni = String.valueOf(rs.getInt("numero_prenotazioni"));
+            rs.close();
+        }
+
+        return numPrenotazioni;
+    }
 }

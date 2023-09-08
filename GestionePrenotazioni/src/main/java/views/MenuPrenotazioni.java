@@ -2,6 +2,7 @@ package views;
 
 import com.github.lgooddatepicker.components.DatePicker;
 import com.github.lgooddatepicker.components.DatePickerSettings;
+import datasets.DatasetPresenzeController;
 import utils.TableConstants;
 import view_controllers.*;
 import data_access.CloudUploader;
@@ -53,6 +54,7 @@ public class MenuPrenotazioni extends JPanel implements StopTableEditObservers {
     private JButton btnRimuoviPiazzola;
     private JTable tabellaPrenotazioni;
     private JLabel lblFiltro;
+    private JLabel lblTotalePrenotazioni;
     private JComboBox cbFiltroAnni;
     private JScrollPane scrollPane;
     private JPopupMenu popupMenu;
@@ -78,6 +80,9 @@ public class MenuPrenotazioni extends JPanel implements StopTableEditObservers {
         // Panel toolbar
         pnlToolbar = new JPanel(new BorderLayout());
         toolBar = new JToolBar();
+
+        // Label totale prenotazioni
+        lblTotalePrenotazioni = new JLabel();
 
         // Bottoni azioni nella toolbar
         btnSalva = new JButton("Salva");
@@ -201,7 +206,7 @@ public class MenuPrenotazioni extends JPanel implements StopTableEditObservers {
     }
 
     // Setup toolbar
-    private void setupToolbar() {
+    private void setupToolbar() throws SQLException {
 
         // Layout toolbar
         pnlToolbar.setLayout(new BorderLayout());
@@ -215,10 +220,12 @@ public class MenuPrenotazioni extends JPanel implements StopTableEditObservers {
         buttonPanel.add(btnFiltraPrenotazione);
         toolBar.add(buttonPanel, BorderLayout.WEST);
 
-        // Panel spazio orizzontale
-        JPanel pnlHorizontalStrut = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        pnlHorizontalStrut.setPreferredSize(new Dimension(SEPARATOR_WIDTH, 1));
-        toolBar.add(pnlHorizontalStrut, BorderLayout.CENTER);
+        // Panel totale prenotazioni
+        JPanel pnlTotalePrenotazioni = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        String totalePrenotazioniSelected = DatasetPresenzeController.getTotalePrenotazioni(cbFiltroAnni.getSelectedItem().toString());
+        lblTotalePrenotazioni.setText("Totale prenotazioni anno " + cbFiltroAnni.getSelectedItem().toString() + ": " + totalePrenotazioniSelected);
+        pnlTotalePrenotazioni.add(lblTotalePrenotazioni);
+        toolBar.add(pnlTotalePrenotazioni, BorderLayout.CENTER);
 
         // Panel comboBox filtro anni + bottoni piazzole
         JPanel pnlFiltroAnni = new JPanel(new FlowLayout(FlowLayout.RIGHT));
