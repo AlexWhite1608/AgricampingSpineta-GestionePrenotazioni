@@ -52,6 +52,7 @@ public class HomePage extends JFrame{
         this.setTitle("Agricamping Spineta");
         this.setLocationRelativeTo(null);
         this.setResizable(true);
+        this.setMinimumSize(new Dimension(1300, 800));
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         // Imposta la finestra come schermo intero

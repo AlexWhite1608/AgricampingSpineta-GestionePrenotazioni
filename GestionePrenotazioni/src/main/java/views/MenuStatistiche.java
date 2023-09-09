@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Objects;
 
 public class MenuStatistiche extends JPanel implements PrenotazioniObservers {
@@ -136,6 +137,8 @@ public class MenuStatistiche extends JPanel implements PrenotazioniObservers {
                 JFrame frameFocusTables = new JFrame("Statistiche");
                 frameFocusTables.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
+                //TODO: aggiungi ulteriori statistiche tramite button
+
                 // Toolbar
                 JToolBar toolBarFocusTables = new JToolBar();
                 toolBarFocusTables.setFloatable(false);
@@ -156,7 +159,6 @@ public class MenuStatistiche extends JPanel implements PrenotazioniObservers {
                 JTable copyTableMezzi = new JTable(tblMezzi.getModel());
                 JTable copyTableNazioni = new JTable(tblNazioni.getModel());
 
-                //TODO: cambia estetica
                 TablePresenzeController controllerCopiaPresenze = new TablePresenzeController(copyTablePresenze);
                 TableMezziController controllerCopiaMezzi = new TableMezziController(copyTableMezzi);
                 TableNazioniController controllerCopiaNazioni = new TableNazioniController(copyTableNazioni);
@@ -166,9 +168,9 @@ public class MenuStatistiche extends JPanel implements PrenotazioniObservers {
                 controllerCopiaNazioni.createTableRenderer();
 
                 // Aggiungi JScrollPane per ciascuna tabella
-                JScrollPane scrollPanePresenze = new JScrollPane(copyTablePresenze);
-                JScrollPane scrollPaneMezzi = new JScrollPane(copyTableMezzi);
-                JScrollPane scrollPaneNazioni = new JScrollPane(copyTableNazioni);
+                JScrollPane scrollPanePresenze = new JScrollPane(copyTablePresenze, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+                JScrollPane scrollPaneMezzi = new JScrollPane(copyTableMezzi, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+                JScrollPane scrollPaneNazioni = new JScrollPane(copyTableNazioni, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
                 pnlTableFocusTables.add(scrollPanePresenze, "Presenze");
                 pnlTableFocusTables.add(scrollPaneMezzi, "Mezzi");
@@ -194,6 +196,7 @@ public class MenuStatistiche extends JPanel implements PrenotazioniObservers {
                 frameFocusTables.pack();
                 frameFocusTables.setLocationRelativeTo(null);
                 frameFocusTables.setResizable(true);
+                frameFocusTables.setMinimumSize(new Dimension(1300, 800));
                 frameFocusTables.setExtendedState(JFrame.MAXIMIZED_BOTH);
                 frameFocusTables.setVisible(true);
             }
@@ -334,6 +337,7 @@ public class MenuStatistiche extends JPanel implements PrenotazioniObservers {
     public void refreshView() throws SQLException {
         ArrayList<String> currentItems = new ArrayList<>();
         YEARS = TimeManager.getPlotYears();
+        YEARS.sort(Collections.reverseOrder());
 
         // Ottieni gli elementi attualmente presenti nella combobox
         for (int i = 0; i < cbPlotYears.getItemCount(); i++) {
