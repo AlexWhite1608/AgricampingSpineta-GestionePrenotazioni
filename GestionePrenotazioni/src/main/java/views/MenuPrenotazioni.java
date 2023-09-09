@@ -225,7 +225,6 @@ public class MenuPrenotazioni extends JPanel implements StopTableEditObservers {
         // Panel totale prenotazioni
         JPanel pnlTotalePrenotazioni = new JPanel(new FlowLayout(FlowLayout.CENTER));
         String totalePrenotazioniSelected = DatasetPresenzeController.getTotalePrenotazioni(cbFiltroAnni.getSelectedItem().toString());
-        lblTotalePrenotazioni.setText("Totale prenotazioni " + cbFiltroAnni.getSelectedItem().toString() + ": " + totalePrenotazioniSelected);
         Font font = new Font(lblTotalePrenotazioni.getFont().getName(), Font.BOLD, 15);
         Border lineBorder = BorderFactory.createLineBorder(Color.BLACK, 1);
         Border emptyBorder = new EmptyBorder(5, 10, 5, 10);
@@ -233,6 +232,7 @@ public class MenuPrenotazioni extends JPanel implements StopTableEditObservers {
         lblTotalePrenotazioni.setBorder(compoundBorder);
         lblTotalePrenotazioni.setFont(font);
         lblTotalePrenotazioni.setForeground(Color.BLACK);
+        lblTotalePrenotazioni.setText("Totale prenotazioni " + cbFiltroAnni.getSelectedItem().toString() + ": " + totalePrenotazioniSelected);
         pnlTotalePrenotazioni.add(lblTotalePrenotazioni);
         toolBar.add(pnlTotalePrenotazioni, BorderLayout.CENTER);
 
@@ -369,6 +369,19 @@ public class MenuPrenotazioni extends JPanel implements StopTableEditObservers {
                 // Reimposta la label lblFiltro se è applicato il filtro e si rimuove scegliendo un valore della cb
                 lblFiltro.setText("FIltra per anno: ");
                 lblFiltro.setForeground(Color.black);
+
+                // Aggiorna il counter del totale delle prenotazioni
+                String totalePrenotazioniSelected = null;
+                try {
+                    totalePrenotazioniSelected = DatasetPresenzeController.getTotalePrenotazioni(cbFiltroAnni.getSelectedItem().toString());
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
+                String annoSelezionato = cbFiltroAnni.getSelectedItem().toString();
+                if(!Objects.equals(annoSelezionato, "Tutto"))
+                    lblTotalePrenotazioni.setText("Totale prenotazioni " + cbFiltroAnni.getSelectedItem().toString() + ": " + totalePrenotazioniSelected);
+                else
+                    lblTotalePrenotazioni.setText("Totale prenotazioni: " + totalePrenotazioniSelected);
 
                 tablePrenotazioniController.refreshTable(tabellaPrenotazioni);
             }
@@ -1418,6 +1431,15 @@ public class MenuPrenotazioni extends JPanel implements StopTableEditObservers {
         DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>(sortedYears.toArray(new String[0]));
         cbFiltroAnni.setModel(model);
         cbFiltroAnni.setSelectedItem(String.valueOf(LocalDate.now().getYear()));
+
+        // Aggiorna il counter del totale delle prenotazioni
+        String totalePrenotazioniSelected = DatasetPresenzeController.getTotalePrenotazioni(cbFiltroAnni.getSelectedItem().toString());
+        String annoSelezionato = cbFiltroAnni.getSelectedItem().toString();
+        if(!Objects.equals(annoSelezionato, "Tutto"))
+            lblTotalePrenotazioni.setText("Totale prenotazioni " + cbFiltroAnni.getSelectedItem().toString() + ": " + totalePrenotazioniSelected);
+        else
+            lblTotalePrenotazioni.setText("Totale prenotazioni: " + totalePrenotazioniSelected);
+
     }
 
     // Notifica i controllers observer della modifica della modifica della piazzola
