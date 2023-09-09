@@ -13,6 +13,8 @@ import org.jdesktop.swingx.autocomplete.ObjectToStringConverter;
 import utils.CustomCellEditorPrenotazioni;
 import utils.TimeManager;
 import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
@@ -223,7 +225,14 @@ public class MenuPrenotazioni extends JPanel implements StopTableEditObservers {
         // Panel totale prenotazioni
         JPanel pnlTotalePrenotazioni = new JPanel(new FlowLayout(FlowLayout.CENTER));
         String totalePrenotazioniSelected = DatasetPresenzeController.getTotalePrenotazioni(cbFiltroAnni.getSelectedItem().toString());
-        lblTotalePrenotazioni.setText("Totale prenotazioni anno " + cbFiltroAnni.getSelectedItem().toString() + ": " + totalePrenotazioniSelected);
+        lblTotalePrenotazioni.setText("Totale prenotazioni " + cbFiltroAnni.getSelectedItem().toString() + ": " + totalePrenotazioniSelected);
+        Font font = new Font(lblTotalePrenotazioni.getFont().getName(), Font.BOLD, 15);
+        Border lineBorder = BorderFactory.createLineBorder(Color.BLACK, 1);
+        Border emptyBorder = new EmptyBorder(5, 10, 5, 10);
+        Border compoundBorder = BorderFactory.createCompoundBorder(lineBorder, emptyBorder);
+        lblTotalePrenotazioni.setBorder(compoundBorder);
+        lblTotalePrenotazioni.setFont(font);
+        lblTotalePrenotazioni.setForeground(Color.BLACK);
         pnlTotalePrenotazioni.add(lblTotalePrenotazioni);
         toolBar.add(pnlTotalePrenotazioni, BorderLayout.CENTER);
 
