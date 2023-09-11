@@ -296,13 +296,14 @@ public class MenuStatistiche extends JPanel implements PrenotazioniObservers {
 
     // Setup statistiche avanzate
     private void setupAdvancedStats() {
-        JFrame frameAdvStats = new JFrame("Statistiche avanzate");
-        frameAdvStats.setLayout(new BorderLayout());
-        frameAdvStats.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        JDialog dialogAdvStats = new JDialog();
+        dialogAdvStats.setTitle("Statistiche avanzate");
+        dialogAdvStats.setLayout(new BorderLayout());
+        dialogAdvStats.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         /* --- Panel statistiche di sinistra --- */
         JPanel pnlSxStats = new JPanel();
-        frameAdvStats.add(pnlSxStats, BorderLayout.NORTH);
+        dialogAdvStats.add(pnlSxStats, BorderLayout.NORTH);
         pnlSxStats.setLayout(new FlowLayout());
 
         // Labels
@@ -348,7 +349,7 @@ public class MenuStatistiche extends JPanel implements PrenotazioniObservers {
 
         pnlTableStats.add(pnlTableStatsNazioni, BorderLayout.WEST);
         pnlTableStats.add(pnlTableStatsMezziNazioni, BorderLayout.EAST);
-        frameAdvStats.add(pnlTableStats, BorderLayout.SOUTH);
+        dialogAdvStats.add(pnlTableStats, BorderLayout.SOUTH);
         /* ... ...*/
 
         // Implementa switch dinamico
@@ -362,11 +363,12 @@ public class MenuStatistiche extends JPanel implements PrenotazioniObservers {
 //                    }
 //                });
 
-        frameAdvStats.pack();
-        frameAdvStats.setMinimumSize(new Dimension(1000, 600));
-        frameAdvStats.setLocationRelativeTo(null);
-        frameAdvStats.setResizable(false);
-        frameAdvStats.setVisible(true);
+        dialogAdvStats.pack();
+        dialogAdvStats.setMinimumSize(new Dimension(1000, 600));
+        dialogAdvStats.setLocationRelativeTo(null);
+        dialogAdvStats.setResizable(false);
+        dialogAdvStats.setModal(true);
+        dialogAdvStats.setVisible(true);
     }
 
     // Ricarica la cb degli anni
