@@ -108,7 +108,7 @@ public class MenuStatistiche extends JPanel implements PrenotazioniObservers {
         btnFocusTables.setFocusPainted(false);
         Icon icon = new ImageIcon((Objects.requireNonNull(getClass().getResource("/zoom-in-24x24.png"))));
         btnFocusTables.setIcon(icon);
-        btnFocusTables.setToolTipText("Ingrandisci le tabelle");
+        btnFocusTables.setToolTipText("Statistiche avanzate");
 
         JPanel pnlChooseYears = new JPanel(new FlowLayout());
         pnlChooseYears.add(lblPlotYears);
@@ -133,102 +133,30 @@ public class MenuStatistiche extends JPanel implements PrenotazioniObservers {
             }
         });
 
-        // Apre il frame di visualizzazione in full-screen delle tabelle
+        // Apre il frame di visualizzazione delle statistiche avanzate
         btnFocusTables.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 JFrame frameFocusTables = new JFrame("Statistiche");
                 frameFocusTables.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-                //TODO: aggiungi ulteriori statistiche tramite button
 
-                // Toolbar
-                JToolBar toolBarFocusTables = new JToolBar();
-                toolBarFocusTables.setFloatable(false);
-                toolBarFocusTables.setLayout(new FlowLayout(FlowLayout.LEFT));
-                frameFocusTables.add(toolBarFocusTables, BorderLayout.NORTH);
-
-                // CombBox con lista tabelle
-                JComboBox<String> cbListaTabelle = new JComboBox<>(new String[] {"Presenze", "Mezzi", "Nazioni"});
-                cbListaTabelle.setSelectedItem("Presenze");
-                cbListaTabelle.setFocusable(false);
-                ((JLabel) cbListaTabelle.getRenderer()).setHorizontalAlignment(SwingConstants.CENTER);
-
-                JPanel pnlTableFocusTables = new JPanel(new CardLayout()); // Utilizza CardLayout
-                frameFocusTables.add(pnlTableFocusTables, BorderLayout.CENTER);
-
-                // Crea copie delle tabelle
-                JTable copyTablePresenze = new JTable(tblPresenze.getModel());
-                JTable copyTableMezzi = new JTable(tblMezzi.getModel());
-                JTable copyTableNazioni = new JTable(tblNazioni.getModel());
-
-                // Imposta l'auto resize delle colonne solo se il numero di colonne è <= 6
-                if (copyTablePresenze.getColumnCount() <= 6) {
-                    copyTablePresenze.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
-                } else {
-                    copyTablePresenze.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-                }
-
-                if (copyTableMezzi.getColumnCount() <= 6) {
-                    copyTableMezzi.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
-                } else {
-                    copyTableMezzi.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-                }
-
-                if (copyTableNazioni.getColumnCount() <= 6) {
-                    copyTableNazioni.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
-                } else {
-                    copyTableNazioni.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-                }
-
-                // Specifica la larghezza desiderata per tutte le colonne
-                int larghezzaColonna = 200;
-
-                for (int i = 0; i < copyTableMezzi.getColumnCount(); i++) {
-                    copyTablePresenze.getColumnModel().getColumn(i).setPreferredWidth(larghezzaColonna);
-                    copyTableMezzi.getColumnModel().getColumn(i).setPreferredWidth(larghezzaColonna);
-                    copyTableNazioni.getColumnModel().getColumn(i).setPreferredWidth(larghezzaColonna);
-                }
-
-                TablePresenzeController controllerCopiaPresenze = new TablePresenzeController(copyTablePresenze);
-                TableMezziController controllerCopiaMezzi = new TableMezziController(copyTableMezzi);
-                TableNazioniController controllerCopiaNazioni = new TableNazioniController(copyTableNazioni);
-
-                controllerCopiaPresenze.createTableRenderer();
-                controllerCopiaMezzi.createTableRenderer();
-                controllerCopiaNazioni.createTableRenderer();
-
-                // Aggiungi JScrollPane per ciascuna tabella
-                JScrollPane scrollPanePresenze = new JScrollPane(copyTablePresenze, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-                JScrollPane scrollPaneMezzi = new JScrollPane(copyTableMezzi, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-                JScrollPane scrollPaneNazioni = new JScrollPane(copyTableNazioni, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-
-                pnlTableFocusTables.add(scrollPanePresenze, "Presenze");
-                pnlTableFocusTables.add(scrollPaneMezzi, "Mezzi");
-                pnlTableFocusTables.add(scrollPaneNazioni, "Nazioni");
-
-                // Nascondi le JScrollPane inizialmente tranne quella di Presenze
-                ((CardLayout) pnlTableFocusTables.getLayout()).show(pnlTableFocusTables, "Presenze");
-
-                toolBarFocusTables.add(new JLabel("Seleziona la tabella: "));
-                toolBarFocusTables.add(cbListaTabelle);
 
                 // Implementa switch dinamico
-                cbListaTabelle.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        String selectedTable = cbListaTabelle.getSelectedItem().toString();
-
-                        // Mostra la JScrollPane corrispondente alla tabella selezionata
-                        ((CardLayout) pnlTableFocusTables.getLayout()).show(pnlTableFocusTables, selectedTable);
-                    }
-                });
+//                cbListaTabelle.addActionListener(new ActionListener() {
+//                    @Override
+//                    public void actionPerformed(ActionEvent e) {
+//                        String selectedTable = cbListaTabelle.getSelectedItem().toString();
+//
+//                        // Mostra la JScrollPane corrispondente alla tabella selezionata
+//                        ((CardLayout) pnlTableFocusTables.getLayout()).show(pnlTableFocusTables, selectedTable);
+//                    }
+//                });
 
                 frameFocusTables.pack();
+                frameFocusTables.setMinimumSize(new Dimension(1000, 600));
                 frameFocusTables.setLocationRelativeTo(null);
                 frameFocusTables.setResizable(true);
-                frameFocusTables.setMinimumSize(new Dimension(1300, 800));
-                frameFocusTables.setExtendedState(JFrame.MAXIMIZED_BOTH);
                 frameFocusTables.setVisible(true);
             }
         });
