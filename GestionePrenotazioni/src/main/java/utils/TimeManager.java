@@ -18,8 +18,6 @@ public class TimeManager {
     // Ritorna gli anni dell'attività per il filtraggio delle prenotazioni
     public static ArrayList<String> getPrenotazioniYears() throws SQLException {
         yearsPrenotazioni.add("Tutto");     // Mostra tutti gli anni
-        yearsPrenotazioni.add(INITIAL_YEAR);
-        addCurrentYearIfNotPresent(yearsPrenotazioni);
 
         // In base agli anni delle prenotazioni aggiunge eventuali nuovi anni
         String yearsQuery = "SELECT Arrivo, Partenza FROM Prenotazioni";

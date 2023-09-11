@@ -1416,12 +1416,15 @@ public class MenuPrenotazioni extends JPanel implements StopTableEditObservers {
 
     // Notifica i controllers observer della modifica della prenotazione
     private void notifyPrenotazioneChanged() throws SQLException {
+        //FIXME: quando si elimina l'unica prenotazione di un certo anno la cb non si refresha rimuovendo l'anno che non cìè più!
+
         for (PrenotazioniObservers listener : prenotazioniObserversList) {
             listener.refreshView();
         }
 
         // Refresh della cbAnni
-        Set<String> uniqueYears = new HashSet<>(TimeManager.getPrenotazioniYears());
+        ArrayList<String> anni = TimeManager.getPrenotazioniYears();
+        Set<String> uniqueYears = new HashSet<>(anni);
 
         // Ordina gli anni unici in ordine decrescente
         ArrayList<String> sortedYears = new ArrayList<>(uniqueYears);
@@ -1429,6 +1432,26 @@ public class MenuPrenotazioni extends JPanel implements StopTableEditObservers {
 
         // Aggiungi gli anni ordinati alla JComboBox
         DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>(sortedYears.toArray(new String[0]));
+
+        Set<String> anniPresenti = new HashSet<>();
+        for (int i = 0; i < model.getSize(); i++) {
+            anniPresenti.add(model.getElementAt(i));
+        }
+
+        // Rimuovi gli anni non più presenti nella JComboBox
+        for (String anno : anniPresenti) {
+            if (!uniqueYears.contains(anno)) {
+                model.removeElement(anno);
+            }
+        }
+
+        // Aggiungi gli anni non ancora presenti
+        for (String anno : uniqueYears) {
+            if (!anniPresenti.contains(anno)) {
+                model.addElement(anno);
+            }
+        }
+
         cbFiltroAnni.setModel(model);
         cbFiltroAnni.setSelectedItem(String.valueOf(LocalDate.now().getYear()));
 
@@ -1439,7 +1462,6 @@ public class MenuPrenotazioni extends JPanel implements StopTableEditObservers {
             lblTotalePrenotazioni.setText("Totale prenotazioni " + cbFiltroAnni.getSelectedItem().toString() + ": " + totalePrenotazioniSelected);
         else
             lblTotalePrenotazioni.setText("Totale prenotazioni: " + totalePrenotazioniSelected);
-
     }
 
     // Notifica i controllers observer della modifica della modifica della piazzola
