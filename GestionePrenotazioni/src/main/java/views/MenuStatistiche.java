@@ -10,9 +10,9 @@ import table_stats_controllers.TableNazioniController;
 import table_stats_controllers.TablePresenzeController;
 import utils.TimeManager;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.Border;
+import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -39,7 +39,7 @@ public class MenuStatistiche extends JPanel implements PrenotazioniObservers {
     private JTable tblMezzi;
     private JTable tblNazioni;
     private JComboBox cbPlotYears;
-    private JButton btnFocusTables;
+    private JButton btnAdvStats;
 
     // Specifica la larghezza desiderata per tutte le colonne
     private static final int larghezzaColonna = 200;
@@ -104,18 +104,18 @@ public class MenuStatistiche extends JPanel implements PrenotazioniObservers {
         cbPlotYears.setSelectedItem(String.valueOf(LocalDate.now().getYear()));
 
         // Button per la visualizzazione del focus sulle tabelle
-        btnFocusTables = new JButton();
-        btnFocusTables.setFocusPainted(false);
+        btnAdvStats = new JButton();
+        btnAdvStats.setFocusPainted(false);
         Icon icon = new ImageIcon((Objects.requireNonNull(getClass().getResource("/zoom-in-24x24.png"))));
-        btnFocusTables.setIcon(icon);
-        btnFocusTables.setToolTipText("Statistiche avanzate");
+        btnAdvStats.setIcon(icon);
+        btnAdvStats.setToolTipText("Statistiche avanzate");
 
         JPanel pnlChooseYears = new JPanel(new FlowLayout());
         pnlChooseYears.add(lblPlotYears);
         pnlChooseYears.add(cbPlotYears);
 
         pnlButtonsToolbar.add(pnlChooseYears, BorderLayout.WEST);
-        pnlButtonsToolbar.add(btnFocusTables, BorderLayout.EAST);
+        pnlButtonsToolbar.add(btnAdvStats, BorderLayout.EAST);
 
         // Implementa aggiornamento del grafico quando si cambia l'anno della cb
         cbPlotYears.addActionListener(new ActionListener() {
@@ -134,30 +134,10 @@ public class MenuStatistiche extends JPanel implements PrenotazioniObservers {
         });
 
         // Apre il frame di visualizzazione delle statistiche avanzate
-        btnFocusTables.addActionListener(new ActionListener() {
+        btnAdvStats.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JFrame frameFocusTables = new JFrame("Statistiche");
-                frameFocusTables.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-
-
-
-                // Implementa switch dinamico
-//                cbListaTabelle.addActionListener(new ActionListener() {
-//                    @Override
-//                    public void actionPerformed(ActionEvent e) {
-//                        String selectedTable = cbListaTabelle.getSelectedItem().toString();
-//
-//                        // Mostra la JScrollPane corrispondente alla tabella selezionata
-//                        ((CardLayout) pnlTableFocusTables.getLayout()).show(pnlTableFocusTables, selectedTable);
-//                    }
-//                });
-
-                frameFocusTables.pack();
-                frameFocusTables.setMinimumSize(new Dimension(1000, 600));
-                frameFocusTables.setLocationRelativeTo(null);
-                frameFocusTables.setResizable(true);
-                frameFocusTables.setVisible(true);
+                setupAdvancedStats();
             }
         });
 
@@ -312,6 +292,81 @@ public class MenuStatistiche extends JPanel implements PrenotazioniObservers {
         // Aggiungo il panel del plot
         pnlNazioni.add(pnlPlotNazioni);
         mainPanelStatistiche.add(pnlNazioni);
+    }
+
+    // Setup statistiche avanzate
+    private void setupAdvancedStats() {
+        JFrame frameAdvStats = new JFrame("Statistiche avanzate");
+        frameAdvStats.setLayout(new BorderLayout());
+        frameAdvStats.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
+        /* --- Panel statistiche di sinistra --- */
+        JPanel pnlSxStats = new JPanel();
+        frameAdvStats.add(pnlSxStats, BorderLayout.NORTH);
+        pnlSxStats.setLayout(new FlowLayout());
+
+        // Labels
+        JLabel lblMesePiuPresenze = new JLabel("Mese con più presenze:");
+        JLabel lblMezzoPiuUsato = new JLabel("Mezzo più usato:");
+        JLabel durataMediaSoggiorno = new JLabel("Durata media del soggiorno:");
+
+        // Aggiungi un margine di 10 pixel a tutte le label
+        lblMesePiuPresenze.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        lblMezzoPiuUsato.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
+        durataMediaSoggiorno.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+        Font font = new Font(lblMesePiuPresenze.getFont().getName(), Font.BOLD, 15);
+        Border lineBorder = BorderFactory.createLineBorder(Color.BLACK, 1);
+        Border emptyBorder = new EmptyBorder(5, 10, 5, 10);
+        Border compoundBorder = BorderFactory.createCompoundBorder(lineBorder, emptyBorder);
+        lblMesePiuPresenze.setBorder(compoundBorder);
+        lblMesePiuPresenze.setFont(font);
+        lblMesePiuPresenze.setForeground(Color.BLACK);
+
+        lblMezzoPiuUsato.setBorder(compoundBorder);
+        lblMezzoPiuUsato.setFont(font);
+        lblMezzoPiuUsato.setForeground(Color.BLACK);
+
+        durataMediaSoggiorno.setBorder(compoundBorder);
+        durataMediaSoggiorno.setFont(font);
+        durataMediaSoggiorno.setForeground(Color.BLACK);
+
+        pnlSxStats.add(lblMesePiuPresenze);
+        pnlSxStats.add(lblMezzoPiuUsato);
+        pnlSxStats.add(durataMediaSoggiorno);
+        /* ... ...*/
+
+        /* --- Panel statistiche su tabella -- */
+        JPanel pnlTableStats = new JPanel();
+        pnlTableStats.setLayout(new BorderLayout());
+
+        // Panel nazioni
+        JPanel pnlTableStatsNazioni = new JPanel();
+
+        // Panel mezzi per nazioni
+        JPanel pnlTableStatsMezziNazioni = new JPanel();
+
+        pnlTableStats.add(pnlTableStatsNazioni, BorderLayout.WEST);
+        pnlTableStats.add(pnlTableStatsMezziNazioni, BorderLayout.EAST);
+        frameAdvStats.add(pnlTableStats, BorderLayout.SOUTH);
+        /* ... ...*/
+
+        // Implementa switch dinamico
+//                cbListaTabelle.addActionListener(new ActionListener() {
+//                    @Override
+//                    public void actionPerformed(ActionEvent e) {
+//                        String selectedTable = cbListaTabelle.getSelectedItem().toString();
+//
+//                        // Mostra la JScrollPane corrispondente alla tabella selezionata
+//                        ((CardLayout) pnlTableFocusTables.getLayout()).show(pnlTableFocusTables, selectedTable);
+//                    }
+//                });
+
+        frameAdvStats.pack();
+        frameAdvStats.setMinimumSize(new Dimension(1000, 600));
+        frameAdvStats.setLocationRelativeTo(null);
+        frameAdvStats.setResizable(false);
+        frameAdvStats.setVisible(true);
     }
 
     // Ricarica la cb degli anni
