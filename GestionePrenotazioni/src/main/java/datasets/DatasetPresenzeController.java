@@ -44,7 +44,7 @@ public class DatasetPresenzeController {
     }
 
     // Ricava le presenze per ogni mese dal database
-    private static Map<String, Map<String, Integer>> getPresenzeForMese() throws SQLException {
+    public static Map<String, Map<String, Integer>> getPresenzeForMese() throws SQLException {
         Map<String, Map<String, Integer>> presenzeMap = new HashMap<>();
 
         String query = "SELECT " +

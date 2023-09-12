@@ -5,6 +5,7 @@ import observer.PrenotazioniObservers;
 import plot_stats_controllers.MezziPlotController;
 import plot_stats_controllers.NazioniPlotController;
 import plot_stats_controllers.PresenzePlotController;
+import table_stats_controllers.TableAdvancedStatsController;
 import table_stats_controllers.TableMezziController;
 import table_stats_controllers.TableNazioniController;
 import table_stats_controllers.TablePresenzeController;
@@ -137,7 +138,11 @@ public class MenuStatistiche extends JPanel implements PrenotazioniObservers {
         btnAdvStats.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                setupAdvancedStats();
+                try {
+                    setupAdvancedStats();
+                } catch (SQLException ex) {
+                    System.err.println("Impossibile calcolare statistiche avanzate " + ex.getMessage());;
+                }
             }
         });
 
@@ -295,7 +300,7 @@ public class MenuStatistiche extends JPanel implements PrenotazioniObservers {
     }
 
     // Setup statistiche avanzate
-    private void setupAdvancedStats() {
+    private void setupAdvancedStats() throws SQLException {
         JDialog dialogAdvStats = new JDialog();
         dialogAdvStats.setTitle("Statistiche avanzate");
         dialogAdvStats.setLayout(new BorderLayout());
@@ -307,9 +312,9 @@ public class MenuStatistiche extends JPanel implements PrenotazioniObservers {
         pnlSxStats.setLayout(new FlowLayout());
 
         // Labels
-        JLabel lblMesePiuPresenze = new JLabel("Mese con più presenze:");
-        JLabel lblMezzoPiuUsato = new JLabel("Mezzo più usato:");
-        JLabel durataMediaSoggiorno = new JLabel("Durata media del soggiorno:");
+        JLabel lblMesePiuPresenze = new JLabel("Mese con più presenze: " + TableAdvancedStatsController.getMesePiuPresenze());
+        JLabel lblMezzoPiuUsato = new JLabel("Mezzo più usato: ");
+        JLabel durataMediaSoggiorno = new JLabel("Durata media del soggiorno: ");
 
         // Aggiungi un margine di 10 pixel a tutte le label
         lblMesePiuPresenze.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
@@ -331,6 +336,8 @@ public class MenuStatistiche extends JPanel implements PrenotazioniObservers {
         durataMediaSoggiorno.setBorder(compoundBorder);
         durataMediaSoggiorno.setFont(font);
         durataMediaSoggiorno.setForeground(Color.BLACK);
+
+
 
         pnlSxStats.add(lblMesePiuPresenze);
         pnlSxStats.add(lblMezzoPiuUsato);
