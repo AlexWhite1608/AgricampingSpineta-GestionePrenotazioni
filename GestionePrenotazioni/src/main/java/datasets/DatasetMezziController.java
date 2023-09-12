@@ -40,7 +40,7 @@ public class DatasetMezziController {
     }
 
     // Ricava il numero di mezzi per ciascun anno
-    private static Map<String, Map<String, Integer>> getCountMezzi() throws SQLException {
+    public static Map<String, Map<String, Integer>> getCountMezzi() throws SQLException {
         Map<String, Map<String, Integer>> mezziMap = new HashMap<>();
 
         String query = "SELECT substr(Arrivo, 4, 7) AS Mese, Mezzo, COUNT(*) AS NumeroMezzi " +
