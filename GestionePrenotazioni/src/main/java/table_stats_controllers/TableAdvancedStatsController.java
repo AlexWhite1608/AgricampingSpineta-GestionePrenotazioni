@@ -3,7 +3,9 @@ package table_stats_controllers;
 import datasets.DatasetMezziController;
 import datasets.DatasetPresenzeController;
 
+import java.sql.Array;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.Objects;
 
@@ -55,5 +57,18 @@ public class TableAdvancedStatsController {
         }
 
         return result;
+    }
+
+    // Ritorna la durata media del soggiorno
+    public static String getDurataMediaSoggiorno() throws SQLException {
+        double result = 0;
+
+        ArrayList<Integer> list = DatasetPresenzeController.getDurataPrenotazioni();
+
+        for (Integer element: list) {
+            result += element;
+        }
+
+        return String.valueOf(result / list.size());
     }
 }

@@ -99,6 +99,28 @@ public class DatasetPresenzeController {
         return presenzeMap;
     }
 
+    // Ricava la durata di ciascuna prenotazione
+    public static ArrayList<Integer> getDurataPrenotazioni() throws SQLException {
+        ArrayList<Integer> result = new ArrayList<>();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+        String query = "SELECT Arrivo, Partenza " +
+                       "FROM Prenotazioni;";
+
+        ResultSet rs = new Gateway().execSelectQuery(query);
+
+        while (rs.next()) {
+            LocalDate arrivo = LocalDate.parse(rs.getString("Arrivo"), formatter);
+            LocalDate partenza = LocalDate.parse(rs.getString("Partenza"), formatter);
+            int numNotti = (int) ChronoUnit.DAYS.between(arrivo, partenza);
+            result.add(numNotti);
+        }
+
+        rs.close();
+
+        return result;
+    }
+
     // Serve per ordinare cronologicamente i mesi
     public static Map<String, Integer> invertMonthMapOrder(Map<String, Integer> monthMap) {
         LinkedHashMap<String, Integer> invertedMonthMap = new LinkedHashMap<>();
