@@ -393,6 +393,9 @@ public class MenuStatistiche extends JPanel implements PrenotazioniObservers {
         tableStatsNazioni.setGridColor(Color.BLACK);
         tableStatsNazioni.getTableHeader().setReorderingAllowed(false);
 
+        // Imposta il tableModel
+        TableAdvancedStatsController.setTableModelNazioni(tableStatsNazioni, "", "");
+
         // Aggiungi un margine esterno al pannello delle tabelle
         pnlTableStatsNazioni.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         pnlTableStatsNazioni.add(new JScrollPane(tableStatsNazioni, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED), BorderLayout.CENTER);

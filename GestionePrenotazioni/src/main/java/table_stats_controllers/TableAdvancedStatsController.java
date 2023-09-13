@@ -3,11 +3,14 @@ package table_stats_controllers;
 import datasets.DatasetMezziController;
 import datasets.DatasetPresenzeController;
 
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.sql.Array;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Vector;
 
 public class TableAdvancedStatsController {
 
@@ -77,7 +80,24 @@ public class TableAdvancedStatsController {
     }
 
     // Crea il table model per la tabella delle nazioni
-    public static void setTableModel() {
+    public static void setTableModelNazioni(JTable table, String anno, String mese) throws SQLException {
+
+        // Imposta le colonne
+        Vector<String> columnNames = new Vector<>();
+        columnNames.add("Nazione");
+        columnNames.add("Presenze");
+
+        // Imposta i dati del modello
+        Map<String, Map<String, Map<String, Integer>>> dataset = DatasetPresenzeController.getPresenzeForMeseAndNazione();
+
+//        DefaultTableModel model = new DefaultTableModel(data, columnNames){
+//            @Override
+//            public boolean isCellEditable(int row, int column) {
+//                return false;
+//            }
+//        };
+//
+//        table.setModel(model);
 
     }
 

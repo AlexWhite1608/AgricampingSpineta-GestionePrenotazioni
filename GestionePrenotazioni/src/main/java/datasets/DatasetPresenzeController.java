@@ -99,6 +99,72 @@ public class DatasetPresenzeController {
         return presenzeMap;
     }
 
+    // Ricava le presenze per ogni mese e per ogni nazione
+    public static Map<String, Map<String, Map<String, Integer>>> getPresenzeForMeseAndNazione() throws SQLException {
+
+        Map<String, Map<String, Map<String, Integer>>> presenzeMap = new HashMap<>();
+
+        String query = "SELECT " +
+                "substr(Arrivo, 4, 7) AS mese, " +
+                "Nazione, Persone, Arrivo, Partenza " +
+                "FROM Prenotazioni " +
+                "ORDER BY mese";
+
+        ResultSet rs = new Gateway().execSelectQuery(query);
+
+        while (rs.next()) {
+            int persone = rs.getInt("Persone");
+            String anno = rs.getString("mese").substring(3, 7);
+            String nazione = rs.getString("Nazione");
+
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            LocalDate arrivo = LocalDate.parse(rs.getString("Arrivo"), formatter);
+            LocalDate partenza = LocalDate.parse(rs.getString("Partenza"), formatter);
+
+            while (!arrivo.isAfter(partenza)) {
+                String meseCorrente = arrivo.format(DateTimeFormatter.ofPattern("MM/yyyy"));
+                int giorniNelMese = arrivo.lengthOfMonth();
+                int giorniMeseCorrente;
+
+                if (arrivo.getMonth() == partenza.getMonth()) {
+                    giorniMeseCorrente = Math.min(partenza.getDayOfMonth() - arrivo.getDayOfMonth(),
+                            (int) ChronoUnit.DAYS.between(arrivo, partenza));
+                } else {
+                    giorniMeseCorrente = Math.min(giorniNelMese - arrivo.getDayOfMonth() + 1,
+                            (int) ChronoUnit.DAYS.between(arrivo, partenza) + 1);
+                }
+
+                // Calcola le presenze per il mese corrente
+                int presenzeMeseCorrente = giorniMeseCorrente * persone;
+
+                // Utilizza la nazione come chiave aggiuntiva
+                presenzeMap
+                        .computeIfAbsent(anno, k -> new HashMap<>())
+                        .computeIfAbsent(nazione, k -> new HashMap<>())
+                        .merge(meseCorrente, presenzeMeseCorrente, Integer::sum);
+
+                arrivo = arrivo.plusMonths(1).withDayOfMonth(1);
+            }
+        }
+
+        rs.close();
+
+        for (Map.Entry<String, Map<String, Map<String, Integer>>> yearEntry : presenzeMap.entrySet()) {
+            String anno = yearEntry.getKey();
+            Map<String, Map<String, Integer>> nazioniMap = yearEntry.getValue();
+
+            for (Map.Entry<String, Map<String, Integer>> nazioneEntry : nazioniMap.entrySet()) {
+                String nazione = nazioneEntry.getKey();
+                Map<String, Integer> monthMap = nazioneEntry.getValue();
+                nazioniMap.put(nazione, invertMonthMapOrder(monthMap));
+            }
+
+            presenzeMap.put(anno, nazioniMap);
+        }
+
+        return presenzeMap;
+    }
+
     // Ricava la durata di ciascuna prenotazione
     public static ArrayList<Integer> getDurataPrenotazioni() throws SQLException {
         ArrayList<Integer> result = new ArrayList<>();
