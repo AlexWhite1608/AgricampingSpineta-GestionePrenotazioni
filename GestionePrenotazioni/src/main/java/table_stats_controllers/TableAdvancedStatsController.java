@@ -76,4 +76,9 @@ public class TableAdvancedStatsController {
         return String.valueOf(media);
     }
 
+    // Crea il table model per la tabella delle nazioni
+    public static void setTableModel() {
+
+    }
+
 }

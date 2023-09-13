@@ -2,6 +2,8 @@ package views;
 
 import observer.PlotControllerObservers;
 import observer.PrenotazioniObservers;
+import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
+import org.jdesktop.swingx.autocomplete.ObjectToStringConverter;
 import plot_stats_controllers.MezziPlotController;
 import plot_stats_controllers.NazioniPlotController;
 import plot_stats_controllers.PresenzePlotController;
@@ -9,6 +11,7 @@ import table_stats_controllers.TableAdvancedStatsController;
 import table_stats_controllers.TableMezziController;
 import table_stats_controllers.TableNazioniController;
 import table_stats_controllers.TablePresenzeController;
+import utils.ListOfNations;
 import utils.TimeManager;
 
 import javax.swing.*;
@@ -23,6 +26,7 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.Objects;
 
 public class MenuStatistiche extends JPanel implements PrenotazioniObservers {
@@ -346,6 +350,43 @@ public class MenuStatistiche extends JPanel implements PrenotazioniObservers {
         JPanel pnlTableStats = new JPanel();
         pnlTableStats.setLayout(new BorderLayout());
 
+        // Creazione della toolbar
+        JToolBar toolbarAdvStats = new JToolBar();
+        toolbarAdvStats.setLayout(new BorderLayout());
+        toolbarAdvStats.setFloatable(false);
+        pnlTableStats.add(toolbarAdvStats, BorderLayout.NORTH);
+
+        // ComboBox scelta anno (senza "Tutto")
+        ArrayList<String> listaAnni = TimeManager.getPrenotazioniYears();
+        listaAnni.removeIf(el -> Objects.equals(el, "Tutto"));
+        JComboBox<String> cbSceltaAnno = new JComboBox(listaAnni.toArray());
+        cbSceltaAnno.setFocusable(false);
+        ((JLabel) cbSceltaAnno.getRenderer()).setHorizontalAlignment(SwingConstants.CENTER);
+
+        // ComboBox scelta mese
+        JComboBox<String> cbSceltaMese = new JComboBox(TimeManager.getYearMonths().toArray());
+        cbSceltaMese.setFocusable(false);
+        ((JLabel) cbSceltaMese.getRenderer()).setHorizontalAlignment(SwingConstants.CENTER);
+
+        // TextField scelta nazione
+        ArrayList<String> listaNazioni = ListOfNations.getListaNazioni();
+        JTextField tfSceltaNazione = new JTextField();
+        tfSceltaNazione.setPreferredSize(cbSceltaMese.getPreferredSize());
+        AutoCompleteDecorator.decorate(tfSceltaNazione, listaNazioni, false, ObjectToStringConverter.DEFAULT_IMPLEMENTATION);
+
+        // Panel scelta anno/mese
+        JPanel pnlSceltaAnnoMese = new JPanel(new FlowLayout());
+        pnlSceltaAnnoMese.add(cbSceltaAnno);
+        pnlSceltaAnnoMese.add(cbSceltaMese);
+
+        // Panel scelta nazione
+        JPanel pnlSceltaNazione = new JPanel(new FlowLayout());
+        pnlSceltaNazione.add(new JLabel("Scegli la nazione: "));
+        pnlSceltaNazione.add(tfSceltaNazione);
+
+        toolbarAdvStats.add(pnlSceltaAnnoMese, BorderLayout.WEST);
+        toolbarAdvStats.add(pnlSceltaNazione, BorderLayout.EAST);
+
         // Panel nazioni
         JPanel pnlTableStatsNazioni = new JPanel(new BorderLayout());
         JTable tableStatsNazioni = new JTable();
@@ -353,7 +394,7 @@ public class MenuStatistiche extends JPanel implements PrenotazioniObservers {
         tableStatsNazioni.getTableHeader().setReorderingAllowed(false);
 
         // Aggiungi un margine esterno al pannello delle tabelle
-        pnlTableStatsNazioni.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Imposta i margini esterni
+        pnlTableStatsNazioni.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         pnlTableStatsNazioni.add(new JScrollPane(tableStatsNazioni, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED), BorderLayout.CENTER);
 
         // Panel mezzi per nazioni
@@ -363,7 +404,7 @@ public class MenuStatistiche extends JPanel implements PrenotazioniObservers {
         tableStatsMezziNazioni.getTableHeader().setReorderingAllowed(false);
 
         // Aggiungi un margine esterno al pannello delle tabelle
-        pnlTableStatsMezziNazioni.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Imposta i margini esterni
+        pnlTableStatsMezziNazioni.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         pnlTableStatsMezziNazioni.add(new JScrollPane(tableStatsMezziNazioni, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED), BorderLayout.CENTER);
 
         // Crea un pannello che contiene entrambe le tabelle affiancate
@@ -374,6 +415,7 @@ public class MenuStatistiche extends JPanel implements PrenotazioniObservers {
         pnlTableStats.add(pnlAffiancate, BorderLayout.CENTER);
         dialogAdvStats.add(pnlTableStats, BorderLayout.CENTER);
         /* ... ... */
+
 
         // Implementa switch dinamico
 //                cbListaTabelle.addActionListener(new ActionListener() {
