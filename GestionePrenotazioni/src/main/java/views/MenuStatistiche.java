@@ -337,27 +337,43 @@ public class MenuStatistiche extends JPanel implements PrenotazioniObservers {
         durataMediaSoggiorno.setFont(font);
         durataMediaSoggiorno.setForeground(Color.BLACK);
 
-
-
         pnlSxStats.add(lblMesePiuPresenze);
         pnlSxStats.add(lblMezzoPiuUsato);
         pnlSxStats.add(durataMediaSoggiorno);
         /* ... ...*/
 
-        /* --- Panel statistiche su tabella -- */
+        /* --- Panel statistiche su tabella --- */
         JPanel pnlTableStats = new JPanel();
         pnlTableStats.setLayout(new BorderLayout());
 
         // Panel nazioni
-        JPanel pnlTableStatsNazioni = new JPanel();
+        JPanel pnlTableStatsNazioni = new JPanel(new BorderLayout());
+        JTable tableStatsNazioni = new JTable();
+        tableStatsNazioni.setGridColor(Color.BLACK);
+        tableStatsNazioni.getTableHeader().setReorderingAllowed(false);
+
+        // Aggiungi un margine esterno al pannello delle tabelle
+        pnlTableStatsNazioni.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Imposta i margini esterni
+        pnlTableStatsNazioni.add(new JScrollPane(tableStatsNazioni, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED), BorderLayout.CENTER);
 
         // Panel mezzi per nazioni
-        JPanel pnlTableStatsMezziNazioni = new JPanel();
+        JPanel pnlTableStatsMezziNazioni = new JPanel(new BorderLayout());
+        JTable tableStatsMezziNazioni = new JTable();
+        tableStatsMezziNazioni.setGridColor(Color.BLACK);
+        tableStatsMezziNazioni.getTableHeader().setReorderingAllowed(false);
 
-        pnlTableStats.add(pnlTableStatsNazioni, BorderLayout.WEST);
-        pnlTableStats.add(pnlTableStatsMezziNazioni, BorderLayout.EAST);
-        dialogAdvStats.add(pnlTableStats, BorderLayout.SOUTH);
-        /* ... ...*/
+        // Aggiungi un margine esterno al pannello delle tabelle
+        pnlTableStatsMezziNazioni.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Imposta i margini esterni
+        pnlTableStatsMezziNazioni.add(new JScrollPane(tableStatsMezziNazioni, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED), BorderLayout.CENTER);
+
+        // Crea un pannello che contiene entrambe le tabelle affiancate
+        JPanel pnlAffiancate = new JPanel(new GridLayout(1, 2));
+        pnlAffiancate.add(pnlTableStatsNazioni);
+        pnlAffiancate.add(pnlTableStatsMezziNazioni);
+
+        pnlTableStats.add(pnlAffiancate, BorderLayout.CENTER);
+        dialogAdvStats.add(pnlTableStats, BorderLayout.CENTER);
+        /* ... ... */
 
         // Implementa switch dinamico
 //                cbListaTabelle.addActionListener(new ActionListener() {
