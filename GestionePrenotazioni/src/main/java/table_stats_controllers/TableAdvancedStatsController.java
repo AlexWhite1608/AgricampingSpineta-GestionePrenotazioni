@@ -7,10 +7,7 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.sql.Array;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Vector;
+import java.util.*;
 
 public class TableAdvancedStatsController {
 
@@ -80,25 +77,54 @@ public class TableAdvancedStatsController {
     }
 
     // Crea il table model per la tabella delle nazioni
-    public static void setTableModelNazioni(JTable table, String anno, String mese) throws SQLException {
+    public static void setTableModelNazioni(JTable table, String annoScelto, String meseScelto) throws SQLException {
 
-        // Imposta le colonne
-        Vector<String> columnNames = new Vector<>();
-        columnNames.add("Nazione");
-        columnNames.add("Presenze");
-
-        // Imposta i dati del modello
+        // Ottieni il dataset delle presenze per anno e mese
         Map<String, Map<String, Map<String, Integer>>> dataset = DatasetPresenzeController.getPresenzeForMeseAndNazione();
 
-//        DefaultTableModel model = new DefaultTableModel(data, columnNames){
-//            @Override
-//            public boolean isCellEditable(int row, int column) {
-//                return false;
-//            }
-//        };
-//
-//        table.setModel(model);
+        // Imposta le colonne del table model
+        Vector<String> columnNames = new Vector<>();
+        columnNames.add("Nazione");
+        columnNames.add("Presenze " + meseScelto + "/" + annoScelto);
 
+        // Crea i dati del modello
+        Vector<Vector<Object>> data = new Vector<>();
+
+        // Itera attraverso le nazioni nel dataset
+        for (Map.Entry<String, Map<String, Map<String, Integer>>> nazioneEntry : dataset.entrySet()) {
+            String anno = nazioneEntry.getKey();
+
+            if(Objects.equals(anno, annoScelto)) {
+                Map<String, Map<String, Integer>> datiNazione = nazioneEntry.getValue();
+
+                // Ottieni il numero di presenze per la nazione specificata
+                Vector<Object> rowData = new Vector<>();
+                for(Map.Entry<String, Map<String, Integer>> entry : datiNazione.entrySet()){
+                    String nazione = entry.getKey();
+                    for(Map.Entry<String, Integer> datiPresenze : entry.getValue().entrySet()){
+                        int presenze = datiPresenze.getValue();
+
+                        // Aggiungi la riga al modello
+                        rowData.add(nazione);
+                        rowData.add(presenze);
+                    }
+                }
+
+                data.add(rowData);
+            }
+        }
+
+        // Crea il modello della tabella
+        DefaultTableModel model = new DefaultTableModel(data, columnNames) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+
+        // Imposta il modello sulla tabella
+        table.setModel(model);
     }
+
 
 }

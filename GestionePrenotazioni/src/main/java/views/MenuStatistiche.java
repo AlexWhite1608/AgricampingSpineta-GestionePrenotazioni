@@ -376,8 +376,8 @@ public class MenuStatistiche extends JPanel implements PrenotazioniObservers {
 
         // Panel scelta anno/mese
         JPanel pnlSceltaAnnoMese = new JPanel(new FlowLayout());
-        pnlSceltaAnnoMese.add(cbSceltaAnno);
         pnlSceltaAnnoMese.add(cbSceltaMese);
+        pnlSceltaAnnoMese.add(cbSceltaAnno);
 
         // Panel scelta nazione
         JPanel pnlSceltaNazione = new JPanel(new FlowLayout());
@@ -394,7 +394,9 @@ public class MenuStatistiche extends JPanel implements PrenotazioniObservers {
         tableStatsNazioni.getTableHeader().setReorderingAllowed(false);
 
         // Imposta il tableModel
-        TableAdvancedStatsController.setTableModelNazioni(tableStatsNazioni, "", "");
+        String annoScelto = cbSceltaAnno.getSelectedItem().toString();
+        String meseScelto = cbSceltaMese.getSelectedItem().toString();
+        TableAdvancedStatsController.setTableModelNazioni(tableStatsNazioni, annoScelto, meseScelto);
 
         // Aggiungi un margine esterno al pannello delle tabelle
         pnlTableStatsNazioni.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
