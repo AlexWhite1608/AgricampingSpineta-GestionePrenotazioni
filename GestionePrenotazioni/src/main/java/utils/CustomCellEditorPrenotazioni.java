@@ -137,7 +137,8 @@ public class CustomCellEditorPrenotazioni extends AbstractCellEditor implements 
 
             cbMezzi.removeAllItems();
             // Aggiunge tutti i valori delle piazzole
-            for(String mezzo : MenuPrenotazioni.getListaMezzi())
+            ArrayList<String> listaMezzi = TableConstants.listaMezzi;
+            for(String mezzo : listaMezzi)
                 cbMezzi.addItem(mezzo);
 
             // Seleziona il valore della cella o imposta un valore di default

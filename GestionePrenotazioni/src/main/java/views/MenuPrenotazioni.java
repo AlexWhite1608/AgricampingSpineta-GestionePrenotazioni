@@ -1482,8 +1482,4 @@ public class MenuPrenotazioni extends JPanel implements StopTableEditObservers {
     public static ArrayList<PrenotazioniObservers> getPrenotazioniObserversList() {
         return prenotazioniObserversList;
     }
-
-    public static ArrayList<String> getListaMezzi() {
-        return TableConstants.listaMezzi;
-    }
 }
