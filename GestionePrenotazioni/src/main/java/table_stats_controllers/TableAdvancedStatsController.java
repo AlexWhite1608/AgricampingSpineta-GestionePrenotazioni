@@ -50,7 +50,7 @@ public class TableAdvancedStatsController {
 
                 if (numMezzi > numMezziMassimo && !Objects.equals(mezzo, "")) {
                     numMezziMassimo = numMezzi;
-                    result = mezzo + " (" + numMezzi + ")";
+                    result = mezzo;
                 }
             }
 
@@ -65,10 +65,15 @@ public class TableAdvancedStatsController {
 
         ArrayList<Integer> list = DatasetPresenzeController.getDurataPrenotazioni();
 
-        for (Integer element: list) {
+        for (Integer element : list) {
             result += element;
         }
 
-        return String.valueOf(result / list.size());
+        double media = result / list.size();
+        // Arrotonda la media a due cifre decimali
+        media = Math.round(media * 100.0) / 100.0;
+
+        return String.valueOf(media);
     }
+
 }

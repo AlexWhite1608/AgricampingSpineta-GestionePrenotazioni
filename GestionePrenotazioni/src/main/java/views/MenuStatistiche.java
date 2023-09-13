@@ -314,7 +314,7 @@ public class MenuStatistiche extends JPanel implements PrenotazioniObservers {
         // Labels
         JLabel lblMesePiuPresenze = new JLabel("Mese con più presenze: " + TableAdvancedStatsController.getMesePiuPresenze());
         JLabel lblMezzoPiuUsato = new JLabel("Mezzo più usato: " + TableAdvancedStatsController.getMezzoPiuUsato());
-        JLabel durataMediaSoggiorno = new JLabel("Durata media del soggiorno: " + String.format(TableAdvancedStatsController.getDurataMediaSoggiorno(), "%.2f"));
+        JLabel durataMediaSoggiorno = new JLabel("Durata media del soggiorno: " + TableAdvancedStatsController.getDurataMediaSoggiorno());
 
         // Aggiungi un margine di 10 pixel a tutte le label
         lblMesePiuPresenze.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
