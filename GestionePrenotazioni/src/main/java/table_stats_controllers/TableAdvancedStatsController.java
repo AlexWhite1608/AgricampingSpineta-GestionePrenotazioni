@@ -2,6 +2,7 @@ package table_stats_controllers;
 
 import datasets.DatasetMezziController;
 import datasets.DatasetPresenzeController;
+import utils.TimeManager;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -98,19 +99,24 @@ public class TableAdvancedStatsController {
                 Map<String, Map<String, Integer>> datiNazione = nazioneEntry.getValue();
 
                 // Ottieni il numero di presenze per la nazione specificata
-                Vector<Object> rowData = new Vector<>();
                 for(Map.Entry<String, Map<String, Integer>> entry : datiNazione.entrySet()){
                     String nazione = entry.getKey();
+
                     for(Map.Entry<String, Integer> datiPresenze : entry.getValue().entrySet()){
+                        Vector<Object> rowData = new Vector<>();
                         int presenze = datiPresenze.getValue();
 
-                        // Aggiungi la riga al modello
-                        rowData.add(nazione);
-                        rowData.add(presenze);
+                        if(Objects.equals(datiPresenze.getKey().substring(0, 2), TimeManager.convertiMeseInNumero(meseScelto))) {
+
+                            // Aggiungi la riga al modello
+                            rowData.add(nazione);
+                            rowData.add(presenze);
+
+                            data.add(rowData);
+                        }
+
                     }
                 }
-
-                data.add(rowData);
             }
         }
 
