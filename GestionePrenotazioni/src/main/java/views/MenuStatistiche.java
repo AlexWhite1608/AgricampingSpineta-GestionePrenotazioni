@@ -398,6 +398,38 @@ public class MenuStatistiche extends JPanel implements PrenotazioniObservers {
         String meseScelto = cbSceltaMese.getSelectedItem().toString();
         TableAdvancedStatsController.setTableModelNazioni(tableStatsNazioni, annoScelto, meseScelto);
 
+        // Aggiorna tabella quando si cambia il mese
+        cbSceltaMese.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Imposta il tableModel
+                String annoScelto = cbSceltaAnno.getSelectedItem().toString();
+                String meseScelto = cbSceltaMese.getSelectedItem().toString();
+
+                try {
+                    TableAdvancedStatsController.setTableModelNazioni(tableStatsNazioni, annoScelto, meseScelto);
+                } catch (SQLException ex) {
+                    System.err.println("Impossibile aggiornare tabella " + ex.getMessage());;
+                }
+            }
+        });
+
+        // Aggiorna tabella quando si cambia l'anno
+        cbSceltaAnno.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Imposta il tableModel
+                String annoScelto = cbSceltaAnno.getSelectedItem().toString();
+                String meseScelto = cbSceltaMese.getSelectedItem().toString();
+
+                try {
+                    TableAdvancedStatsController.setTableModelNazioni(tableStatsNazioni, annoScelto, meseScelto);
+                } catch (SQLException ex) {
+                    System.err.println("Impossibile aggiornare tabella " + ex.getMessage());;
+                }
+            }
+        });
+
         // Aggiungi un margine esterno al pannello delle tabelle
         pnlTableStatsNazioni.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         pnlTableStatsNazioni.add(new JScrollPane(tableStatsNazioni, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED), BorderLayout.CENTER);
