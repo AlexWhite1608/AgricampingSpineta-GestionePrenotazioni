@@ -26,11 +26,9 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.text.DateFormatSymbols;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.Objects;
+import java.util.*;
 
 public class MenuStatistiche extends JPanel implements PrenotazioniObservers {
 
@@ -366,11 +364,21 @@ public class MenuStatistiche extends JPanel implements PrenotazioniObservers {
         JComboBox<String> cbSceltaAnno = new JComboBox(listaAnni.toArray());
         cbSceltaAnno.setFocusable(false);
         ((JLabel) cbSceltaAnno.getRenderer()).setHorizontalAlignment(SwingConstants.CENTER);
+        cbSceltaAnno.setSelectedItem(String.valueOf(LocalDate.now().getYear()));
 
         // ComboBox scelta mese
         JComboBox<String> cbSceltaMese = new JComboBox(TimeManager.getYearMonths().toArray());
         cbSceltaMese.setFocusable(false);
         ((JLabel) cbSceltaMese.getRenderer()).setHorizontalAlignment(SwingConstants.CENTER);
+
+        // Imposta il mese attuale come scelta default
+        LocalDate currentDate = LocalDate.now();
+        int currentMonth = currentDate.getMonthValue();
+        DateFormatSymbols symbols = new DateFormatSymbols(Locale.ITALIAN);
+        String[] monthNames = symbols.getMonths();
+        String italianMonthName = monthNames[currentMonth - 1];
+        String capitalizedMonthName = italianMonthName.substring(0, 1).toUpperCase() + italianMonthName.substring(1);
+        cbSceltaMese.setSelectedItem(capitalizedMonthName);
 
         // Panel scelta anno/mese
         JPanel pnlSceltaAnnoMese = new JPanel(new FlowLayout());
