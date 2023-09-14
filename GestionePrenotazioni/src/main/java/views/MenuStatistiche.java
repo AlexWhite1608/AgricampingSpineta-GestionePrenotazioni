@@ -18,6 +18,7 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -423,6 +424,10 @@ public class MenuStatistiche extends JPanel implements PrenotazioniObservers {
                 } catch (SQLException ex) {
                     System.err.println("Impossibile aggiornare tabella " + ex.getMessage());;
                 }
+
+                // Azzera la tabella dei mezzi
+                DefaultTableModel model = (DefaultTableModel) tableStatsMezziNazioni.getModel();
+                model.setRowCount(0);
             }
         });
 
@@ -439,6 +444,10 @@ public class MenuStatistiche extends JPanel implements PrenotazioniObservers {
                 } catch (SQLException ex) {
                     System.err.println("Impossibile aggiornare tabella " + ex.getMessage());;
                 }
+
+                // Azzera la tabella dei mezzi
+                DefaultTableModel model = (DefaultTableModel) tableStatsMezziNazioni.getModel();
+                model.setRowCount(0);
             }
         });
 
@@ -448,6 +457,8 @@ public class MenuStatistiche extends JPanel implements PrenotazioniObservers {
             public void mouseClicked(MouseEvent e) {
                 int row = tableStatsNazioni.rowAtPoint(e.getPoint());
                 String nazione = tableStatsNazioni.getValueAt(row, 0).toString();
+                String annoScelto = cbSceltaAnno.getSelectedItem().toString();
+                String meseScelto = cbSceltaMese.getSelectedItem().toString();
 
                 try {
                     TableAdvancedStatsController.setTableModelNazioniMezzi(tableStatsMezziNazioni, annoScelto, meseScelto, nazione);
@@ -469,18 +480,6 @@ public class MenuStatistiche extends JPanel implements PrenotazioniObservers {
         pnlTableStats.add(pnlAffiancate, BorderLayout.CENTER);
         dialogAdvStats.add(pnlTableStats, BorderLayout.CENTER);
         /* ... ... */
-
-
-        // Implementa switch dinamico
-//                cbListaTabelle.addActionListener(new ActionListener() {
-//                    @Override
-//                    public void actionPerformed(ActionEvent e) {
-//                        String selectedTable = cbListaTabelle.getSelectedItem().toString();
-//
-//                        // Mostra la JScrollPane corrispondente alla tabella selezionata
-//                        ((CardLayout) pnlTableFocusTables.getLayout()).show(pnlTableFocusTables, selectedTable);
-//                    }
-//                });
 
         dialogAdvStats.pack();
         dialogAdvStats.setMinimumSize(new Dimension(1000, 600));

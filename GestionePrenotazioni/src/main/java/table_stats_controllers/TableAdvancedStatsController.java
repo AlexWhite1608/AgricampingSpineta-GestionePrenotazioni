@@ -134,7 +134,7 @@ public class TableAdvancedStatsController {
     }
 
     // Crea il table model per la tabella delle nazioni e dei mezzi
-    public static void setTableModelNazioniMezzi(JTable table, String annoScelto, String meseScelto, String nazione) throws SQLException {
+    public static void setTableModelNazioniMezzi(JTable table, String annoScelto, String meseScelto, String nazioneScelta) throws SQLException {
 
         // Ottiene il dataset
         Map<String, Map<String, Map<String, Map<String, Integer>>>> dataset = DatasetMezziController.getNumeroVeicoliNazione();
@@ -146,6 +146,41 @@ public class TableAdvancedStatsController {
 
         // Crea i dati del modello
         Vector<Vector<Object>> data = new Vector<>();
+
+        // Itera attraverso le nazioni nel dataset
+        for (Map.Entry<String, Map<String, Map<String, Map<String, Integer>>>> nazioneEntry : dataset.entrySet()) {
+            String anno = nazioneEntry.getKey();
+
+            if(Objects.equals(anno, annoScelto)) {
+                Map<String, Map<String, Map<String, Integer>>> datiNazione = nazioneEntry.getValue();
+
+                // Ottieni il numero di presenze per la nazione specificata
+                for(Map.Entry<String, Map<String, Map<String, Integer>>> entry : datiNazione.entrySet()){
+                    String nazione = entry.getKey();
+
+                    if(Objects.equals(nazione, nazioneScelta)) {
+                        for(Map.Entry<String, Map<String, Integer>> datiMezzi : entry.getValue().entrySet()){
+                            for(Map.Entry<String, Integer> datiNumeroMezzi : datiMezzi.getValue().entrySet()){
+                                Vector<Object> rowData = new Vector<>();
+
+                                String mezzo = datiNumeroMezzi.getKey();
+                                int numeroMezzi = datiNumeroMezzi.getValue();
+                                String meseAttuale = datiMezzi.getKey().substring(0, 2);
+
+                                if(Objects.equals(meseAttuale, TimeManager.convertiMeseInNumero(meseScelto))) {
+
+                                    // Aggiungi la riga al modello
+                                    rowData.add(mezzo);
+                                    rowData.add(numeroMezzi);
+
+                                    data.add(rowData);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
 
         // Crea il modello della tabella
         DefaultTableModel model = new DefaultTableModel(data, columnNames) {
