@@ -1,6 +1,6 @@
 package renderers;
 
-import utils.CalculatePercentageChange;
+import utils.CalculatePercentage;
 import utils.TableConstants;
 
 import javax.swing.*;
@@ -48,7 +48,7 @@ public class TabellaMezziRenderer extends DefaultTableCellRenderer {
                 int currentValue = ((Number) value).intValue();
 
                 // Calcola la percentuale di variazione
-                double percentageChange = CalculatePercentageChange.calculatePercentageChange((int) previousYearValue, currentValue);
+                double percentageChange = CalculatePercentage.calculatePercentageChange((int) previousYearValue, currentValue);
 
                 // Formatta la percentuale con due decimali
                 String formattedPercentage = String.format("%.2f%%", percentageChange);

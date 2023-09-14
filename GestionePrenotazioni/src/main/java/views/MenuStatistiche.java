@@ -350,6 +350,7 @@ public class MenuStatistiche extends JPanel implements PrenotazioniObservers {
         /* ... ...*/
 
         /* --- Panel statistiche su tabella --- */
+        TableAdvancedStatsController tableAdvancedStatsController = new TableAdvancedStatsController();
         JPanel pnlTableStats = new JPanel();
         pnlTableStats.setLayout(new BorderLayout());
 
@@ -389,11 +390,13 @@ public class MenuStatistiche extends JPanel implements PrenotazioniObservers {
         JTable tableStatsNazioni = new JTable();
         tableStatsNazioni.setGridColor(Color.BLACK);
         tableStatsNazioni.getTableHeader().setReorderingAllowed(false);
+        tableAdvancedStatsController.setTableStatsNazioni(tableStatsNazioni);
 
-        // Imposta il tableModel
+        // Imposta il tableModel e il renderer
         String annoScelto = cbSceltaAnno.getSelectedItem().toString();
         String meseScelto = cbSceltaMese.getSelectedItem().toString();
-        TableAdvancedStatsController.setTableModelNazioni(tableStatsNazioni, annoScelto, meseScelto);
+        tableAdvancedStatsController.setTableModelNazioni(annoScelto, meseScelto);
+        tableAdvancedStatsController.createTableNazioniRenderer();
 
         // Aggiungi un margine esterno al pannello delle tabelle
         pnlTableStatsNazioni.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
@@ -404,6 +407,9 @@ public class MenuStatistiche extends JPanel implements PrenotazioniObservers {
         JTable tableStatsMezziNazioni = new JTable();
         tableStatsMezziNazioni.setGridColor(Color.BLACK);
         tableStatsMezziNazioni.getTableHeader().setReorderingAllowed(false);
+        tableStatsMezziNazioni.setFocusable(false);
+        tableStatsMezziNazioni.setRowSelectionAllowed(false);
+        tableAdvancedStatsController.setTableStatsMezziNazioni(tableStatsMezziNazioni);
 
         // Aggiorna tabella quando si cambia il mese
         cbSceltaMese.addActionListener(new ActionListener() {
@@ -414,7 +420,8 @@ public class MenuStatistiche extends JPanel implements PrenotazioniObservers {
                 String meseScelto = cbSceltaMese.getSelectedItem().toString();
 
                 try {
-                    TableAdvancedStatsController.setTableModelNazioni(tableStatsNazioni, annoScelto, meseScelto);
+                    tableAdvancedStatsController.setTableModelNazioni(annoScelto, meseScelto);
+                    tableAdvancedStatsController.createTableNazioniRenderer();
                 } catch (SQLException ex) {
                     System.err.println("Impossibile aggiornare tabella " + ex.getMessage());;
                 }
@@ -434,7 +441,8 @@ public class MenuStatistiche extends JPanel implements PrenotazioniObservers {
                 String meseScelto = cbSceltaMese.getSelectedItem().toString();
 
                 try {
-                    TableAdvancedStatsController.setTableModelNazioni(tableStatsNazioni, annoScelto, meseScelto);
+                    tableAdvancedStatsController.setTableModelNazioni(annoScelto, meseScelto);
+                    tableAdvancedStatsController.createTableNazioniRenderer();
                 } catch (SQLException ex) {
                     System.err.println("Impossibile aggiornare tabella " + ex.getMessage());;
                 }
@@ -457,7 +465,8 @@ public class MenuStatistiche extends JPanel implements PrenotazioniObservers {
                 lblNazioneScelta.setText("Nazione scelta: " + nazione);
 
                 try {
-                    TableAdvancedStatsController.setTableModelNazioniMezzi(tableStatsMezziNazioni, annoScelto, meseScelto, nazione);
+                    tableAdvancedStatsController.setTableModelNazioniMezzi(annoScelto, meseScelto, nazione);
+                    tableAdvancedStatsController.createTableNazioniMezziRenderer();
                 } catch (SQLException ex) {
                     System.err.println("Impossibile impostare il table model sulla tabella dei mezzi: " + ex.getMessage());
                 }

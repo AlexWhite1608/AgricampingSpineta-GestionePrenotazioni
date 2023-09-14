@@ -3,15 +3,25 @@ package table_stats_controllers;
 import datasets.DatasetMezziController;
 import datasets.DatasetNazioniController;
 import datasets.DatasetPresenzeController;
+import renderers.TabellaAdvStatsNazioniMezziRenderer;
+import renderers.TabellaAdvStatsNazioniRenderer;
+import renderers.TabellaPresenzeRenderer;
 import utils.TimeManager;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import java.sql.Array;
 import java.sql.SQLException;
 import java.util.*;
 
 public class TableAdvancedStatsController {
+
+    private JTable tableStatsNazioni;
+    private JTable tableStatsMezziNazioni;
+
+    public TableAdvancedStatsController() {
+    }
 
     // Ritorna il mese con più presenze
     public static String getMesePiuPresenze() throws SQLException {
@@ -79,7 +89,7 @@ public class TableAdvancedStatsController {
     }
 
     // Crea il table model per la tabella delle nazioni
-    public static void setTableModelNazioni(JTable table, String annoScelto, String meseScelto) throws SQLException {
+    public void setTableModelNazioni(String annoScelto, String meseScelto) throws SQLException {
 
         // Ottieni il dataset delle presenze per anno e mese
         Map<String, Map<String, Map<String, Integer>>> dataset = DatasetPresenzeController.getPresenzeForMeseAndNazione();
@@ -130,11 +140,11 @@ public class TableAdvancedStatsController {
         };
 
         // Imposta il modello sulla tabella
-        table.setModel(model);
+        tableStatsNazioni.setModel(model);
     }
 
     // Crea il table model per la tabella delle nazioni e dei mezzi
-    public static void setTableModelNazioniMezzi(JTable table, String annoScelto, String meseScelto, String nazioneScelta) throws SQLException {
+    public void setTableModelNazioniMezzi(String annoScelto, String meseScelto, String nazioneScelta) throws SQLException {
 
         // Ottiene il dataset
         Map<String, Map<String, Map<String, Map<String, Integer>>>> dataset = DatasetMezziController.getNumeroVeicoliNazione();
@@ -191,6 +201,28 @@ public class TableAdvancedStatsController {
         };
 
         // Imposta il modello sulla tabella
-        table.setModel(model);
+        tableStatsMezziNazioni.setModel(model);
+    }
+
+    public void createTableNazioniRenderer() {
+        DefaultTableCellRenderer cellRenderer = new TabellaAdvStatsNazioniRenderer();
+        for(int columnIndex = 0; columnIndex < this.tableStatsNazioni.getColumnCount(); columnIndex++) {
+            this.tableStatsNazioni.getColumnModel().getColumn(columnIndex).setCellRenderer(cellRenderer);
+        }
+    }
+
+    public void createTableNazioniMezziRenderer() {
+        DefaultTableCellRenderer cellRenderer = new TabellaAdvStatsNazioniMezziRenderer();
+        for(int columnIndex = 0; columnIndex < this.tableStatsMezziNazioni.getColumnCount(); columnIndex++) {
+            this.tableStatsMezziNazioni.getColumnModel().getColumn(columnIndex).setCellRenderer(cellRenderer);
+        }
+    }
+
+    public void setTableStatsNazioni(JTable tableStatsNazioni) {
+        this.tableStatsNazioni = tableStatsNazioni;
+    }
+
+    public void setTableStatsMezziNazioni(JTable tableStatsMezziNazioni) {
+        this.tableStatsMezziNazioni = tableStatsMezziNazioni;
     }
 }
