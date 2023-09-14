@@ -1,6 +1,7 @@
 package table_stats_controllers;
 
 import datasets.DatasetMezziController;
+import datasets.DatasetNazioniController;
 import datasets.DatasetPresenzeController;
 import utils.TimeManager;
 
@@ -132,5 +133,29 @@ public class TableAdvancedStatsController {
         table.setModel(model);
     }
 
+    // Crea il table model per la tabella delle nazioni e dei mezzi
+    public static void setTableModelNazioniMezzi(JTable table, String annoScelto, String meseScelto, String nazione) throws SQLException {
 
+        // Ottiene il dataset
+        Map<String, Map<String, Map<String, Map<String, Integer>>>> dataset = DatasetMezziController.getNumeroVeicoliNazione();
+
+        // Imposta le colonne del table model
+        Vector<String> columnNames = new Vector<>();
+        columnNames.add("Mezzo");
+        columnNames.add("Numero " + meseScelto + "/" + annoScelto);
+
+        // Crea i dati del modello
+        Vector<Vector<Object>> data = new Vector<>();
+
+        // Crea il modello della tabella
+        DefaultTableModel model = new DefaultTableModel(data, columnNames) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+
+        // Imposta il modello sulla tabella
+        table.setModel(model);
+    }
 }

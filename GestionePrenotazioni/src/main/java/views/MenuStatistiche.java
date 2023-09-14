@@ -21,6 +21,8 @@ import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -398,6 +400,16 @@ public class MenuStatistiche extends JPanel implements PrenotazioniObservers {
         String meseScelto = cbSceltaMese.getSelectedItem().toString();
         TableAdvancedStatsController.setTableModelNazioni(tableStatsNazioni, annoScelto, meseScelto);
 
+        // Aggiungi un margine esterno al pannello delle tabelle
+        pnlTableStatsNazioni.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        pnlTableStatsNazioni.add(new JScrollPane(tableStatsNazioni, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED), BorderLayout.CENTER);
+
+        // Panel mezzi per nazioni
+        JPanel pnlTableStatsMezziNazioni = new JPanel(new BorderLayout());
+        JTable tableStatsMezziNazioni = new JTable();
+        tableStatsMezziNazioni.setGridColor(Color.BLACK);
+        tableStatsMezziNazioni.getTableHeader().setReorderingAllowed(false);
+
         // Aggiorna tabella quando si cambia il mese
         cbSceltaMese.addActionListener(new ActionListener() {
             @Override
@@ -430,15 +442,20 @@ public class MenuStatistiche extends JPanel implements PrenotazioniObservers {
             }
         });
 
-        // Aggiungi un margine esterno al pannello delle tabelle
-        pnlTableStatsNazioni.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        pnlTableStatsNazioni.add(new JScrollPane(tableStatsNazioni, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED), BorderLayout.CENTER);
+        // In base alla scelta della nazione si attiva la seconda tabella
+        tableStatsNazioni.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                int row = tableStatsNazioni.rowAtPoint(e.getPoint());
+                String nazione = tableStatsNazioni.getValueAt(row, 0).toString();
 
-        // Panel mezzi per nazioni
-        JPanel pnlTableStatsMezziNazioni = new JPanel(new BorderLayout());
-        JTable tableStatsMezziNazioni = new JTable();
-        tableStatsMezziNazioni.setGridColor(Color.BLACK);
-        tableStatsMezziNazioni.getTableHeader().setReorderingAllowed(false);
+                try {
+                    TableAdvancedStatsController.setTableModelNazioniMezzi(tableStatsMezziNazioni, annoScelto, meseScelto, nazione);
+                } catch (SQLException ex) {
+                    System.err.println("Impossibile impostare il table model sulla tabella dei mezzi: " + ex.getMessage());
+                }
+            }
+        });
 
         // Aggiungi un margine esterno al pannello delle tabelle
         pnlTableStatsMezziNazioni.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));

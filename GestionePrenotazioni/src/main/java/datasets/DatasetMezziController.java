@@ -5,6 +5,9 @@ import org.jfree.data.category.DefaultCategoryDataset;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -65,4 +68,56 @@ public class DatasetMezziController {
         return mezziMap;
     }
 
+    // Ottiene il numero di veicoli per ciascuna nazione
+    public static Map<String, Map<String, Map<String, Map<String, Integer>>>> getNumeroVeicoliNazione() throws SQLException {
+
+        Map<String, Map<String, Map<String, Map<String, Integer>>>> numeroMezziPerNazione = new HashMap<>();
+
+        String query = "SELECT " +
+                "substr(Arrivo, 4, 7) AS mese, " +
+                "Nazione, COUNT(Mezzo) AS NumeroMezzi, Arrivo, Partenza, Mezzo " +
+                "FROM Prenotazioni " +
+                "GROUP BY mese, Mezzo " +
+                "ORDER BY mese";
+
+        ResultSet rs = new Gateway().execSelectQuery(query);
+
+        while (rs.next()) {
+            int numeroMezzi = rs.getInt("NumeroMezzi");
+            String anno = rs.getString("mese").substring(3, 7);
+            String nazione = rs.getString("Nazione");
+            String mezzo = rs.getString("Mezzo");
+
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            LocalDate arrivo = LocalDate.parse(rs.getString("Arrivo"), formatter);
+            LocalDate partenza = LocalDate.parse(rs.getString("Partenza"), formatter);
+
+            while (!arrivo.isAfter(partenza)) {
+                String meseCorrente = arrivo.format(DateTimeFormatter.ofPattern("MM/yyyy"));
+                int giorniNelMese = arrivo.lengthOfMonth();
+                int giorniMeseCorrente;
+
+                if (arrivo.getMonth() == partenza.getMonth()) {
+                    giorniMeseCorrente = Math.min(partenza.getDayOfMonth() - arrivo.getDayOfMonth(),
+                            (int) ChronoUnit.DAYS.between(arrivo, partenza));
+                } else {
+                    giorniMeseCorrente = Math.min(giorniNelMese - arrivo.getDayOfMonth() + 1,
+                            (int) ChronoUnit.DAYS.between(arrivo, partenza) + 1);
+                }
+
+                // Utilizza la nazione come chiave aggiuntiva
+                numeroMezziPerNazione
+                        .computeIfAbsent(anno, k -> new HashMap<>())
+                        .computeIfAbsent(nazione, k -> new HashMap<>())
+                        .computeIfAbsent(meseCorrente, k -> new HashMap<>())
+                        .merge(mezzo, numeroMezzi, Integer::sum);
+
+                arrivo = arrivo.plusMonths(1).withDayOfMonth(1);
+            }
+        }
+
+        rs.close();
+
+        return numeroMezziPerNazione;
+    }
 }
