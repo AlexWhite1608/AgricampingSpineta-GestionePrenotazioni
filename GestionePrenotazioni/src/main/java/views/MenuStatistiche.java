@@ -320,7 +320,7 @@ public class MenuStatistiche extends JPanel implements PrenotazioniObservers {
 
         // Labels
         JLabel lblMesePiuPresenze = new JLabel("Mese con più presenze: " + TableAdvancedStatsController.getMesePiuPresenze());
-        JLabel lblMezzoPiuUsato = new JLabel("Mezzo più usato: " + TableAdvancedStatsController.getMezzoPiuUsato());
+        JLabel lblMezzoPiuUsato = new JLabel("Mezzo più utilizzato: " + TableAdvancedStatsController.getMezzoPiuUsato());
         JLabel durataMediaSoggiorno = new JLabel("Durata media del soggiorno: " + TableAdvancedStatsController.getDurataMediaSoggiorno());
 
         // Aggiungi un margine di 10 pixel a tutte le label
@@ -371,12 +371,6 @@ public class MenuStatistiche extends JPanel implements PrenotazioniObservers {
         cbSceltaMese.setFocusable(false);
         ((JLabel) cbSceltaMese.getRenderer()).setHorizontalAlignment(SwingConstants.CENTER);
 
-        // TextField scelta nazione
-        ArrayList<String> listaNazioni = ListOfNations.getListaNazioni();
-        JTextField tfSceltaNazione = new JTextField();
-        tfSceltaNazione.setPreferredSize(cbSceltaMese.getPreferredSize());
-        AutoCompleteDecorator.decorate(tfSceltaNazione, listaNazioni, false, ObjectToStringConverter.DEFAULT_IMPLEMENTATION);
-
         // Panel scelta anno/mese
         JPanel pnlSceltaAnnoMese = new JPanel(new FlowLayout());
         pnlSceltaAnnoMese.add(cbSceltaMese);
@@ -384,8 +378,8 @@ public class MenuStatistiche extends JPanel implements PrenotazioniObservers {
 
         // Panel scelta nazione
         JPanel pnlSceltaNazione = new JPanel(new FlowLayout());
-        pnlSceltaNazione.add(new JLabel("Scegli la nazione: "));
-        pnlSceltaNazione.add(tfSceltaNazione);
+        JLabel lblNazioneScelta = new JLabel("Nazione scelta: ");
+        pnlSceltaNazione.add(lblNazioneScelta);
 
         toolbarAdvStats.add(pnlSceltaAnnoMese, BorderLayout.WEST);
         toolbarAdvStats.add(pnlSceltaNazione, BorderLayout.EAST);
@@ -459,6 +453,8 @@ public class MenuStatistiche extends JPanel implements PrenotazioniObservers {
                 String nazione = tableStatsNazioni.getValueAt(row, 0).toString();
                 String annoScelto = cbSceltaAnno.getSelectedItem().toString();
                 String meseScelto = cbSceltaMese.getSelectedItem().toString();
+
+                lblNazioneScelta.setText("Nazione scelta: " + nazione);
 
                 try {
                     TableAdvancedStatsController.setTableModelNazioniMezzi(tableStatsMezziNazioni, annoScelto, meseScelto, nazione);
