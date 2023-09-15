@@ -338,13 +338,13 @@ public class MenuStatistiche extends JPanel implements PrenotazioniObservers {
         tabellaNazioni.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 
         if (tblNazioni.getColumnCount() <= 5) {
-            tblMezzi.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+            tblNazioni.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
         } else {
-            tblMezzi.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+            tblNazioni.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         }
 
         for (int i = 0; i < tblNazioni.getColumnCount(); i++) {
-            tblMezzi.getColumnModel().getColumn(i).setPreferredWidth(larghezzaColonna);
+            tblNazioni.getColumnModel().getColumn(i).setPreferredWidth(larghezzaColonna);
         }
 
         pnlTableNazioni.add(new JScrollPane(tblNazioni, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED), gbc);
