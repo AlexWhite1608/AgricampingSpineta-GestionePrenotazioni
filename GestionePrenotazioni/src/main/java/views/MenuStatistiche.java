@@ -304,7 +304,7 @@ public class MenuStatistiche extends JPanel implements PrenotazioniObservers {
         titledBorder.setTitleFont(titledBorder.getTitleFont().deriveFont(Font.BOLD, 16));
         pnlNazioni.setBorder(titledBorder);
 
-        JPanel pnlTableNazioni = new JPanel(new BorderLayout());
+        JPanel pnlTableNazioni = new JPanel(new GridBagLayout());
 
         // Setting controller tabella Presenze
         tblNazioni = new JTable();
@@ -312,20 +312,42 @@ public class MenuStatistiche extends JPanel implements PrenotazioniObservers {
         tblNazioni.getTableHeader().setReorderingAllowed(false);
         TableNazioniController tableNazioniController = new TableNazioniController(tblNazioni);
         TableNazioniController.setTableModel();
-
         TableNazioniController.createTableRenderer();
+        tblNazioni.removeColumn(tblNazioni.getColumnModel().getColumn(0));
 
-        if (tblNazioni.getColumnCount() <= 6) {
-            tblNazioni.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+        JTable tabellaNazioni = new JTable();
+        TableNazioniController.addNazioniTable(tabellaNazioni);
+        TableNazioniController.setNazioniTableModel();
+
+        // Imposta il layout per tabellaNazioni
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.fill = GridBagConstraints.BOTH;
+        gbc.weightx = 1.0;
+        gbc.weighty = 1.0;
+
+        pnlTableNazioni.add(new JScrollPane(tabellaNazioni, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED), gbc);
+
+        // Resetta i vincoli per tblNazioni
+        gbc = new GridBagConstraints();
+        gbc.fill = GridBagConstraints.BOTH;
+        gbc.gridx = 1;
+        gbc.weightx = 4.0;
+        gbc.weighty = 1.0;
+
+        // Imposta AUTO_RESIZE_ALL_COLUMNS per adattare la larghezza al contenuto
+        tabellaNazioni.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+
+        if (tblNazioni.getColumnCount() <= 5) {
+            tblMezzi.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
         } else {
-            tblNazioni.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+            tblMezzi.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         }
 
         for (int i = 0; i < tblNazioni.getColumnCount(); i++) {
-            tblNazioni.getColumnModel().getColumn(i).setPreferredWidth(larghezzaColonna);
+            tblMezzi.getColumnModel().getColumn(i).setPreferredWidth(larghezzaColonna);
         }
 
-        pnlTableNazioni.add(new JScrollPane(tblNazioni, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED), BorderLayout.CENTER);
+        pnlTableNazioni.add(new JScrollPane(tblNazioni, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED), gbc);
 
         pnlNazioni.add(pnlTableNazioni);
         mainPanelStatistiche.add(pnlNazioni);
