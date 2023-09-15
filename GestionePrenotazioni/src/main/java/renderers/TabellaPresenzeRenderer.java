@@ -40,7 +40,7 @@ public class TabellaPresenzeRenderer extends DefaultTableCellRenderer  {
         }
 
         // Inserisce la percentuale rispetto all'anno precedente
-        if (table.getColumnCount() > 2 && column > 1) {
+        if (table.getColumnCount() > 2 && column > 0) {
             // Ottieni il valore della cella dell'anno precedente
             Object previousYearValue = table.getValueAt(row, column - 1);
 

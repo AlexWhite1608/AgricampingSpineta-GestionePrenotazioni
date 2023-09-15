@@ -3,6 +3,7 @@ package table_stats_controllers;
 import data_access.Gateway;
 import datasets.DatasetPresenzeController;
 import observer.PrenotazioniObservers;
+import renderers.TabellaFissaRenderer;
 import renderers.TabellaPresenzeRenderer;
 import utils.OrderMap;
 import utils.TimeManager;
@@ -11,8 +12,10 @@ import views.MenuPrenotazioni;
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import java.awt.*;
 import java.sql.SQLException;
 import java.util.*;
+import java.util.List;
 
 public class TablePresenzeController implements PrenotazioniObservers {
 
@@ -101,6 +104,57 @@ public class TablePresenzeController implements PrenotazioniObservers {
             tabellaPresenze.getColumnModel().getColumn(columnIndex).setCellRenderer(cellRenderer);
         }
 
+    }
+
+    // Crea la tabella dei mesi separata
+    public static JTable getMesiTable() {
+
+        // Imposta le colonne (gli anni)
+        Vector<String> columnNames = new Vector<>();
+        columnNames.add("Mesi");
+
+        // Ottiene i mesi dell'anno da utilizzare come righe del modello
+        ArrayList<String> months = TimeManager.getYearMonths();
+
+        // Imposta i dati del modello
+        Vector<Vector<Object>> data = new Vector<>();
+
+        for (int i = 0; i < months.size(); i++) {
+            String mese = months.get(i);
+            Vector<Object> rowData = new Vector<>();
+            rowData.add(mese); // Inserisce il mese
+
+            data.add(rowData);
+        }
+
+        // Aggiungi l'ultima riga con la stringa "TOTALE"
+        Vector<Object> totalRow = new Vector<>();
+        totalRow.add("TOTALE");
+
+        data.add(totalRow);
+
+        DefaultTableModel model = new DefaultTableModel(data, columnNames){
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+
+        JTable tabellaMesi = new JTable();
+        tabellaMesi.setGridColor(Color.BLACK);
+        tabellaMesi.getTableHeader().setReorderingAllowed(false);
+        tabellaMesi.setModel(model);
+        TablePresenzeController.createTabellaMesiRenderer(tabellaMesi);
+
+        return tabellaMesi;
+    }
+
+    private static void createTabellaMesiRenderer(JTable tabellaMesi) {
+
+        DefaultTableCellRenderer cellRenderer = new TabellaFissaRenderer();
+        for(int columnIndex = 0; columnIndex < tabellaMesi.getColumnCount(); columnIndex++) {
+            tabellaMesi.getColumnModel().getColumn(columnIndex).setCellRenderer(cellRenderer);
+        }
     }
 
     // Ricarica la tabella
