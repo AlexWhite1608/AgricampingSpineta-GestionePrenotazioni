@@ -14,7 +14,7 @@ public class TabellaMezziRenderer extends DefaultTableCellRenderer {
         Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 
         // Imposta altezza righe in base al numero di righe
-        table.setRowHeight(28);
+        table.setRowHeight(25);
 
         // Centra le celle
         setHorizontalAlignment(HORIZONTAL);
@@ -40,7 +40,7 @@ public class TabellaMezziRenderer extends DefaultTableCellRenderer {
         }
 
         // Inserisce la percentuale rispetto all'anno precedente
-        if (table.getColumnCount() > 2 && column > 1) {
+        if (table.getColumnCount() > 2 && column > 0) {
             // Ottieni il valore della cella dell'anno precedente
             Object previousYearValue = table.getValueAt(row, column - 1);
 

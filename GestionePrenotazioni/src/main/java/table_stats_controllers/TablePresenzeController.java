@@ -144,14 +144,14 @@ public class TablePresenzeController implements PrenotazioniObservers {
         tabellaMesi.setGridColor(Color.BLACK);
         tabellaMesi.getTableHeader().setReorderingAllowed(false);
         tabellaMesi.setModel(model);
-        TablePresenzeController.createTabellaMesiRenderer(tabellaMesi);
+        TablePresenzeController.createTabellaMesiRenderer(tabellaMesi, "mesi");
 
         return tabellaMesi;
     }
 
-    private static void createTabellaMesiRenderer(JTable tabellaMesi) {
+    private static void createTabellaMesiRenderer(JTable tabellaMesi, String tipoTabella) {
 
-        DefaultTableCellRenderer cellRenderer = new TabellaFissaRenderer();
+        DefaultTableCellRenderer cellRenderer = new TabellaFissaRenderer(tipoTabella);
         for(int columnIndex = 0; columnIndex < tabellaMesi.getColumnCount(); columnIndex++) {
             tabellaMesi.getColumnModel().getColumn(columnIndex).setCellRenderer(cellRenderer);
         }

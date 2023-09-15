@@ -213,7 +213,6 @@ public class MenuStatistiche extends JPanel implements PrenotazioniObservers {
         mainPanelStatistiche.add(pnlPresenze);
     }
 
-
     // Setup del plot Presenze
     private void setupPlotPresenze() throws SQLException {
         pnlPlotPresenze = new JPanel(new BorderLayout());
@@ -236,7 +235,7 @@ public class MenuStatistiche extends JPanel implements PrenotazioniObservers {
         titledBorder.setTitleFont(titledBorder.getTitleFont().deriveFont(Font.BOLD, 16));
         pnlMezzi.setBorder(titledBorder);
 
-        JPanel pnlTableMezzi = new JPanel(new BorderLayout());
+        JPanel pnlTableMezzi = new JPanel(new GridBagLayout());
 
         // Setting controller tabella Presenze
         tblMezzi = new JTable();
@@ -244,10 +243,30 @@ public class MenuStatistiche extends JPanel implements PrenotazioniObservers {
         tblMezzi.getTableHeader().setReorderingAllowed(false);
         TableMezziController tableMezziController = new TableMezziController(tblMezzi);
         TableMezziController.setTableModel();
-
         TableMezziController.createTableRenderer();
+        tblMezzi.removeColumn(tblMezzi.getColumnModel().getColumn(0));
 
-        if (tblMezzi.getColumnCount() <= 6) {
+        JTable tabellaMezzi = TableMezziController.getMezziTable();
+
+        // Imposta il layout per tabellaMezzi
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.fill = GridBagConstraints.BOTH;
+        gbc.weightx = 1.0;
+        gbc.weighty = 1.0;
+
+        pnlTableMezzi.add(new JScrollPane(tabellaMezzi, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED), gbc);
+
+        // Resetta i vincoli per tblMezzi
+        gbc = new GridBagConstraints();
+        gbc.fill = GridBagConstraints.BOTH;
+        gbc.gridx = 1;
+        gbc.weightx = 4.0;
+        gbc.weighty = 1.0;
+
+        // Imposta AUTO_RESIZE_ALL_COLUMNS per adattare la larghezza al contenuto
+        tabellaMezzi.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+
+        if (tblMezzi.getColumnCount() <= 5) {
             tblMezzi.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
         } else {
             tblMezzi.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
@@ -257,7 +276,7 @@ public class MenuStatistiche extends JPanel implements PrenotazioniObservers {
             tblMezzi.getColumnModel().getColumn(i).setPreferredWidth(larghezzaColonna);
         }
 
-        pnlTableMezzi.add(new JScrollPane(tblMezzi, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED), BorderLayout.CENTER);
+        pnlTableMezzi.add(new JScrollPane(tblMezzi, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED), gbc);
 
         pnlMezzi.add(pnlTableMezzi);
         mainPanelStatistiche.add(pnlMezzi);
@@ -560,6 +579,7 @@ public class MenuStatistiche extends JPanel implements PrenotazioniObservers {
             tblPresenze.getColumnModel().getColumn(i).setPreferredWidth(larghezzaColonna);
         }
 
+        tblNazioni.removeColumn(tblNazioni.getColumnModel().getColumn(0));
         if (tblNazioni.getColumnCount() <= 5) {
             tblNazioni.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
         } else {
@@ -570,6 +590,7 @@ public class MenuStatistiche extends JPanel implements PrenotazioniObservers {
             tblNazioni.getColumnModel().getColumn(i).setPreferredWidth(larghezzaColonna);
         }
 
+        tblMezzi.removeColumn(tblMezzi.getColumnModel().getColumn(0));
         if (tblMezzi.getColumnCount() <= 5) {
             tblMezzi.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
         } else {
