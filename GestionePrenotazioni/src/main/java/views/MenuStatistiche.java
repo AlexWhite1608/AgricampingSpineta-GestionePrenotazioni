@@ -185,7 +185,7 @@ public class MenuStatistiche extends JPanel implements PrenotazioniObservers {
         gbc.weightx = 1.0;
         gbc.weighty = 1.0;
 
-        pnlTablePresenze.add(new JScrollPane(tabellaMesi, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED), gbc);
+        pnlTablePresenze.add(new JScrollPane(tabellaMesi, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS), gbc);
 
         // Resetta i vincoli per tblPresenze
         gbc = new GridBagConstraints();
@@ -208,6 +208,23 @@ public class MenuStatistiche extends JPanel implements PrenotazioniObservers {
         }
 
         pnlTablePresenze.add(new JScrollPane(tblPresenze, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED), gbc);
+
+        // Sincronizza le barre di scorrimento verticali delle due tabelle
+        JScrollBar mainTableVerticalScrollBar = ((JScrollPane) tblPresenze.getParent().getParent()).getVerticalScrollBar();
+        JScrollBar secondaryTableVerticalScrollBar = ((JScrollPane) tabellaMesi.getParent().getParent()).getVerticalScrollBar();
+
+        mainTableVerticalScrollBar.addAdjustmentListener(e -> {
+            int mainTableValue = mainTableVerticalScrollBar.getValue();
+            secondaryTableVerticalScrollBar.setValue(mainTableValue);
+        });
+
+        secondaryTableVerticalScrollBar.addAdjustmentListener(e -> {
+            int secondaryTableValue = secondaryTableVerticalScrollBar.getValue();
+            mainTableVerticalScrollBar.setValue(secondaryTableValue);
+        });
+
+        // Nasconde la scrollbar nella tabella secondaria
+        secondaryTableVerticalScrollBar.setPreferredSize(new Dimension(0,0));
 
         pnlPresenze.add(pnlTablePresenze);
         mainPanelStatistiche.add(pnlPresenze);
@@ -254,7 +271,7 @@ public class MenuStatistiche extends JPanel implements PrenotazioniObservers {
         gbc.weightx = 1.0;
         gbc.weighty = 1.0;
 
-        pnlTableMezzi.add(new JScrollPane(tabellaMezzi, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED), gbc);
+        pnlTableMezzi.add(new JScrollPane(tabellaMezzi, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS), gbc);
 
         // Resetta i vincoli per tblMezzi
         gbc = new GridBagConstraints();
@@ -277,6 +294,23 @@ public class MenuStatistiche extends JPanel implements PrenotazioniObservers {
         }
 
         pnlTableMezzi.add(new JScrollPane(tblMezzi, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED), gbc);
+
+        // Sincronizza le barre di scorrimento verticali delle due tabelle
+        JScrollBar mainTableVerticalScrollBar = ((JScrollPane) tblMezzi.getParent().getParent()).getVerticalScrollBar();
+        JScrollBar secondaryTableVerticalScrollBar = ((JScrollPane) tabellaMezzi.getParent().getParent()).getVerticalScrollBar();
+
+        mainTableVerticalScrollBar.addAdjustmentListener(e -> {
+            int mainTableValue = mainTableVerticalScrollBar.getValue();
+            secondaryTableVerticalScrollBar.setValue(mainTableValue);
+        });
+
+        secondaryTableVerticalScrollBar.addAdjustmentListener(e -> {
+            int secondaryTableValue = secondaryTableVerticalScrollBar.getValue();
+            mainTableVerticalScrollBar.setValue(secondaryTableValue);
+        });
+
+        // Nasconde la scrollbar nella tabella secondaria
+        secondaryTableVerticalScrollBar.setPreferredSize(new Dimension(0,0));
 
         pnlMezzi.add(pnlTableMezzi);
         mainPanelStatistiche.add(pnlMezzi);
@@ -325,7 +359,7 @@ public class MenuStatistiche extends JPanel implements PrenotazioniObservers {
         gbc.weightx = 1.0;
         gbc.weighty = 1.0;
 
-        pnlTableNazioni.add(new JScrollPane(tabellaNazioni, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED), gbc);
+        pnlTableNazioni.add(new JScrollPane(tabellaNazioni, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS), gbc);
 
         // Resetta i vincoli per tblNazioni
         gbc = new GridBagConstraints();
@@ -348,6 +382,23 @@ public class MenuStatistiche extends JPanel implements PrenotazioniObservers {
         }
 
         pnlTableNazioni.add(new JScrollPane(tblNazioni, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED), gbc);
+
+        // Sincronizza le barre di scorrimento verticali delle due tabelle
+        JScrollBar mainTableVerticalScrollBar = ((JScrollPane) tblNazioni.getParent().getParent()).getVerticalScrollBar();
+        JScrollBar secondaryTableVerticalScrollBar = ((JScrollPane) tabellaNazioni.getParent().getParent()).getVerticalScrollBar();
+
+        mainTableVerticalScrollBar.addAdjustmentListener(e -> {
+            int mainTableValue = mainTableVerticalScrollBar.getValue();
+            secondaryTableVerticalScrollBar.setValue(mainTableValue);
+        });
+
+        secondaryTableVerticalScrollBar.addAdjustmentListener(e -> {
+            int secondaryTableValue = secondaryTableVerticalScrollBar.getValue();
+            mainTableVerticalScrollBar.setValue(secondaryTableValue);
+        });
+
+        // Nasconde la scrollbar nella tabella secondaria
+        secondaryTableVerticalScrollBar.setPreferredSize(new Dimension(0,0));
 
         pnlNazioni.add(pnlTableNazioni);
         mainPanelStatistiche.add(pnlNazioni);
