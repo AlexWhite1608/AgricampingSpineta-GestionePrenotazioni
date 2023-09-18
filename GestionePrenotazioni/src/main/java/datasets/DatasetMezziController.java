@@ -77,8 +77,8 @@ public class DatasetMezziController {
                 "substr(Arrivo, 4, 7) AS mese, " +
                 "Nazione, COUNT(Mezzo) AS NumeroMezzi, Arrivo, Partenza, Mezzo " +
                 "FROM Prenotazioni " +
-                "GROUP BY mese, Mezzo " +
-                "ORDER BY mese";
+                "GROUP BY mese, Mezzo, Nazione " +
+                "ORDER BY mese, Mezzo, Nazione";
 
         ResultSet rs = new Gateway().execSelectQuery(query);
 
