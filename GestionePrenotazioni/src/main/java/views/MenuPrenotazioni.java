@@ -1253,8 +1253,11 @@ public class MenuPrenotazioni extends JPanel implements StopTableEditObservers {
 
                     if(!rs.next()) {
                         MessageController.getErrorMessage(dialogFiltraPrenotazione, "Non esistono prenotazioni che soddisfano i filtri inseriti");
+                        rs.close();
                         return;
                     }
+
+                    rs.close();
                 } catch (SQLException ex) {
                     throw new RuntimeException(ex);
                 }
