@@ -50,6 +50,7 @@ public class MenuPrenotazioni extends JPanel implements StopTableEditObservers {
 
     private JPanel mainPanelPrenotazioni;
     private JPanel pnlToolbar;
+    private JPanel buttonPanel;
     private JToolBar toolBar;
     private JButton btnAggiungiPrenotazione;
     private JButton btnFiltraPrenotazione;
@@ -57,6 +58,7 @@ public class MenuPrenotazioni extends JPanel implements StopTableEditObservers {
     private JButton btnImportaDrive;
     private JButton btnAggiungiPiazzola;
     private JButton btnRimuoviPiazzola;
+    private JButton btnResetFiltro;
     private JTable tabellaPrenotazioni;
     private JLabel lblFiltro;
     private JLabel lblTotalePrenotazioni;
@@ -96,6 +98,8 @@ public class MenuPrenotazioni extends JPanel implements StopTableEditObservers {
         btnFiltraPrenotazione = new JButton("Filtra");
         btnAggiungiPiazzola = new JButton("Aggiungi piazzola");
         btnRimuoviPiazzola = new JButton("Rimuovi piazzola");
+        btnResetFiltro = new JButton("Annulla filtro");
+        btnResetFiltro.setBackground(TableConstants.BUTTON_ANNULLA_FILTRO_COLORE);
 
         // ComboBox filtraggio anni
         lblFiltro = new JLabel("Filtra per anno: ");
@@ -217,12 +221,13 @@ public class MenuPrenotazioni extends JPanel implements StopTableEditObservers {
         pnlToolbar.setLayout(new BorderLayout());
 
         // Crea il pannello per i bottoni
-        JPanel buttonPanel = new JPanel();
+        buttonPanel = new JPanel();
         buttonPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
         buttonPanel.add(btnSalva);
         buttonPanel.add(btnImportaDrive);
         buttonPanel.add(btnAggiungiPrenotazione);
         buttonPanel.add(btnFiltraPrenotazione);
+
         toolBar.add(buttonPanel, BorderLayout.WEST);
 
         // Panel totale prenotazioni
@@ -254,12 +259,14 @@ public class MenuPrenotazioni extends JPanel implements StopTableEditObservers {
         btnFiltraPrenotazione.setFocusPainted(false);
         btnAggiungiPiazzola.setFocusPainted(false);
         btnRimuoviPiazzola.setFocusPainted(false);
+        btnResetFiltro.setFocusPainted(false);
         btnSalva.setToolTipText("Salva sul drive");
         btnImportaDrive.setToolTipText("Importa prenotazioni dal backup");
         btnAggiungiPrenotazione.setToolTipText("Aggiungi prenotazione");
         btnFiltraPrenotazione.setToolTipText("Filtra prenotazione");
         btnAggiungiPiazzola.setToolTipText("Aggiungi piazzola ");
         btnRimuoviPiazzola.setToolTipText("Rimuovi piazzola");
+        btnResetFiltro.setToolTipText("Annulla il filtro applicato");
 
         // Setting combobox
         cbFiltroAnni.setFocusable(false);
@@ -1273,8 +1280,26 @@ public class MenuPrenotazioni extends JPanel implements StopTableEditObservers {
 
                 // Controlla se stai filtrando
                 if (!currentFilterQuery.isEmpty()) {
-                    lblFiltro.setText("Filtro applicato ");
-                    lblFiltro.setForeground(Color.red);
+                    lblFiltro.setText("Filtro: " + conditions);
+                    lblFiltro.setForeground(TableConstants.BUTTON_ANNULLA_FILTRO_COLORE);
+
+                    // Aggiunge il bottone del filtro quando viene applicato
+                    buttonPanel.add(btnResetFiltro);
+
+                    btnResetFiltro.addActionListener(new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+
+                            // Reimposta la label lblFiltro se è applicato il filtro e si rimuove scegliendo un valore della cb
+                            lblFiltro.setText("FIltra per anno: ");
+                            lblFiltro.setForeground(Color.black);
+
+                            currentFilterQuery = "";
+                            tablePrenotazioniController.refreshTable(tabellaPrenotazioni);
+
+                            buttonPanel.remove(btnResetFiltro);
+                        }
+                    });
                 }
             }
         });
