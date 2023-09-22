@@ -1270,7 +1270,7 @@ public class MenuPrenotazioni extends JPanel implements StopTableEditObservers {
                 tablePrenotazioniController.refreshTable(tabellaPrenotazioni, filterQuery);
                 dialogFiltraPrenotazione.dispose();
 
-                //TODO: controlla se stai filtrando
+                // Controlla se stai filtrando
                 if (!currentFilterQuery.isEmpty()) {
                     lblFiltro.setText("Filtro applicato ");
                     lblFiltro.setForeground(Color.red);

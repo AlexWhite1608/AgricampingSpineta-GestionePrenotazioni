@@ -257,7 +257,7 @@ public class CustomCellEditorPrenotazioni extends AbstractCellEditor implements 
         }
         fireEditingStopped();
 
-        //Controlla se sta filtrando
+        // Controlla se sta filtrando
         if (!currentFilterQuery.isEmpty()) {
             tablePrenotazioniController.refreshTable(tabellaPrenotazioni, currentFilterQuery);
         }
