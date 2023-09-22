@@ -27,13 +27,15 @@ public class CustomCellEditorPrenotazioni extends AbstractCellEditor implements 
     private int editingRow;
 
     private JTable tabellaPrenotazioni;
+    private String currentFilterQuery;
     private final TablePrenotazioniController tablePrenotazioniController;
 
     // Lista degli observers di fine edit tabella
     private static ArrayList<StopTableEditObservers> observers = new ArrayList<>();
 
-    public CustomCellEditorPrenotazioni(TablePrenotazioniController tablePrenotazioniController) {
+    public CustomCellEditorPrenotazioni(TablePrenotazioniController tablePrenotazioniController, String currentFilterQuery) {
         this.tablePrenotazioniController = tablePrenotazioniController;
+        this.currentFilterQuery = currentFilterQuery;
 
         cbPiazzole = new JComboBox<>();
         ((JLabel) cbPiazzole.getRenderer()).setHorizontalAlignment(SwingConstants.CENTER);
@@ -254,7 +256,11 @@ public class CustomCellEditorPrenotazioni extends AbstractCellEditor implements 
             }
         }
         fireEditingStopped();
-        tablePrenotazioniController.refreshTable(tabellaPrenotazioni);
+
+        //Controlla se sta filtrando
+        if (!currentFilterQuery.isEmpty()) {
+            tablePrenotazioniController.refreshTable(tabellaPrenotazioni, currentFilterQuery);
+        }
         tabellaPrenotazioni.repaint();
 
         // Notifica gli observers che l'editing della tabella è concluso

@@ -45,6 +45,9 @@ public class MenuPrenotazioni extends JPanel implements StopTableEditObservers {
     // Lista dei controller observer di MenuCalenario e MenuArriviPartenze
     private static ArrayList<PrenotazioniObservers> prenotazioniObserversList = new ArrayList<>();
 
+    // Stringa per tenere traccia del filtro dopo la modifica
+    private String currentFilterQuery = "";
+
     private JPanel mainPanelPrenotazioni;
     private JPanel pnlToolbar;
     private JToolBar toolBar;
@@ -1263,11 +1266,15 @@ public class MenuPrenotazioni extends JPanel implements StopTableEditObservers {
                 }
 
                 // Aggiorno la tabella con la vista filtrata
+                currentFilterQuery = filterQuery;
                 tablePrenotazioniController.refreshTable(tabellaPrenotazioni, filterQuery);
                 dialogFiltraPrenotazione.dispose();
 
-                lblFiltro.setText("Filtro applicato ");
-                lblFiltro.setForeground(Color.red);
+                //TODO: controlla se stai filtrando
+                if (!currentFilterQuery.isEmpty()) {
+                    lblFiltro.setText("Filtro applicato ");
+                    lblFiltro.setForeground(Color.red);
+                }
             }
         });
 
@@ -1407,7 +1414,7 @@ public class MenuPrenotazioni extends JPanel implements StopTableEditObservers {
 
             // Se l'editor è nullo o non è già un editor personalizzato, crea un nuovo editor
             if (cellEditor == null || !(cellEditor instanceof CustomCellEditorPrenotazioni)) {
-                CustomCellEditorPrenotazioni customCellEditor = new CustomCellEditorPrenotazioni(tablePrenotazioniController);
+                CustomCellEditorPrenotazioni customCellEditor = new CustomCellEditorPrenotazioni(tablePrenotazioniController, currentFilterQuery);
 
                 // Si iscrive come observer all'evento di terminazione dell'edit della tabella
                 CustomCellEditorPrenotazioni.getObservers().add(this);
