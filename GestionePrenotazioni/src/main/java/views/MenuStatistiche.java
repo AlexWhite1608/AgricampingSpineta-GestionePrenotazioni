@@ -48,6 +48,7 @@ public class MenuStatistiche extends JPanel implements PrenotazioniObservers {
     private JTable tblNazioni;
     private JComboBox cbPlotYears;
     private JButton btnAdvStats;
+    private JButton btnShowPlots;
 
     // Specifica la larghezza desiderata per tutte le colonne
     private static final int larghezzaColonna = 200;
@@ -114,16 +115,27 @@ public class MenuStatistiche extends JPanel implements PrenotazioniObservers {
         // Button per la visualizzazione del focus sulle tabelle
         btnAdvStats = new JButton();
         btnAdvStats.setFocusPainted(false);
-        Icon icon = new ImageIcon((Objects.requireNonNull(getClass().getResource("/zoom-in-24x24.png"))));
-        btnAdvStats.setIcon(icon);
+        Icon iconAdvStats = new ImageIcon((Objects.requireNonNull(getClass().getResource("/zoom-in-24x24.png"))));
+        btnAdvStats.setIcon(iconAdvStats);
         btnAdvStats.setToolTipText("Statistiche avanzate");
+
+        // Button per visualizzare i grafici in dialog separato
+        btnShowPlots = new JButton();
+        btnShowPlots.setFocusPainted(false);
+        Icon iconShowPlots = new ImageIcon((Objects.requireNonNull(getClass().getResource("/pie-chart.png"))));
+        btnShowPlots.setIcon(iconShowPlots);
+        btnShowPlots.setToolTipText("Mostra grafici");
+
+        JPanel pnlStatsButtons = new JPanel(new FlowLayout());
+        pnlStatsButtons.add(btnShowPlots);
+        pnlStatsButtons.add(btnAdvStats);
 
         JPanel pnlChooseYears = new JPanel(new FlowLayout());
         pnlChooseYears.add(lblPlotYears);
         pnlChooseYears.add(cbPlotYears);
 
         pnlButtonsToolbar.add(pnlChooseYears, BorderLayout.WEST);
-        pnlButtonsToolbar.add(btnAdvStats, BorderLayout.EAST);
+        pnlButtonsToolbar.add(pnlStatsButtons, BorderLayout.EAST);
 
         // Implementa aggiornamento del grafico quando si cambia l'anno della cb
         cbPlotYears.addActionListener(new ActionListener() {
