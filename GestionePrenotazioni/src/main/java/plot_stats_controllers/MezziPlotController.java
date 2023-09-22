@@ -111,6 +111,40 @@ public class MezziPlotController implements PlotController, PrenotazioniObserver
         pnlPlot.add(chartPanel);
     }
 
+    // Costruisce il grafico e ritorna il chartPanel
+    public ChartPanel getChartPanel() throws SQLException {
+        DefaultCategoryDataset dataset = DatasetMezziController.getPlotDataset(YEAR);
+        barChart = ChartFactory.createBarChart(
+                PLOT_TYPE + YEAR,
+                "Mezzo",
+                "Numero",
+                dataset,
+                PlotOrientation.VERTICAL,
+                false, true, false);
+
+        CategoryPlot plot = barChart.getCategoryPlot();
+        plot.getRenderer().setSeriesPaint(0, TableConstants.TABELLA_MEZZI_COLOR);
+        barChart.setBackgroundPaint(pnlPlot.getBackground());
+
+        CategoryAxis xAxis = plot.getDomainAxis();
+        xAxis.setCategoryLabelPositions(CategoryLabelPositions.UP_45);
+
+        ValueAxis rangeAxis = plot.getRangeAxis();
+        rangeAxis.setAutoRange(true);
+
+        BarRenderer renderer = (BarRenderer)plot.getRenderer();
+        renderer.setMaximumBarWidth(0.1);
+        renderer.setDrawBarOutline(false);
+        renderer.setShadowVisible(false);
+        renderer.setBarPainter(new StandardBarPainter());
+
+        // Collega il plot al JPanel
+        ChartPanel chartPanel = new ChartPanel(barChart);
+        chartPanel.setMouseWheelEnabled(false);
+
+        return chartPanel;
+    }
+
     // Richiamata per modificare l'anno del plot quando modificato
     @Override
     public void changeTitlePlot(String newYear) throws SQLException {

@@ -107,6 +107,26 @@ public class NazioniPlotController implements PlotController, PrenotazioniObserv
         pnlPlot.add(chartPanel);
     }
 
+    // Costruisce il grafico e ritorna il chart panel
+    public ChartPanel getChartPanel() throws SQLException {
+        DefaultPieDataset dataset = DatasetNazioniController.getPlotDataset(YEAR);
+        pieChart = ChartFactory.createPieChart(
+                PLOT_TYPE + YEAR,
+                dataset,
+                false, true, false);
+
+        // Aggiungi il generatore di etichette personalizzato per mostrare le percentuali nei tooltip
+        PiePlot plot = (PiePlot) pieChart.getPlot();
+        plot.setLabelGenerator(new CustomPieSectionLabelGenerator(dataset));
+        pieChart.setBackgroundPaint(pnlPlot.getBackground());
+
+        // Collega il plot al JPanel
+        ChartPanel chartPanel = new ChartPanel(pieChart);
+        chartPanel.setMouseWheelEnabled(false);
+
+        return chartPanel;
+    }
+
     // Richiamata per modificare l'anno del plot quando modificato
     @Override
     public void changeTitlePlot(String newYear) throws SQLException {

@@ -4,6 +4,7 @@ import observer.PlotControllerObservers;
 import observer.PrenotazioniObservers;
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 import org.jdesktop.swingx.autocomplete.ObjectToStringConverter;
+import org.jfree.chart.ChartPanel;
 import plot_stats_controllers.MezziPlotController;
 import plot_stats_controllers.NazioniPlotController;
 import plot_stats_controllers.PresenzePlotController;
@@ -153,7 +154,7 @@ public class MenuStatistiche extends JPanel implements PrenotazioniObservers {
             }
         });
 
-        // Apre il frame di visualizzazione delle statistiche avanzate
+        // Apre il dialog di visualizzazione delle statistiche avanzate
         btnAdvStats.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -161,6 +162,18 @@ public class MenuStatistiche extends JPanel implements PrenotazioniObservers {
                     setupAdvancedStats();
                 } catch (SQLException ex) {
                     System.err.println("Impossibile calcolare statistiche avanzate " + ex.getMessage());;
+                }
+            }
+        });
+
+        // Apre il dialog di visualizzazione dei grafici
+        btnShowPlots.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    setupShowPlots();
+                } catch (SQLException ex) {
+                    System.err.println("Impossibile mostrare i grafici " + ex.getMessage());
                 }
             }
         });
@@ -625,6 +638,84 @@ public class MenuStatistiche extends JPanel implements PrenotazioniObservers {
         dialogAdvStats.setResizable(false);
         dialogAdvStats.setModal(true);
         dialogAdvStats.setVisible(true);
+    }
+
+    // Setup grafici ingranditi
+    private void setupShowPlots() throws SQLException {
+        JDialog dialogShowPlots = new JDialog();
+        dialogShowPlots.setTitle("Grafici");
+        dialogShowPlots.setLayout(new BorderLayout());
+        dialogShowPlots.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
+        // MainPanel
+        JPanel pnlShowPlots = new JPanel(new BorderLayout());
+
+        // Impostazione toolbar
+        JToolBar toolbarShowPlots = new JToolBar();
+        toolbarShowPlots.setLayout(new BorderLayout());
+        toolbarShowPlots.setFloatable(false);
+
+        // ComboBox scelta anno (senza "Tutto")
+        ArrayList<String> listaAnni = TimeManager.getPrenotazioniYears();
+        listaAnni.removeIf(el -> Objects.equals(el, "Tutto"));
+        JComboBox<String> cbSceltaAnno = new JComboBox(listaAnni.toArray());
+        cbSceltaAnno.setFocusable(false);
+        ((JLabel) cbSceltaAnno.getRenderer()).setHorizontalAlignment(SwingConstants.CENTER);
+        cbSceltaAnno.setSelectedItem(String.valueOf(LocalDate.now().getYear()));
+
+        // ComboBox scelta grafico
+        JComboBox<String> cbSceltaPlot = new JComboBox(new String[] {"Presenze", "Mezzi", "Nazioni"});
+        cbSceltaPlot.setFocusable(false);
+        ((JLabel) cbSceltaPlot.getRenderer()).setHorizontalAlignment(SwingConstants.CENTER);
+        cbSceltaPlot.setSelectedItem("Presenze");
+
+        // JPanel per contenere le ComboBox
+        JPanel pnlComboBoxAndButton = new JPanel(new FlowLayout());
+        pnlComboBoxAndButton.add(cbSceltaPlot);
+        pnlComboBoxAndButton.add(cbSceltaAnno);
+
+        // Aggiungi il JPanel alla toolbar
+        toolbarShowPlots.add(pnlComboBoxAndButton, BorderLayout.WEST);
+
+        // Panel del grafico scelto
+        JPanel pnlChosenPlot = new JPanel(new CardLayout());
+
+        PresenzePlotController presenzePlotController = new PresenzePlotController(pnlChosenPlot, cbPlotYears.getSelectedItem().toString());
+        ChartPanel chartPanelPresenze = presenzePlotController.getChartPanel();
+        pnlChosenPlot.add(chartPanelPresenze, "Presenze");
+
+        MezziPlotController mezziPlotController = new MezziPlotController(pnlChosenPlot, cbPlotYears.getSelectedItem().toString());
+        ChartPanel chartPanelMezzi = mezziPlotController.getChartPanel();
+        pnlChosenPlot.add(chartPanelMezzi, "Mezzi");
+
+        NazioniPlotController nazioniPlotController = new NazioniPlotController(pnlChosenPlot, cbPlotYears.getSelectedItem().toString());
+        ChartPanel chartPanelNazioni = nazioniPlotController.getChartPanel();
+        pnlChosenPlot.add(chartPanelNazioni, "Nazioni");
+
+        // Nascondi tutti i grafici inizialmente tranne quello di Presenze
+        ((CardLayout) pnlChosenPlot.getLayout()).show(pnlChosenPlot, "Presenze");
+
+        // Implementa switch dinamico
+        cbSceltaPlot.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String selectedPlot = cbSceltaPlot.getSelectedItem().toString();
+
+                // Mostra il grafico corrispondente alla scelta dalla cb
+                ((CardLayout) pnlChosenPlot.getLayout()).show(pnlChosenPlot, selectedPlot);
+            }
+        });
+
+        pnlShowPlots.add(toolbarShowPlots, BorderLayout.NORTH);
+        pnlShowPlots.add(pnlChosenPlot, BorderLayout.CENTER);
+
+        dialogShowPlots.add(pnlShowPlots);
+        dialogShowPlots.pack();
+        dialogShowPlots.setMinimumSize(new Dimension(1000, 600));
+        dialogShowPlots.setLocationRelativeTo(null);
+        dialogShowPlots.setResizable(false);
+        dialogShowPlots.setModal(true);
+        dialogShowPlots.setVisible(true);
     }
 
     // Ricarica la cb degli anni
