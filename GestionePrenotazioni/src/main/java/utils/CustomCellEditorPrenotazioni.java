@@ -260,7 +260,8 @@ public class CustomCellEditorPrenotazioni extends AbstractCellEditor implements 
         // Controlla se sta filtrando
         if (!currentFilterQuery.isEmpty()) {
             tablePrenotazioniController.refreshTable(tabellaPrenotazioni, currentFilterQuery);
-        }
+        } else
+            tablePrenotazioniController.refreshTable(tabellaPrenotazioni);
         tabellaPrenotazioni.repaint();
 
         // Notifica gli observers che l'editing della tabella è concluso
