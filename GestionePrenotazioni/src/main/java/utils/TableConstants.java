@@ -27,7 +27,7 @@ public class TableConstants {
     public static final Color TABELLA_MEZZI_COLOR = new Color(252, 175, 56);
     public static final Color TABELLA_PERCENTUALE_CRESCITA = new Color(208, 247, 208);
     public static final Color TABELLA_PERCENTUALE_DECRESCITA = new Color(252, 167, 167);
-    public static final Color BUTTON_ANNULLA_FILTRO_COLORE = new Color(250, 175, 170);
+    public static final Color BUTTON_ANNULLA_FILTRO_COLORE = new Color(240, 67, 55);
 
     public static final int COLUMNS_WIDTH_CALENDARIO = 45;
     public static final int SEPARATOR_BORDER_WIDTH = 3;
