@@ -899,7 +899,13 @@ public class MenuPrenotazioni extends JPanel implements StopTableEditObservers {
                 }
 
                 // Ricarico la tabella prenotazioni e notifico gli observers
-                tablePrenotazioniController.refreshTable(tabellaPrenotazioni);
+                if(!currentFilterQuery.isEmpty()) {
+                    tablePrenotazioniController.refreshTable(tabellaPrenotazioni, currentFilterQuery);
+                }
+                else {
+                    tablePrenotazioniController.refreshTable(tabellaPrenotazioni);
+                }
+
                 try {
                     notifyPrenotazioneChanged();
                 } catch (SQLException ex) {
@@ -911,10 +917,6 @@ public class MenuPrenotazioni extends JPanel implements StopTableEditObservers {
 
                 try {
                     if(new Gateway().execSelectQuery(checkQuery) != null) {
-
-                        // Imposta l'anno corrente nella cb degli anni
-                        String currentYear = String.valueOf(LocalDate.now().getYear());
-                        cbFiltroAnni.setSelectedItem(currentYear);
 
                         dialogNuovaPrenotazione.dispose();
                         MessageController.getInfoMessage(MenuPrenotazioni.this, "Prenotazione aggiunta");
