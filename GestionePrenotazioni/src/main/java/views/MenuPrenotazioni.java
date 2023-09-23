@@ -899,13 +899,7 @@ public class MenuPrenotazioni extends JPanel implements StopTableEditObservers {
                 }
 
                 // Ricarico la tabella prenotazioni e notifico gli observers
-                if(!currentFilterQuery.isEmpty()) {
-                    tablePrenotazioniController.refreshTable(tabellaPrenotazioni, currentFilterQuery);
-                }
-                else {
-                    tablePrenotazioniController.refreshTable(tabellaPrenotazioni);
-                }
-
+                tablePrenotazioniController.refreshTable(tabellaPrenotazioni);
                 try {
                     notifyPrenotazioneChanged();
                 } catch (SQLException ex) {
@@ -917,7 +911,6 @@ public class MenuPrenotazioni extends JPanel implements StopTableEditObservers {
 
                 try {
                     if(new Gateway().execSelectQuery(checkQuery) != null) {
-
                         dialogNuovaPrenotazione.dispose();
                         MessageController.getInfoMessage(MenuPrenotazioni.this, "Prenotazione aggiunta");
 
