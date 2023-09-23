@@ -911,6 +911,11 @@ public class MenuPrenotazioni extends JPanel implements StopTableEditObservers {
 
                 try {
                     if(new Gateway().execSelectQuery(checkQuery) != null) {
+
+                        // Imposta l'anno corrente nella cb degli anni
+                        String currentYear = String.valueOf(LocalDate.now().getYear());
+                        cbFiltroAnni.setSelectedItem(currentYear);
+
                         dialogNuovaPrenotazione.dispose();
                         MessageController.getInfoMessage(MenuPrenotazioni.this, "Prenotazione aggiunta");
 
@@ -1291,10 +1296,12 @@ public class MenuPrenotazioni extends JPanel implements StopTableEditObservers {
                         public void actionPerformed(ActionEvent e) {
 
                             // Reimposta la label lblFiltro se è applicato il filtro e si rimuove scegliendo un valore della cb
-                            lblFiltro.setText("FIltra per anno: ");
+                            lblFiltro.setText("Filtra per anno: ");
                             lblFiltro.setForeground(Color.black);
 
                             currentFilterQuery = "";
+                            String currentYear = String.valueOf(LocalDate.now().getYear());
+                            cbFiltroAnni.setSelectedItem(currentYear);
                             tablePrenotazioniController.refreshTable(tabellaPrenotazioni);
 
                             buttonPanel.remove(btnResetFiltro);
@@ -1347,10 +1354,7 @@ public class MenuPrenotazioni extends JPanel implements StopTableEditObservers {
 
                     // Ottengo i valori dalla riga selezionata
                     String id = tabellaPrenotazioni.getModel().getValueAt(selectedRow, 0).toString();
-                    String arrivo = (String) tabellaPrenotazioni.getValueAt(selectedRow, 1);
-                    String partenza = (String) tabellaPrenotazioni.getValueAt(selectedRow, 2);
                     String nome = (String) tabellaPrenotazioni.getValueAt(selectedRow, 3);
-                    String acconto = (String) tabellaPrenotazioni.getValueAt(selectedRow, 4);
 
                     // Messaggio di conferma di eliminazione della prenotazione
                     int confirmResult = JOptionPane.showConfirmDialog(MenuPrenotazioni.this,
@@ -1372,7 +1376,13 @@ public class MenuPrenotazioni extends JPanel implements StopTableEditObservers {
                         new Gateway().execUpdateQuery(deleteArriviPartenzequery, idEliminazione);
 
                         // Aggiorno la tabella dopo l'eliminazione e notifico gli observers
-                        tablePrenotazioniController.refreshTable(tabellaPrenotazioni);
+                        if(!currentFilterQuery.isEmpty()) {
+                            tablePrenotazioniController.refreshTable(tabellaPrenotazioni, currentFilterQuery);
+                        }
+                        else {
+                            tablePrenotazioniController.refreshTable(tabellaPrenotazioni);
+                        }
+
                         notifyPrenotazioneChanged();
                     }
                 } catch (SQLException ex) {
@@ -1489,7 +1499,8 @@ public class MenuPrenotazioni extends JPanel implements StopTableEditObservers {
         }
 
         cbFiltroAnni.setModel(model);
-        cbFiltroAnni.setSelectedItem(String.valueOf(LocalDate.now().getYear()));
+//        String currentYear = String.valueOf(LocalDate.now().getYear());
+//        cbFiltroAnni.setSelectedItem(currentYear);
 
         // Aggiorna il counter del totale delle prenotazioni
         String totalePrenotazioniSelected = DatasetPresenzeController.getTotalePrenotazioni(cbFiltroAnni.getSelectedItem().toString());
