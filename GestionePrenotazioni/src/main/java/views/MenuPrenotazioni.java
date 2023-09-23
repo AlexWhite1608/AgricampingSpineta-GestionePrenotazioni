@@ -47,6 +47,7 @@ public class MenuPrenotazioni extends JPanel implements StopTableEditObservers {
 
     // Stringa per tenere traccia del filtro dopo la modifica
     private String currentFilterQuery = "";
+    private boolean IS_FILTERED = false;
 
     private JPanel mainPanelPrenotazioni;
     private JPanel pnlToolbar;
@@ -899,7 +900,13 @@ public class MenuPrenotazioni extends JPanel implements StopTableEditObservers {
                 }
 
                 // Ricarico la tabella prenotazioni e notifico gli observers
-                tablePrenotazioniController.refreshTable(tabellaPrenotazioni);
+                if(!currentFilterQuery.isEmpty()) {
+                    tablePrenotazioniController.refreshTable(tabellaPrenotazioni, currentFilterQuery);
+                }
+                else {
+                    tablePrenotazioniController.refreshTable(tabellaPrenotazioni);
+                }
+
                 try {
                     notifyPrenotazioneChanged();
                 } catch (SQLException ex) {
@@ -1280,6 +1287,8 @@ public class MenuPrenotazioni extends JPanel implements StopTableEditObservers {
 
                 // Controlla se stai filtrando
                 if (!currentFilterQuery.isEmpty()) {
+                    IS_FILTERED = true;
+
                     lblFiltro.setText("Filtro: " + conditions);
                     lblFiltro.setForeground(TableConstants.BUTTON_ANNULLA_FILTRO_COLORE);
 
@@ -1289,6 +1298,7 @@ public class MenuPrenotazioni extends JPanel implements StopTableEditObservers {
                     btnResetFiltro.addActionListener(new ActionListener() {
                         @Override
                         public void actionPerformed(ActionEvent e) {
+                            IS_FILTERED = false;
 
                             // Reimposta la label lblFiltro se è applicato il filtro e si rimuove scegliendo un valore della cb
                             lblFiltro.setText("Filtra per anno: ");
@@ -1494,8 +1504,11 @@ public class MenuPrenotazioni extends JPanel implements StopTableEditObservers {
         }
 
         cbFiltroAnni.setModel(model);
-//        String currentYear = String.valueOf(LocalDate.now().getYear());
-//        cbFiltroAnni.setSelectedItem(currentYear);
+
+        if(!IS_FILTERED) {
+            String currentYear = String.valueOf(LocalDate.now().getYear());
+            cbFiltroAnni.setSelectedItem(currentYear);
+        }
 
         // Aggiorna il counter del totale delle prenotazioni
         String totalePrenotazioniSelected = DatasetPresenzeController.getTotalePrenotazioni(cbFiltroAnni.getSelectedItem().toString());
