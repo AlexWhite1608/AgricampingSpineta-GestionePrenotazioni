@@ -395,6 +395,7 @@ public class MenuPrenotazioni extends JPanel implements StopTableEditObservers {
                     lblTotalePrenotazioni.setText("Totale prenotazioni: " + totalePrenotazioniSelected);
 
                 currentFilterQuery = "";
+                buttonPanel.remove(btnResetFiltro);
                 tablePrenotazioniController.refreshTable(tabellaPrenotazioni);
             }
         });
