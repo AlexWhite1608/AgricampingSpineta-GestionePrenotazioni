@@ -1,10 +1,17 @@
 package views;
 
+import datasets.DatasetMezziController;
+import datasets.DatasetNazioniController;
+import datasets.DatasetPresenzeController;
 import observer.PlotControllerObservers;
 import observer.PrenotazioniObservers;
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 import org.jdesktop.swingx.autocomplete.ObjectToStringConverter;
 import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.CategoryPlot;
+import org.jfree.chart.plot.PiePlot;
+import org.jfree.chart.plot.Plot;
 import plot_stats_controllers.MezziPlotController;
 import plot_stats_controllers.NazioniPlotController;
 import plot_stats_controllers.PresenzePlotController;
@@ -12,6 +19,7 @@ import table_stats_controllers.TableAdvancedStatsController;
 import table_stats_controllers.TableMezziController;
 import table_stats_controllers.TableNazioniController;
 import table_stats_controllers.TablePresenzeController;
+import utils.CustomPieSectionLabelGenerator;
 import utils.ListOfNations;
 import utils.TimeManager;
 
@@ -40,6 +48,7 @@ public class MenuStatistiche extends JPanel implements PrenotazioniObservers {
     private JPanel pnlMezzi;
     private JPanel pnlNazioni;
     private JPanel pnlToolbar;
+    private JPanel pnlChosenPlot;
     private JPanel pnlPlotPresenze;
     private JPanel pnlPlotMezzi;
     private JPanel pnlPlotNazioni;
@@ -116,14 +125,14 @@ public class MenuStatistiche extends JPanel implements PrenotazioniObservers {
         // Button per la visualizzazione del focus sulle tabelle
         btnAdvStats = new JButton();
         btnAdvStats.setFocusPainted(false);
-        Icon iconAdvStats = new ImageIcon((Objects.requireNonNull(getClass().getResource("/zoom-in-24x24.png"))));
+        Icon iconAdvStats = new ImageIcon((Objects.requireNonNull(getClass().getResource("/pie-chart.png"))));
         btnAdvStats.setIcon(iconAdvStats);
         btnAdvStats.setToolTipText("Statistiche avanzate");
 
         // Button per visualizzare i grafici in dialog separato
         btnShowPlots = new JButton();
         btnShowPlots.setFocusPainted(false);
-        Icon iconShowPlots = new ImageIcon((Objects.requireNonNull(getClass().getResource("/pie-chart.png"))));
+        Icon iconShowPlots = new ImageIcon((Objects.requireNonNull(getClass().getResource("/zoom-in-24x24.png"))));
         btnShowPlots.setIcon(iconShowPlots);
         btnShowPlots.setToolTipText("Mostra grafici");
 
@@ -678,7 +687,7 @@ public class MenuStatistiche extends JPanel implements PrenotazioniObservers {
         toolbarShowPlots.add(pnlComboBoxAndButton, BorderLayout.WEST);
 
         // Panel del grafico scelto
-        JPanel pnlChosenPlot = new JPanel(new CardLayout());
+        pnlChosenPlot = new JPanel(new CardLayout());
 
         PresenzePlotController presenzePlotController = new PresenzePlotController(pnlChosenPlot, cbPlotYears.getSelectedItem().toString());
         ChartPanel chartPanelPresenze = presenzePlotController.getChartPanel();
@@ -703,6 +712,37 @@ public class MenuStatistiche extends JPanel implements PrenotazioniObservers {
 
                 // Mostra il grafico corrispondente alla scelta dalla cb
                 ((CardLayout) pnlChosenPlot.getLayout()).show(pnlChosenPlot, selectedPlot);
+
+                cbSceltaAnno.setSelectedItem(String.valueOf(LocalDate.now().getYear()));
+            }
+        });
+
+        //TODO: Implementa aggiornamento del grafico quando si cambia l'anno della cb
+        cbSceltaAnno.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+
+                // Crea una mappa per associare nomi di grafici ai rispettivi ChartPanel
+                Map<String, ChartPanel> chartPanels = new HashMap<>();
+
+                // Aggiungi i tuoi ChartPanel alla mappa
+                chartPanels.put("Presenze", chartPanelPresenze);
+                chartPanels.put("Mezzi", chartPanelMezzi);
+                chartPanels.put("Nazioni", chartPanelNazioni);
+
+                // Ottieni il nome del grafico selezionato dalla JComboBox
+                String selectedPlot = cbSceltaPlot.getSelectedItem().toString();
+
+                // Ottieni il ChartPanel e il Chart associato al nome del grafico
+                ChartPanel selectedChartPanel = chartPanels.get(selectedPlot);
+                JFreeChart selectedChart = selectedChartPanel.getChart();
+
+                // Esegui il refresh del grafico in base all'anno
+                String selectedYear = cbSceltaAnno.getSelectedItem().toString();
+                try {
+                    refreshSelectedPlot(selectedChart, selectedChartPanel, selectedYear, selectedPlot);
+                } catch (SQLException ex) {
+                    System.err.println("Impossibile aggiornare il grafico " + ex.getMessage());
+                }
             }
         });
 
@@ -781,6 +821,30 @@ public class MenuStatistiche extends JPanel implements PrenotazioniObservers {
     @Override
     public void refreshPiazzola() throws SQLException {
 
+    }
+
+    // Ricarica il plot selezionato con l'anno della cb scelto
+    private void refreshSelectedPlot(JFreeChart chart, ChartPanel chartPanel, String selectedYear, String selectedPlot) throws SQLException {
+
+        // Ricostruisce il grafico con i nuovi valori
+        Plot plot = chart.getPlot();
+        if(plot instanceof PiePlot){
+            ((PiePlot) plot).setDataset(DatasetNazioniController.getPlotDataset(selectedYear));
+            ((PiePlot) plot).setLabelGenerator(new CustomPieSectionLabelGenerator(DatasetNazioniController.getPlotDataset(selectedYear)));
+            chart.setTitle(selectedPlot + " " + selectedYear);
+            chartPanel.setMouseWheelEnabled(false);
+            pnlChosenPlot.revalidate();
+            pnlChosenPlot.repaint();
+        } else if (plot instanceof CategoryPlot) {
+            if(Objects.equals(selectedPlot, "Mezzi"))
+                chart.getCategoryPlot().setDataset(DatasetMezziController.getPlotDataset(selectedYear));
+            else if(Objects.equals(selectedPlot, "Presenze"))
+                chart.getCategoryPlot().setDataset(DatasetPresenzeController.getPlotDataset(selectedYear));
+            chart.setTitle(selectedPlot + " " + selectedYear);
+            chartPanel.setMouseWheelEnabled(false);
+            pnlChosenPlot.revalidate();
+            pnlChosenPlot.repaint();
+        }
     }
 
     public static ArrayList<PlotControllerObservers> getPlotControllersObserversList() {
