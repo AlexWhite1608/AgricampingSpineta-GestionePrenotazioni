@@ -1164,6 +1164,47 @@ public class MenuPrenotazioni extends JPanel implements StopTableEditObservers {
         gbc.anchor = GridBagConstraints.WEST;
         pnlForm.add(tfNazione, gbc);
 
+        // Label mese
+        JLabel lblMese = new JLabel("Mese:");
+        gbc.gridx = 0;
+        gbc.gridy = 6;
+        gbc.anchor = GridBagConstraints.WEST;
+        pnlForm.add(lblMese, gbc);
+
+        // ComboBox mese
+        JComboBox<String> cbMese = new JComboBox(TimeManager.getYearMonths().toArray());
+        cbMese.setPreferredSize(datePickerArrivo.getPreferredSize());
+        cbMese.setFocusable(false);
+        cbMese.setSelectedItem(null);
+        ((JLabel) cbMese.getRenderer()).setHorizontalAlignment(SwingConstants.CENTER);
+        gbc.gridx = 1;
+        gbc.gridy = 6;
+        gbc.anchor = GridBagConstraints.WEST;
+        pnlForm.add(cbMese, gbc);
+
+        // Label anno
+        JLabel lblAnno = new JLabel("Anno:");
+        gbc.gridx = 3;
+        gbc.gridy = 6;
+        gbc.anchor = GridBagConstraints.WEST;
+        pnlForm.add(lblAnno, gbc);
+
+        // ComboBox anno
+        JComboBox<String> cbAnno = new JComboBox(TimeManager.getPrenotazioniYears().toArray());
+        for (int i = cbAnno.getItemCount() - 1; i >= 0; i--) {
+            if (Objects.equals(cbAnno.getItemAt(i), "Tutto")) {
+                cbAnno.removeItemAt(i);
+            }
+        }
+        cbAnno.setPreferredSize(datePickerArrivo.getPreferredSize());
+        cbAnno.setFocusable(false);
+        cbAnno.setSelectedItem(null);
+        ((JLabel) cbAnno.getRenderer()).setHorizontalAlignment(SwingConstants.CENTER);
+        gbc.gridx = 4;
+        gbc.gridy = 6;
+        gbc.anchor = GridBagConstraints.WEST;
+        pnlForm.add(cbAnno, gbc);
+
         // Imposta i vincoli sulle textFields
         TextFieldsController.setupTextFieldsInteger(tfTelefono);
         TextFieldsController.setupTextFieldsFloat(tfAcconto);
@@ -1203,6 +1244,8 @@ public class MenuPrenotazioni extends JPanel implements StopTableEditObservers {
                 String acconto = "";
                 String mezzo = "";
                 String nazione = "";
+                String mese = "";
+                String anno = "";
                 if(!Objects.equals(tfNome.getText(), ""))
                     nomePrenotazione = tfNome.getText();
                 if(!Objects.equals(cbSceltaPiazzola.getSelectedItem(), null))
@@ -1225,6 +1268,14 @@ public class MenuPrenotazioni extends JPanel implements StopTableEditObservers {
                     mezzo = "";
                 if(!Objects.equals(tfNazione.getText(), ""))
                     nazione = tfNazione.getText();
+                if(cbMese.getSelectedItem() != null)
+                    mese = cbMese.getSelectedItem().toString();
+                else
+                    mese = "";
+                if(cbAnno.getSelectedItem() != null)
+                    anno = cbAnno.getSelectedItem().toString();
+                else
+                    anno = "";
 
                 // Eseguo la query del filtro (in base al radio button selezionato) con eventuale messaggio se non esiste nessun valore per il filtro scelto
                 String filterQuery = "SELECT * FROM Prenotazioni WHERE ";
@@ -1232,36 +1283,66 @@ public class MenuPrenotazioni extends JPanel implements StopTableEditObservers {
 
                 ArrayList<String> conditions = new ArrayList<>();
 
+                String condizioneScelta = "";
+
                 // Aggiungi le condizioni alla lista solo se i valori non sono vuoti
                 if (!nomePrenotazione.isEmpty()) {
                     conditions.add("Nome = '" + nomePrenotazione + "'");
+                    condizioneScelta = "Nome: " + nomePrenotazione;
                 }
                 if (!piazzolaScelta.isEmpty()) {
                     conditions.add("Piazzola = '" + piazzolaScelta + "'");
+                    condizioneScelta = "Piazzola: " + piazzolaScelta;
                 }
                 if (!dataArrivo.isEmpty()) {
                     conditions.add("Arrivo = '" + dataArrivo + "'");
+                    condizioneScelta = "Arrivo: " + dataArrivo;
                 }
                 if (!dataPartenza.isEmpty()) {
                     conditions.add("Partenza = '" + dataPartenza + "'");
+                    condizioneScelta = "Partenza: " + dataPartenza;
                 }
                 if (!info.isEmpty()) {
                     conditions.add("Info = '" + info + "'");
+                    condizioneScelta = "Info: " + info;
                 }
                 if (!telefono.isEmpty()) {
                     conditions.add("Telefono = '" + telefono + "'");
+                    condizioneScelta = "Telefono: " + telefono;
                 }
                 if (!email.isEmpty()) {
                     conditions.add("Email = '" + email + "'");
+                    condizioneScelta = "Email: " + email;
                 }
                 if (!acconto.isEmpty()) {
                     conditions.add("Acconto = '" + acconto + "'");
+                    condizioneScelta = "Acconto: " + acconto;
                 }
                 if (!mezzo.isEmpty()) {
                     conditions.add("Mezzo = '" + mezzo + "'");
+                    condizioneScelta = "Mezzo: " + mezzo;
                 }
                 if (!nazione.isEmpty()) {
                     conditions.add("Nazione = '" + nazione + "'");
+                    condizioneScelta = "Nazione: " + nazione;
+                }
+                if (!mese.isEmpty() && anno.isEmpty()) {
+                    String numeroMese = TimeManager.convertiMeseInNumero(mese);
+                    conditions.add("substr(Arrivo, 4, 2) = '" + numeroMese + "'" + " OR substr(Partenza, 4, 2) = '" + numeroMese + "'");
+                    condizioneScelta = "Mese: " + mese;
+                }
+                if (!anno.isEmpty() && mese.isEmpty()) {
+                    conditions.add("substr(Arrivo, -4) = '" + anno + "'" + " OR substr(Partenza, -4) = '" + anno + "'");
+                    condizioneScelta = "Anno: " + anno;
+                }
+                if (!anno.isEmpty() && !mese.isEmpty()) {
+                    String numeroMese = TimeManager.convertiMeseInNumero(mese);
+                    conditions.add(
+                            "(substr(Arrivo, 4, 2) = '" + numeroMese + "' OR substr(Partenza, 4, 2) = '" + numeroMese + "') " +
+                                    "AND " +
+                                    "(substr(Arrivo, -4) = '" + anno + "' OR substr(Partenza, -4) = '" + anno + "')"
+                    );
+                    condizioneScelta = "Anno: " + anno + " Mese: " + mese;
                 }
 
                 // Unisco le condizioni utilizzando l'operatore AND oppure OR a seconda del radio button
@@ -1290,7 +1371,7 @@ public class MenuPrenotazioni extends JPanel implements StopTableEditObservers {
                 if (!currentFilterQuery.isEmpty()) {
                     IS_FILTERED = true;
 
-                    lblFiltro.setText("Filtro: " + conditions);
+                    lblFiltro.setText(condizioneScelta);
                     lblFiltro.setForeground(TableConstants.BUTTON_ANNULLA_FILTRO_COLORE);
 
                     // Aggiunge il bottone del filtro quando viene applicato
