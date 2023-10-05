@@ -49,6 +49,9 @@ public class MenuPrenotazioni extends JPanel implements StopTableEditObservers {
     private String currentFilterQuery = "";
     private boolean IS_FILTERED = false;
 
+    // Lista dei nomi delle prenotazioni per il completer
+    ArrayList<String> listaNomi = getAllNames();
+
     private JPanel mainPanelPrenotazioni;
     private JPanel pnlToolbar;
     private JPanel buttonPanel;
@@ -1202,8 +1205,9 @@ public class MenuPrenotazioni extends JPanel implements StopTableEditObservers {
         TextFieldsController.setupTextFieldsFloat(tfAcconto);
         TextFieldsController.setupTextFieldsString(tfNome);
 
-        // Implementa il completer per le nazioni
+        // Implementa il completer per le nazioni e i nomi
         AutoCompleteDecorator.decorate(tfNazione, ListOfNations.getListaNazioni(), false, ObjectToStringConverter.DEFAULT_IMPLEMENTATION);
+        AutoCompleteDecorator.decorate(tfNome, listaNomi, false, ObjectToStringConverter.DEFAULT_IMPLEMENTATION);
 
         /* Panel dedicato ai buttons */
         JPanel pnlButtons = new JPanel(new FlowLayout());
@@ -1591,6 +1595,26 @@ public class MenuPrenotazioni extends JPanel implements StopTableEditObservers {
             lblTotalePrenotazioni.setText("Totale prenotazioni " + cbFiltroAnni.getSelectedItem().toString() + ": " + totalePrenotazioniSelected);
         else
             lblTotalePrenotazioni.setText("Totale prenotazioni: " + totalePrenotazioniSelected);
+
+        // Aggiorna la lista dei nomi delle prenotazioni
+        listaNomi = getAllNames();
+    }
+
+    // Ricava i nomi delle prenotazioni per implementare il completer nel filtro
+    private ArrayList<String> getAllNames() throws SQLException{
+        String namesQuery = "SELECT Nome FROM Prenotazioni";
+        ArrayList<String> result = new ArrayList<>();
+
+        // Ricavo i nomi dal database
+        ResultSet rs = new Gateway().execSelectQuery(namesQuery);
+
+        while (rs.next()) {
+            result.add(rs.getString("Nome"));
+        }
+
+        rs.close();
+
+        return result;
     }
 
     // Notifica i controllers observer della modifica della modifica della piazzola
