@@ -127,7 +127,7 @@ public class TableNazioniController implements PrenotazioniObservers {
 
         for (Map<String, Integer> innerMap : dataset.values()) {
             for (String nazione : innerMap.keySet()) {
-                if (!Objects.equals(nazione, "") && uniqueNazioni.add(nazione)) {
+                if (!Objects.equals(nazione, "") && uniqueNazioni.add(nazione)) {   // Aggiunge la nazione sono se non è doppione nel Set
                     Vector<Object> rowData = new Vector<>();
                     rowData.add(nazione); // Inserisce la nazione
 
