@@ -18,13 +18,6 @@ public class ArriviPartenzeRenderer extends DefaultTableCellRenderer {
         setHorizontalAlignment(SwingConstants.CENTER);
         setFont(TableConstants.CELL_FONT);
 
-        // Colora le righe alternativamente
-        if (row % 2 == 0) {
-            c.setBackground(Color.WHITE);
-        } else {
-            c.setBackground(TableConstants.ALTERNATE_CELL_COLOR);
-        }
-
         // Imposta il colore della riga in base al valore di Arrivato/Partito
         String idPrenotazione = table.getModel().getValueAt(row, 0).toString();
         String statusColumn = (table.getColumnCount() == 8) ? "Partito" : "Arrivato";
