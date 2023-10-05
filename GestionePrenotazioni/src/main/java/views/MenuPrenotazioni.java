@@ -914,35 +914,27 @@ public class MenuPrenotazioni extends JPanel implements StopTableEditObservers {
                     throw new RuntimeException(ex);
                 }
 
-                // Controlla che la nuova prenotazione sia stata inserita
-                String checkQuery = "SELECT * FROM Prenotazioni WHERE Nome = ? AND Piazzola = ? AND Arrivo = ? AND Partenza = ?";
+                dialogNuovaPrenotazione.dispose();
+                MessageController.getInfoMessage(MenuPrenotazioni.this, "Prenotazione aggiunta");
 
-                try {
-                    if(new Gateway().execSelectQuery(checkQuery) != null) {
-                        dialogNuovaPrenotazione.dispose();
-                        MessageController.getInfoMessage(MenuPrenotazioni.this, "Prenotazione aggiunta");
+                // Inserisce la prenotazione nella tabella ArriviPartenze
+                String insertArriviPartenze = "INSERT INTO ArriviPartenze (Id, Arrivo, Partenza, Nome, Arrivato, Partito) VALUES (?, ?, ?, ?, ?, ?);";
 
-                        // Inserisce la prenotazione nella tabella ArriviPartenze
-                        String insertArriviPartenze = "INSERT INTO ArriviPartenze (Id, Arrivo, Partenza, Nome, Arrivato, Partito) VALUES (?, ?, ?, ?, ?, ?);";
-
-                        // Ricavo l'id della prenotazione appena inserita
-                        String id = "";
-                        if (tabellaPrenotazioni.getRowCount() > 0) {
-                            int lastRowIndex = tabellaPrenotazioni.getRowCount() - 1;
-                            Object idValue = tabellaPrenotazioni.getModel().getValueAt(lastRowIndex, 0);
-                            if (idValue != null) {
-                                id = idValue.toString();
-                            }
-                        }
-                        new Gateway().execUpdateQuery(insertArriviPartenze, id, dataArrivo, dataPartenza, nomePrenotazione, "no", "no");
-
-                    } else {
-                        dialogNuovaPrenotazione.dispose();
-                        MessageController.getErrorMessage(MenuPrenotazioni.this, "Impossibile inserire la nuova prenotazione");
+                // Ricavo l'id della prenotazione appena inserita
+                String id = "";
+                if (tabellaPrenotazioni.getRowCount() > 0) {
+                    int lastRowIndex = tabellaPrenotazioni.getRowCount() - 1;
+                    Object idValue = tabellaPrenotazioni.getModel().getValueAt(lastRowIndex, 0);
+                    if (idValue != null) {
+                        id = idValue.toString();
                     }
+                }
+                try {
+                    new Gateway().execUpdateQuery(insertArriviPartenze, id, dataArrivo, dataPartenza, nomePrenotazione, "no", "no");
                 } catch (SQLException ex) {
                     throw new RuntimeException(ex);
                 }
+
             }
         });
 
