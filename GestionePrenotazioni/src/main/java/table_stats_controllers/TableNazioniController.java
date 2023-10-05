@@ -123,13 +123,17 @@ public class TableNazioniController implements PrenotazioniObservers {
 
         // Imposta i dati del modello
         Vector<Vector<Object>> data = new Vector<>();
+        Set<String> uniqueNazioni = new HashSet<>();
 
-        for (int i = 0; i < listaNazioni.size(); i++) {
-            String mezzo = listaNazioni.get(i);
-            Vector<Object> rowData = new Vector<>();
-            rowData.add(mezzo); // Inserisce la nazione
+        for (Map<String, Integer> innerMap : dataset.values()) {
+            for (String nazione : innerMap.keySet()) {
+                if (!Objects.equals(nazione, "") && uniqueNazioni.add(nazione)) {
+                    Vector<Object> rowData = new Vector<>();
+                    rowData.add(nazione); // Inserisce la nazione
 
-            data.add(rowData);
+                    data.add(rowData);
+                }
+            }
         }
 
         // Aggiungi l'ultima riga con la stringa "TOTALE"

@@ -264,7 +264,7 @@ public class MenuArriviPartenze extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 String setArriviValue = "UPDATE ArriviPartenze SET Arrivato = ? WHERE Id = ?";
                 try {
-                    System.out.println(new Gateway().execUpdateQuery(setArriviValue, "no", idPrenotazione));
+                    System.out.println("ANNULLA ARRIVO: " +new Gateway().execUpdateQuery(setArriviValue, "no", idPrenotazione));
                 } catch (SQLException ex) {
                     System.err.println("Impossibile impostare il valore Arrivato");;
                 }
@@ -281,7 +281,7 @@ public class MenuArriviPartenze extends JPanel {
 
                 String setArriviValue = "UPDATE ArriviPartenze SET Arrivato = ? WHERE Id = ?";
                 try {
-                    System.out.println(new Gateway().execUpdateQuery(setArriviValue, "si", idPrenotazione));
+                    System.out.println("CONFERMA ARRIVO: " + new Gateway().execUpdateQuery(setArriviValue, "si", idPrenotazione));
                 } catch (SQLException ex) {
                     System.err.println("Impossibile impostare il valore Arrivato");;
                 }
@@ -316,7 +316,7 @@ public class MenuArriviPartenze extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 String setPartitoValue = "UPDATE ArriviPartenze SET Partito = ? WHERE Id = ?";
                 try {
-                    System.out.println(new Gateway().execUpdateQuery(setPartitoValue, "no", idPrenotazione));
+                    System.out.println("ANNULLA PARTENZA: " + new Gateway().execUpdateQuery(setPartitoValue, "no", idPrenotazione));
                 } catch (SQLException ex) {
                     System.err.println("Impossibile impostare il valore Partito");;
                 }
@@ -340,7 +340,7 @@ public class MenuArriviPartenze extends JPanel {
 
                 String setPartitoValue = "UPDATE ArriviPartenze SET Partito = ? WHERE Id = ?";
                 try {
-                    System.out.println(new Gateway().execUpdateQuery(setPartitoValue, "si", idPrenotazione));
+                    System.out.println("CONFERMA PARTENZA: " + new Gateway().execUpdateQuery(setPartitoValue, "si", idPrenotazione));
                 } catch (SQLException ex) {
                     System.err.println("Impossibile impostare il valore Arrivato");;
                 }
