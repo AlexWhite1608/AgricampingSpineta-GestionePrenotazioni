@@ -4,6 +4,7 @@ import data_access.Gateway;
 import observer.PrenotazioniObservers;
 import renderers.ArriviPartenzeRenderer;
 import utils.TableConstants;
+import utils.TimeManager;
 import views.MenuPrenotazioni;
 
 import javax.swing.*;
@@ -21,7 +22,6 @@ public class TableArriviController implements PrenotazioniObservers {
 
     private static JTable tabellaArrivi;
     private static Gateway gateway;
-    private static LocalDate TODAY = LocalDate.now();
 
     public TableArriviController(JTable tabellaArrivi) {
         TableArriviController.tabellaArrivi = tabellaArrivi;
@@ -39,7 +39,7 @@ public class TableArriviController implements PrenotazioniObservers {
 
         // Costruisco il table model
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        String formattedTodayDate = TODAY.format(formatter);
+        String formattedTodayDate = TimeManager.TODAY.format(formatter);
         ResultSet resultSet = gateway.execSelectQuery(query, formattedTodayDate);
         ResultSetMetaData metaData = resultSet.getMetaData();
 
@@ -114,6 +114,6 @@ public class TableArriviController implements PrenotazioniObservers {
     public void refreshPiazzola() throws SQLException {}
 
     public static void setTODAY(LocalDate TODAY) {
-        TableArriviController.TODAY = TODAY;
+        TimeManager.TODAY = TODAY;
     }
 }

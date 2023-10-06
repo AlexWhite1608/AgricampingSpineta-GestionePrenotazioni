@@ -514,7 +514,7 @@ public class MenuStatistiche extends JPanel implements PrenotazioniObservers {
         cbSceltaAnno.setSelectedItem(String.valueOf(LocalDate.now().getYear()));
 
         // ComboBox scelta mese
-        JComboBox<String> cbSceltaMese = new JComboBox(TimeManager.getYearMonths().toArray());
+        JComboBox<String> cbSceltaMese = new JComboBox(TimeManager.getYearMonths(true).toArray());
         cbSceltaMese.setFocusable(false);
         ((JLabel) cbSceltaMese.getRenderer()).setHorizontalAlignment(SwingConstants.CENTER);
 

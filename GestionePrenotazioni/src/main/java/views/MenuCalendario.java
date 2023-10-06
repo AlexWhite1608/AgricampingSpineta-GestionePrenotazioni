@@ -2,11 +2,15 @@ package views;
 
 import com.github.lgooddatepicker.components.DatePicker;
 import com.github.lgooddatepicker.components.DatePickerSettings;
+import table_stats_controllers.TableAdvancedStatsController;
 import view_controllers.ControllerDatePrenotazioni;
 import view_controllers.MessageController;
 import view_controllers.TableCalendarioController;
 
+import javax.print.attribute.standard.JobHoldUntil;
 import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -75,16 +79,32 @@ public class MenuCalendario extends JPanel {
     }
 
     // Setup della toolbar
-    private void setupToolbar() {
+    private void setupToolbar() throws SQLException {
 
         // Impostazione del layout
         toolBar.setLayout(new BorderLayout());
-        JPanel pnlButtonsToolbar = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        JPanel pnlButtonsToolbar = new JPanel(new FlowLayout());
 
         // Creazione degli elementi della toolbar
         JButton btnScegliGiorno = new JButton("Giorno");
         JButton btnResetGiorno = new JButton("Reset");
         JLabel lblGiornoSelezionato = new JLabel();
+
+        // Panel box delle presenze giornaliere
+        JPanel pnlPresenzeGiornaliere = new JPanel(new FlowLayout());
+        JLabel lblPresenzeGiornaliere = new JLabel("Attualmente presenti: " + TableAdvancedStatsController.getPresenzeOggi());
+        lblPresenzeGiornaliere.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        Font font = new Font(lblPresenzeGiornaliere.getFont().getName(), Font.BOLD, 15);
+        Border lineBorder = BorderFactory.createLineBorder(Color.BLACK, 1);
+        Border emptyBorder = new EmptyBorder(5, 10, 5, 10);
+        Border compoundBorder = BorderFactory.createCompoundBorder(lineBorder, emptyBorder);
+        lblPresenzeGiornaliere.setBorder(compoundBorder);
+        lblPresenzeGiornaliere.setFont(font);
+        lblPresenzeGiornaliere.setForeground(Color.BLACK);
+        lblPresenzeGiornaliere.setBorder(compoundBorder);
+        lblPresenzeGiornaliere.setFont(font);
+        lblPresenzeGiornaliere.setForeground(Color.BLACK);
+        pnlPresenzeGiornaliere.add(lblPresenzeGiornaliere);
 
         // Impostazioni
         btnScegliGiorno.setFocusPainted(false);
@@ -206,7 +226,8 @@ public class MenuCalendario extends JPanel {
         });
 
         toolBar.setFloatable(false);
-        toolBar.add(pnlButtonsToolbar, BorderLayout.CENTER);
+        toolBar.add(pnlButtonsToolbar, BorderLayout.WEST);
+        toolBar.add(lblPresenzeGiornaliere, BorderLayout.EAST);
         pnlToolbar.add(toolBar, BorderLayout.CENTER);
         mainPanelCalendario.add(pnlToolbar, BorderLayout.NORTH);
     }

@@ -14,6 +14,7 @@ public class TimeManager {
 
     private static final String INITIAL_YEAR = "2023";
     private static ArrayList<String> yearsPrenotazioni = new ArrayList<>();
+    public static LocalDate TODAY = LocalDate.now();
 
     // Ritorna gli anni dell'attività per il filtraggio delle prenotazioni
     public static ArrayList<String> getPrenotazioniYears() throws SQLException {
@@ -81,7 +82,7 @@ public class TimeManager {
     }
 
     // Ritorna i mesi dell'anno per le statistiche
-    public static ArrayList<String> getYearMonths() {
+    public static ArrayList<String> getYearMonths(boolean maiusc) {
         ArrayList<String> months = new ArrayList<>();
 
         for (Month month : Month.values()) {
@@ -90,8 +91,11 @@ public class TimeManager {
                     Locale.ITALIAN
             );
 
-            String meseMaiuscola = meseItaliano.substring(0, 1).toUpperCase() + meseItaliano.substring(1);
-            months.add(meseMaiuscola);
+            if(maiusc){
+                String meseMaiuscola = meseItaliano.substring(0, 1).toUpperCase() + meseItaliano.substring(1);
+                months.add(meseMaiuscola);
+            } else
+                months.add(meseItaliano);
         }
 
         return months;

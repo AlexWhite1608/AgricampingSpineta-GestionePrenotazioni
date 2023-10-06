@@ -47,7 +47,7 @@ public class TablePresenzeController implements PrenotazioniObservers {
         columnNames.addAll(listaAnniOrdinati);
 
         // Ottiene i mesi dell'anno da utilizzare come righe del modello
-        ArrayList<String> months = TimeManager.getYearMonths();
+        ArrayList<String> months = TimeManager.getYearMonths(true);
 
         // Imposta i dati del modello
         Vector<Vector<Object>> data = new Vector<>();
@@ -114,7 +114,7 @@ public class TablePresenzeController implements PrenotazioniObservers {
         columnNames.add("Mesi");
 
         // Ottiene i mesi dell'anno da utilizzare come righe del modello
-        ArrayList<String> months = TimeManager.getYearMonths();
+        ArrayList<String> months = TimeManager.getYearMonths(true);
 
         // Imposta i dati del modello
         Vector<Vector<Object>> data = new Vector<>();

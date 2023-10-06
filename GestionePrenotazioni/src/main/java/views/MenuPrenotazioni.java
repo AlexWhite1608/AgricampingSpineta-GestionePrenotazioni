@@ -1167,7 +1167,7 @@ public class MenuPrenotazioni extends JPanel implements StopTableEditObservers {
         pnlForm.add(lblMese, gbc);
 
         // ComboBox mese
-        JComboBox<String> cbMese = new JComboBox(TimeManager.getYearMonths().toArray());
+        JComboBox<String> cbMese = new JComboBox(TimeManager.getYearMonths(true).toArray());
         cbMese.setPreferredSize(datePickerArrivo.getPreferredSize());
         cbMese.setFocusable(false);
         cbMese.setSelectedItem(null);

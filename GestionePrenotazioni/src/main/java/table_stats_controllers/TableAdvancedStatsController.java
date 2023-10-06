@@ -1,5 +1,6 @@
 package table_stats_controllers;
 
+import data_access.Gateway;
 import datasets.DatasetMezziController;
 import datasets.DatasetNazioniController;
 import datasets.DatasetPresenzeController;
@@ -12,7 +13,11 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import java.sql.Array;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class TableAdvancedStatsController {
@@ -86,6 +91,42 @@ public class TableAdvancedStatsController {
         media = Math.round(media * 100.0) / 100.0;
 
         return String.valueOf(media);
+    }
+
+    // Ritorna il numero di presenze di oggi
+    public static String getPresenzeOggi() throws SQLException {
+        int totalePersone = 0;
+        String query = "SELECT Nome, Arrivo, Partenza, Persone " +
+                       "FROM Prenotazioni ";
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        String formattedTodayDate = TimeManager.TODAY.format(formatter);
+
+        ResultSet resultSet = new Gateway().execSelectQuery(query);
+
+        while(resultSet.next()){
+            String nome = resultSet.getString("Nome");
+
+            // Non si considerano i nomi delle prenotazioni che sono i mesi usati per le stats
+            if(!TimeManager.getYearMonths(false).contains(nome)){
+                String arrivo = resultSet.getString("Arrivo");
+                String partenza = resultSet.getString("Partenza");
+                int persone = resultSet.getInt("Persone");
+
+                LocalDate dataArrivo = LocalDate.parse(arrivo, formatter);
+                LocalDate dataPartenza = LocalDate.parse(partenza, formatter);
+                LocalDate oggi = LocalDate.parse(formattedTodayDate, formatter);
+
+                if(dataArrivo.isBefore(oggi) && dataPartenza.isAfter(oggi)){
+                    totalePersone += persone;
+                }
+            }
+
+        }
+
+        resultSet.close();
+
+        return String.valueOf(totalePersone);
     }
 
     // Crea il table model per la tabella delle nazioni
