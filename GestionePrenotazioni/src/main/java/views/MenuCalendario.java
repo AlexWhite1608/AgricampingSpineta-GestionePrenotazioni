@@ -27,6 +27,7 @@ public class MenuCalendario extends JPanel {
     private JTable tabellaCalendario;
     private JPanel pnlToolbar;
     private JToolBar toolBar;
+    private JLabel lblPresenzeGiornaliere;
 
     public MenuCalendario() throws SQLException {
 
@@ -92,7 +93,8 @@ public class MenuCalendario extends JPanel {
 
         // Panel box delle presenze giornaliere
         JPanel pnlPresenzeGiornaliere = new JPanel(new FlowLayout());
-        JLabel lblPresenzeGiornaliere = new JLabel("Attualmente presenti: " + TableAdvancedStatsController.getPresenzeOggi());
+        lblPresenzeGiornaliere = new JLabel("Attualmente presenti: " + tableCalendarioController.getAttualmentePresenti());
+        tableCalendarioController.setPresenzeLabel(lblPresenzeGiornaliere);
         lblPresenzeGiornaliere.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         Font font = new Font(lblPresenzeGiornaliere.getFont().getName(), Font.BOLD, 15);
         Border lineBorder = BorderFactory.createLineBorder(Color.BLACK, 1);

@@ -4,6 +4,7 @@ import data_access.Gateway;
 import observer.PrenotazioniObservers;
 import renderers.CalendarioCellRenderer;
 import renderers.VerticalTableHeaderCellRenderer;
+import table_stats_controllers.TableAdvancedStatsController;
 import utils.TableConstants;
 import views.MenuPrenotazioni;
 
@@ -24,7 +25,11 @@ public class TableCalendarioController implements PrenotazioniObservers {
     // Lista delle piazzole
     private static List<String> listaPiazzole;
 
+    // Numero degli attualmente presenti nel campeggio
+    private String attualmentePresenti;
+
     private static JTable tabellaCalendario;
+    private JLabel lblPresenzeGiornaliere;
     private static Gateway gateway;
 
     public TableCalendarioController(JTable tabellaCalendario) throws SQLException {
@@ -37,6 +42,9 @@ public class TableCalendarioController implements PrenotazioniObservers {
         // Inizializzo la lista delle piazzole disponibili
         ControllerPiazzole.setListaPiazzole();
         listaPiazzole = ControllerPiazzole.getListaPiazzole();
+
+        // Inizializza il numero di attualmente presenti
+        attualmentePresenti = TableAdvancedStatsController.getPresenzeOggi();
 
         // Si iscrive alle notifiche del MenuPrenotazioni
         MenuPrenotazioni.getPrenotazioniObserversList().add(this);
@@ -140,6 +148,10 @@ public class TableCalendarioController implements PrenotazioniObservers {
 
         // Ricarico il renderer per l'header
         createHeaderRenderer();
+
+        // Ricarico il numero di attualmente presenti nella label
+        attualmentePresenti = TableAdvancedStatsController.getPresenzeOggi();
+        lblPresenzeGiornaliere.setText("Attualmente presenti: " + attualmentePresenti);
     }
 
     // Ricarica la tabella a seguito di inserimento/rimozione piazzole
@@ -213,6 +225,15 @@ public class TableCalendarioController implements PrenotazioniObservers {
                 column.setHeaderRenderer(createHeaderPiazzole());
             columnIndex++;
         }
+    }
+
+    // Assegna la label degli attualmente presenti per aggiornarla dinamicamente
+    public void setPresenzeLabel(JLabel lblPresenzeGiornaliere) {
+        this.lblPresenzeGiornaliere = lblPresenzeGiornaliere;
+    }
+
+    public String getAttualmentePresenti() {
+        return attualmentePresenti;
     }
 
     // Crea il renderer per la colonna delle Piazzole

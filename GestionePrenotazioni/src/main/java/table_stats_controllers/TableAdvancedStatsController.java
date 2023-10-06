@@ -117,7 +117,9 @@ public class TableAdvancedStatsController {
                 LocalDate dataPartenza = LocalDate.parse(partenza, formatter);
                 LocalDate oggi = LocalDate.parse(formattedTodayDate, formatter);
 
-                if(dataArrivo.isBefore(oggi) && dataPartenza.isAfter(oggi)){
+                boolean condition1 = dataArrivo.isBefore(oggi) && dataPartenza.isAfter(oggi);
+                boolean condition2 = dataArrivo.equals(oggi) && dataPartenza.isAfter(oggi);
+                if(condition1 || condition2){
                     totalePersone += persone;
                 }
             }
