@@ -466,12 +466,14 @@ public class MenuStatistiche extends JPanel implements PrenotazioniObservers {
         // Labels
         JLabel lblMesePiuPresenze = new JLabel("Mese con più presenze: " + TableAdvancedStatsController.getMesePiuPresenze());
         JLabel lblMezzoPiuUsato = new JLabel("Mezzo più utilizzato: " + TableAdvancedStatsController.getMezzoPiuUsato());
-        JLabel durataMediaSoggiorno = new JLabel("Durata media del soggiorno: " + TableAdvancedStatsController.getDurataMediaSoggiorno());
+        JLabel lblDurataMediaSoggiorno = new JLabel("Durata media del soggiorno: " + TableAdvancedStatsController.getDurataMediaSoggiorno());
+        JLabel lblGiornoMaxPresenze = new JLabel("Giorno con presenze massime: " + TableAdvancedStatsController.getMaxPresenzeGiorno());
 
         // Aggiungi un margine di 10 pixel a tutte le label
         lblMesePiuPresenze.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         lblMezzoPiuUsato.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
-        durataMediaSoggiorno.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        lblDurataMediaSoggiorno.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        lblGiornoMaxPresenze.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         Font font = new Font(lblMesePiuPresenze.getFont().getName(), Font.BOLD, 15);
         Border lineBorder = BorderFactory.createLineBorder(Color.BLACK, 1);
@@ -485,13 +487,18 @@ public class MenuStatistiche extends JPanel implements PrenotazioniObservers {
         lblMezzoPiuUsato.setFont(font);
         lblMezzoPiuUsato.setForeground(Color.BLACK);
 
-        durataMediaSoggiorno.setBorder(compoundBorder);
-        durataMediaSoggiorno.setFont(font);
-        durataMediaSoggiorno.setForeground(Color.BLACK);
+        lblDurataMediaSoggiorno.setBorder(compoundBorder);
+        lblDurataMediaSoggiorno.setFont(font);
+        lblDurataMediaSoggiorno.setForeground(Color.BLACK);
+
+        lblGiornoMaxPresenze.setBorder(compoundBorder);
+        lblGiornoMaxPresenze.setFont(font);
+        lblGiornoMaxPresenze.setForeground(Color.BLACK);
 
         pnlSxStats.add(lblMesePiuPresenze);
         pnlSxStats.add(lblMezzoPiuUsato);
-        pnlSxStats.add(durataMediaSoggiorno);
+        pnlSxStats.add(lblDurataMediaSoggiorno);
+        pnlSxStats.add(lblGiornoMaxPresenze);
         /* ... ...*/
 
         /* --- Panel statistiche su tabella --- */

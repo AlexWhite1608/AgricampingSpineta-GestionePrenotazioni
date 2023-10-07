@@ -25,6 +25,10 @@ public class TableAdvancedStatsController {
     private JTable tableStatsNazioni;
     private JTable tableStatsMezziNazioni;
 
+    // Il vecchio giorno con più presenze
+    private static final String MAX_PRESENZE_GIORNO = "14/08/2023";
+    private static final int NUM_PRESENZE_MAX_GIORNO = 88;
+
     public TableAdvancedStatsController() {
     }
 
@@ -129,6 +133,19 @@ public class TableAdvancedStatsController {
         resultSet.close();
 
         return String.valueOf(totalePersone);
+    }
+
+    // Ritorna il giorno con le presenze maggiori (rispetto al 14/08/2023)
+    public static String getMaxPresenzeGiorno() throws SQLException {
+        int presenzeOggi = Integer.parseInt(TableAdvancedStatsController.getPresenzeOggi());
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        String oggi = TimeManager.TODAY.format(formatter);
+
+        if(presenzeOggi > NUM_PRESENZE_MAX_GIORNO)
+            return oggi + " (" + presenzeOggi + ")";
+        else
+            return MAX_PRESENZE_GIORNO + " (" + NUM_PRESENZE_MAX_GIORNO + ")";
     }
 
     // Crea il table model per la tabella delle nazioni
