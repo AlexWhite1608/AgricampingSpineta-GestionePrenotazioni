@@ -26,7 +26,7 @@ Di seguito sono elencate le principali caratteristiche dell'applicazione:
 
 ![Calendario prenotazioni](img/calendario.png)
 
-- **Visualizzazione arrivi/partenze:**
+- **Visualizzazione arrivi e partenze:**
 
 ![Arrivi/Partenze](img/a_p.png)
 
