@@ -35,6 +35,8 @@ Di seguito sono elencate le principali caratteristiche dell'applicazione:
 ![Statistiche](img/stats.png)
 
 
+![StatisticheAvanzate](img/adv_stats.png)
+
 ## Requisiti di Sistema
 
 - **Sistema Operativo:** L'applicazione è compatibile con Windows, macOS e Linux.
