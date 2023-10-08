@@ -113,21 +113,13 @@ public class TableNazioniController implements PrenotazioniObservers {
 
         // Ottiene le nazioni da utilizzare come righe del modello
         Map<String, Map<String, Integer>> dataset = DatasetNazioniController.getTableDataset();
-        ArrayList<String> listaNazioni = new ArrayList<>();
-        for (Map<String, Integer> innerMap : dataset.values()) {
-            for (String nazione : innerMap.keySet()){
-                if(!Objects.equals(nazione, ""))
-                    listaNazioni.add(nazione);
-            }
-        }
 
         // Imposta i dati del modello
         Vector<Vector<Object>> data = new Vector<>();
-        Set<String> uniqueNazioni = new HashSet<>();
 
         for (Map<String, Integer> innerMap : dataset.values()) {
             for (String nazione : innerMap.keySet()) {
-                if (!Objects.equals(nazione, "") && uniqueNazioni.add(nazione)) {   // Aggiunge la nazione sono se non è doppione nel Set
+                if (!nazione.isEmpty()) {
                     Vector<Object> rowData = new Vector<>();
                     rowData.add(nazione); // Inserisce la nazione
 
