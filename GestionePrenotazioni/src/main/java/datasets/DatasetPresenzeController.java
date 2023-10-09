@@ -57,33 +57,38 @@ public class DatasetPresenzeController {
 
         while (rs.next()) {
             int persone = rs.getInt("Persone");
-            String anno = rs.getString("mese").substring(3, 7);
+            String annoArrivo = rs.getString("mese").substring(3, 7);
 
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
             LocalDate arrivo = LocalDate.parse(rs.getString("Arrivo"), formatter);
             LocalDate partenza = LocalDate.parse(rs.getString("Partenza"), formatter);
 
             while (!arrivo.isAfter(partenza)) {
+                String annoCorrente = arrivo.format(DateTimeFormatter.ofPattern("yyyy"));
                 String meseCorrente = arrivo.format(DateTimeFormatter.ofPattern("MM/yyyy"));
                 int giorniNelMese = arrivo.lengthOfMonth();
-                int giorniMeseCorrente;
 
-                if (arrivo.getMonth() == partenza.getMonth()) {
-                    giorniMeseCorrente = Math.min(partenza.getDayOfMonth() - arrivo.getDayOfMonth(),
+                if (arrivo.isEqual(partenza)) {
+
+                    // Caso in cui arrivo e partenza sono nello stesso giorno
+                    int presenzeMeseCorrente = persone;
+                    addPresenze(presenzeMap, annoCorrente, meseCorrente, presenzeMeseCorrente);
+                } else if (annoCorrente.equals(annoArrivo)) {
+
+                    // Caso in cui siamo nell'anno di arrivo
+                    int giorniMeseCorrente = Math.min(giorniNelMese - arrivo.getDayOfMonth() + 1,
                             (int) ChronoUnit.DAYS.between(arrivo, partenza));
+
+                    int presenzeMeseCorrente = giorniMeseCorrente * persone;
+                    addPresenze(presenzeMap, annoArrivo, meseCorrente, presenzeMeseCorrente);
                 } else {
-                    giorniMeseCorrente = Math.min(giorniNelMese - arrivo.getDayOfMonth() + 1,
-                            (int) ChronoUnit.DAYS.between(arrivo, partenza) + 1);
+
+                    // Caso in cui siamo nell'anno di partenza
+                    int giorniMeseCorrente = partenza.getDayOfMonth() - 1;
+
+                    int presenzeMeseCorrente = giorniMeseCorrente * persone;
+                    addPresenze(presenzeMap, annoCorrente, meseCorrente, presenzeMeseCorrente);
                 }
-
-                // Calcola le presenze per il mese corrente
-                int presenzeMeseCorrente = giorniMeseCorrente * persone;
-
-                presenzeMap
-                        .computeIfAbsent(anno, k -> new HashMap<>())
-                        .merge(meseCorrente, presenzeMeseCorrente, Integer::sum);
-
-                //FIXME: quando c'è una prenotazione a cavallo tra due anni viene contata bene sul grafico ma non sulla tabella
 
                 arrivo = arrivo.plusMonths(1).withDayOfMonth(1);
             }
@@ -98,6 +103,13 @@ public class DatasetPresenzeController {
 
         return presenzeMap;
     }
+
+    private static void addPresenze(Map<String, Map<String, Integer>> presenzeMap, String anno, String mese, int presenze) {
+        presenzeMap
+                .computeIfAbsent(anno, k -> new HashMap<>())
+                .merge(mese, presenze, Integer::sum);
+    }
+
 
     // Ricava le presenze per ogni mese e per ogni nazione
     public static Map<String, Map<String, Map<String, Integer>>> getPresenzeForMeseAndNazione() throws SQLException {
