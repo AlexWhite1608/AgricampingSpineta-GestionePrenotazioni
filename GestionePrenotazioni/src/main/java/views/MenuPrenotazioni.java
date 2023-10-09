@@ -1324,19 +1324,19 @@ public class MenuPrenotazioni extends JPanel implements StopTableEditObservers {
                 }
                 if (!mese.isEmpty() && anno.isEmpty()) {
                     String numeroMese = TimeManager.convertiMeseInNumero(mese);
-                    conditions.add("substr(Arrivo, 4, 2) = '" + numeroMese + "'" + " OR substr(Partenza, 4, 2) = '" + numeroMese + "'");
+                    conditions.add("substr(Arrivo, 4, 2) = '" + numeroMese + "'");
                     condizioneScelta = "Mese: " + mese;
                 }
                 if (!anno.isEmpty() && mese.isEmpty()) {
-                    conditions.add("substr(Arrivo, -4) = '" + anno + "'" + " OR substr(Partenza, -4) = '" + anno + "'");
+                    conditions.add("substr(Arrivo, -4) = '" + anno + "'");
                     condizioneScelta = "Anno: " + anno;
                 }
                 if (!anno.isEmpty() && !mese.isEmpty()) {
                     String numeroMese = TimeManager.convertiMeseInNumero(mese);
                     conditions.add(
-                            "(substr(Arrivo, 4, 2) = '" + numeroMese + "' OR substr(Partenza, 4, 2) = '" + numeroMese + "') " +
+                            "(substr(Arrivo, 4, 2) = '" + numeroMese + "') " +
                                     "AND " +
-                                    "(substr(Arrivo, -4) = '" + anno + "' OR substr(Partenza, -4) = '" + anno + "')"
+                                    "(substr(Arrivo, -4) = '" + anno + "')"
                     );
                     condizioneScelta = "Anno: " + anno + " Mese: " + mese;
                 }
