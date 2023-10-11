@@ -32,10 +32,6 @@ import utils.ListOfNations;
 
 public class MenuPrenotazioni extends JPanel implements StopTableEditObservers {
 
-    // Valori per modifiche estetiche
-    private final int SEPARATOR_WIDTH = 1270;
-    private final int DIALOG_SEPARATOR_WIDTH = 30;
-
     // Anni contenuti nella cbFiltroAnni
     private ArrayList<String> YEARS = TimeManager.getPrenotazioniYears();
 
@@ -600,7 +596,7 @@ public class MenuPrenotazioni extends JPanel implements StopTableEditObservers {
         pnlForm.add(datePickerArrivo, gbc);
 
         // Spaziatura orizzontale tra i datepickers
-        Component horizontalStrut1 = Box.createHorizontalStrut(DIALOG_SEPARATOR_WIDTH);
+        Component horizontalStrut1 = Box.createHorizontalStrut(TableConstants.DIALOG_SEPARATOR_WIDTH);
         gbc.gridx = 2;
         gbc.gridy = 0;
         gbc.anchor = GridBagConstraints.CENTER;
@@ -660,7 +656,7 @@ public class MenuPrenotazioni extends JPanel implements StopTableEditObservers {
         pnlForm.add(cbSceltaPiazzola, gbc);
 
         // Spazio
-        Component horizontalStrut2 = Box.createHorizontalStrut(DIALOG_SEPARATOR_WIDTH);
+        Component horizontalStrut2 = Box.createHorizontalStrut(TableConstants.DIALOG_SEPARATOR_WIDTH);
         gbc.gridx = 2;
         gbc.gridy = 1;
         gbc.anchor = GridBagConstraints.CENTER;
@@ -985,7 +981,7 @@ public class MenuPrenotazioni extends JPanel implements StopTableEditObservers {
         pnlForm.add(datePickerArrivo, gbc);
 
         // Spaziatura orizzontale tra i datepickers
-        Component horizontalStrut1 = Box.createHorizontalStrut(DIALOG_SEPARATOR_WIDTH);
+        Component horizontalStrut1 = Box.createHorizontalStrut(TableConstants.DIALOG_SEPARATOR_WIDTH);
         gbc.gridx = 2;
         gbc.gridy = 0;
         gbc.anchor = GridBagConstraints.CENTER;
@@ -1045,7 +1041,7 @@ public class MenuPrenotazioni extends JPanel implements StopTableEditObservers {
         pnlForm.add(cbSceltaPiazzola, gbc);
 
         // Spazio
-        Component horizontalStrut2 = Box.createHorizontalStrut(DIALOG_SEPARATOR_WIDTH);
+        Component horizontalStrut2 = Box.createHorizontalStrut(TableConstants.DIALOG_SEPARATOR_WIDTH);
         gbc.gridx = 2;
         gbc.gridy = 1;
         gbc.anchor = GridBagConstraints.CENTER;

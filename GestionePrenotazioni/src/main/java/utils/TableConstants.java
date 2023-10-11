@@ -35,4 +35,7 @@ public class TableConstants {
 
     // Lista dei mezzi
     public static final ArrayList<String> listaMezzi = new ArrayList<>(List.of(new String[]{"Camper", "Caravan", "Van", "Piedi + Tenda", "Auto + Tenda", "Bici + Tenda", "Moto + Tenda", "StarsBox", "Casa Mobile", "Nessuno"}));
+    // Valori per modifiche estetiche
+    private final static int SEPARATOR_WIDTH = 1270;
+    public final static int DIALOG_SEPARATOR_WIDTH = 30;
 }
