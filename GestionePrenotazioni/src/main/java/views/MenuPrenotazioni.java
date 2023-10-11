@@ -3,6 +3,7 @@ package views;
 import com.github.lgooddatepicker.components.DatePicker;
 import com.github.lgooddatepicker.components.DatePickerSettings;
 import datasets.DatasetPresenzeController;
+import observer.NewPrenotazioneObservers;
 import utils.TableConstants;
 import view_controllers.*;
 import data_access.CloudUploader;
@@ -30,7 +31,7 @@ import java.util.*;
 import observer.PrenotazioniObservers;
 import utils.ListOfNations;
 
-public class MenuPrenotazioni extends JPanel implements StopTableEditObservers {
+public class MenuPrenotazioni extends JPanel implements StopTableEditObservers, NewPrenotazioneObservers {
 
     // Anni contenuti nella cbFiltroAnni
     private ArrayList<String> YEARS = TimeManager.getPrenotazioniYears();
@@ -72,6 +73,9 @@ public class MenuPrenotazioni extends JPanel implements StopTableEditObservers {
         createUIComponents();
         setupToolbar();
         setupTable();
+
+        // Si iscrive ad observer del Calendario
+        MenuCalendario.getNuovaPrenotazioneCalendarioObserver().add(this);
 
         setLayout(new BorderLayout());
         add(mainPanelPrenotazioni, BorderLayout.CENTER);
@@ -1630,5 +1634,41 @@ public class MenuPrenotazioni extends JPanel implements StopTableEditObservers {
 
     public static ArrayList<PrenotazioniObservers> getPrenotazioniObserversList() {
         return prenotazioniObserversList;
+    }
+
+    // Richiamato dal Calendario per aggiungere una nuova prenotazione
+    @Override
+    public void addPrenotazione(String dataArrivo, String dataPartenza, String nomePrenotazione) {
+        // Ricarico la tabella prenotazioni e notifico gli observers
+        if(!currentFilterQuery.isEmpty()) {
+            tablePrenotazioniController.refreshTable(tabellaPrenotazioni, currentFilterQuery);
+        }
+        else {
+            tablePrenotazioniController.refreshTable(tabellaPrenotazioni);
+        }
+
+        try {
+            notifyPrenotazioneChanged();
+        } catch (SQLException ex) {
+            throw new RuntimeException(ex);
+        }
+
+        // Inserisce la prenotazione nella tabella ArriviPartenze
+        String insertArriviPartenze = "INSERT INTO ArriviPartenze (Id, Arrivo, Partenza, Nome, Arrivato, Partito) VALUES (?, ?, ?, ?, ?, ?);";
+
+        // Ricavo l'id della prenotazione appena inserita
+        String id = "";
+        if (tabellaPrenotazioni.getRowCount() > 0) {
+            int lastRowIndex = tabellaPrenotazioni.getRowCount() - 1;
+            Object idValue = tabellaPrenotazioni.getModel().getValueAt(lastRowIndex, 0);
+            if (idValue != null) {
+                id = idValue.toString();
+            }
+        }
+        try {
+            new Gateway().execUpdateQuery(insertArriviPartenze, id, dataArrivo, dataPartenza, nomePrenotazione, "no", "no");
+        } catch (SQLException ex) {
+            throw new RuntimeException(ex);
+        }
     }
 }
